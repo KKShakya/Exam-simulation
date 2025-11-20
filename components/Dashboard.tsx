@@ -1,9 +1,8 @@
-
 import React from 'react';
-import { Target, TrendingUp, Brain, Clock, MonitorPlay, Zap, Youtube } from 'lucide-react';
+import { Target, TrendingUp, Brain, Clock, MonitorPlay, Zap, AlertTriangle, ArrowRight } from 'lucide-react';
 
 interface DashboardProps {
-  onNavigate: (tab: string) => void;
+  onNavigate: (tab: string, props?: any) => void;
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
@@ -54,20 +53,22 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex items-center justify-between group hover:border-red-100 transition-colors">
+            {/* Weak Areas Card */}
+            <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex flex-col justify-between group hover:border-red-100 transition-colors cursor-pointer" onClick={() => onNavigate('practice', { difficulty: 'Difficult' })}>
               <div>
-                <div className="flex items-center gap-2 mb-1">
-                   <Youtube size={18} className="text-red-600" />
-                   <h3 className="font-bold text-slate-800">Video Classes</h3>
+                <div className="flex items-center gap-2 mb-2">
+                   <div className="bg-red-100 p-2 rounded-lg text-red-600">
+                     <AlertTriangle size={20} />
+                   </div>
+                   <h3 className="font-bold text-slate-800">Focus Weak Areas</h3>
                 </div>
-                <p className="text-sm text-slate-500">Shantanu Sir & Ashish Sir.</p>
+                <p className="text-sm text-slate-500 leading-relaxed">
+                  Based on your patterns, you need more practice in <span className="font-semibold text-red-500">Difficult DI</span> & <span className="font-semibold text-red-500">Puzzles</span>.
+                </p>
               </div>
-              <button 
-                onClick={() => onNavigate('youtube')}
-                className="text-red-600 font-semibold hover:text-red-700"
-              >
-                Watch &rarr;
-              </button>
+              <div className="mt-4 text-red-600 font-semibold text-sm flex items-center gap-1 hover:gap-2 transition-all">
+                Improve Now <ArrowRight size={16} />
+              </div>
             </div>
 
             <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex items-center justify-between group hover:border-amber-100 transition-colors">

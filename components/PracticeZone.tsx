@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { Loader2, CheckCircle, XCircle, HelpCircle, ArrowRight, RefreshCcw } from 'lucide-react';
+import { Loader2, CheckCircle, XCircle, HelpCircle, RefreshCcw, BarChart2 } from 'lucide-react';
 import { Subject, Difficulty, Question } from '../types';
 import { generatePracticeQuestions } from '../services/geminiService';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 
-const PracticeZone: React.FC = () => {
+const PracticeZone: React.FC<{ initialTopic?: string, initialDifficulty?: Difficulty }> = ({ initialTopic, initialDifficulty }) => {
   const [config, setConfig] = useState({
     subject: Subject.QUANT,
-    difficulty: Difficulty.MODERATE,
-    topic: '',
+    difficulty: initialDifficulty || Difficulty.MODERATE,
+    topic: initialTopic || '',
     count: 5
   });
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -17,7 +18,7 @@ const PracticeZone: React.FC = () => {
 
   const handleGenerate = async () => {
     if (!config.topic) {
-      alert("Please enter a specific topic (e.g., 'Number Series' or 'Blood Relations')");
+      alert("Please enter a specific topic (e.g., 'Number Series' or 'Data Interpretation')");
       return;
     }
     setLoading(true);
@@ -34,6 +35,48 @@ const PracticeZone: React.FC = () => {
     if (userAnswers[questionIdx] !== undefined) return; // Prevent changing answer
     setUserAnswers(prev => ({ ...prev, [questionIdx]: optionIdx }));
     setShowExplanation(prev => ({ ...prev, [questionIdx]: true }));
+  };
+
+  // Colors for charts
+  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
+
+  const renderChart = (q: Question) => {
+    if (!q.chartData) return null;
+
+    return (
+      <div className="h-[300px] w-full bg-white border border-slate-100 rounded-lg p-4 mb-6">
+        <h4 className="text-center font-bold text-slate-700 mb-2 text-sm">{q.chartData.title}</h4>
+        <ResponsiveContainer width="100%" height="90%">
+          {q.chartData.type === 'bar' ? (
+            <BarChart data={q.chartData.data}>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} />
+              <XAxis dataKey="name" tick={{fontSize: 12}} />
+              <YAxis />
+              <Tooltip />
+              <Bar dataKey="value" fill="#6366f1" radius={[4, 4, 0, 0]} />
+            </BarChart>
+          ) : (
+            <PieChart>
+              <Pie
+                data={q.chartData.data}
+                cx="50%"
+                cy="50%"
+                outerRadius={80}
+                fill="#8884d8"
+                dataKey="value"
+                label={({name, percent}) => `${name} ${(percent * 100).toFixed(0)}%`}
+              >
+                {q.chartData.data.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip />
+              <Legend verticalAlign="bottom" height={36}/>
+            </PieChart>
+          )}
+        </ResponsiveContainer>
+      </div>
+    );
   };
 
   return (
@@ -69,13 +112,22 @@ const PracticeZone: React.FC = () => {
 
           <div className="md:col-span-2">
             <label className="block text-sm font-medium text-slate-700 mb-2">Specific Topic</label>
-            <input 
-              type="text" 
-              placeholder="e.g., Quadratic Equations, Floor Puzzles, RBI Functions..."
-              className="w-full p-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
-              value={config.topic}
-              onChange={(e) => setConfig({...config, topic: e.target.value})}
-            />
+            <div className="flex gap-2">
+               <input 
+                type="text" 
+                placeholder="e.g., Data Interpretation, Number Series, Blood Relations..."
+                className="flex-1 p-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                value={config.topic}
+                onChange={(e) => setConfig({...config, topic: e.target.value})}
+              />
+              <button 
+                onClick={() => setConfig(prev => ({...prev, topic: 'Data Interpretation'}))}
+                className="px-3 py-2 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100 flex items-center gap-1 text-sm font-medium whitespace-nowrap"
+              >
+                <BarChart2 size={16} /> Try DI
+              </button>
+            </div>
+            <p className="text-xs text-slate-400 mt-2">Tip: Type 'Data Interpretation' or 'Pie Chart' to see interactive graphs.</p>
           </div>
         </div>
 
@@ -91,7 +143,7 @@ const PracticeZone: React.FC = () => {
       </div>
 
       {questions.length > 0 && (
-        <div className="space-y-6">
+        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4">
           {questions.map((q, qIdx) => (
             <div key={qIdx} className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
               <div className="p-6">
@@ -100,6 +152,10 @@ const PracticeZone: React.FC = () => {
                      Q{qIdx + 1} • {q.difficulty}
                    </span>
                 </div>
+
+                {/* Render Chart if exists */}
+                {renderChart(q)}
+
                 <p className="text-lg font-medium text-slate-800 mb-6">{q.questionText}</p>
                 
                 <div className="space-y-3">

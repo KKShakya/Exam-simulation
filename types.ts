@@ -12,6 +12,12 @@ export enum Subject {
   COMPUTER = 'Computer Knowledge'
 }
 
+export interface ChartData {
+  type: 'bar' | 'pie';
+  title: string;
+  data: { name: string; value: number }[];
+}
+
 export interface Question {
   id?: string;
   questionText: string;
@@ -20,6 +26,7 @@ export interface Question {
   explanation: string;
   topic: string;
   difficulty: string;
+  chartData?: ChartData; // Optional field for DI
 }
 
 export interface MockQuestion extends Question {
@@ -45,4 +52,12 @@ export interface PatternAnalysis {
   examType: 'PO' | 'Clerk';
   summary: string;
   subjectData: PatternDataPoint[];
+}
+
+export interface Note {
+  id: string;
+  title: string;
+  content: string;
+  date: number;
+  tags: string[];
 }

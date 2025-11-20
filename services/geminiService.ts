@@ -3,20 +3,12 @@ import { Question, Subject, Difficulty, PatternAnalysis, MockQuestion } from "..
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
-// System instructions for the general chat agent
+// Updated System Instruction for a more natural "Gemini-like" experience
 const TUTOR_SYSTEM_INSTRUCTION = `
-You are an elite Banking Exam Tutor specializing in IBPS RRB PO and Clerk exams.
-Your goal is to help students clear these exams by providing detailed concepts, shortcuts, and strategies.
-You have deep knowledge of:
-- Quantitative Aptitude (Data Interpretation, Arithmetic, Simplification)
-- Reasoning Ability (Puzzles, Seating Arrangement, Syllogism)
-- General Awareness (Banking Awareness, Current Affairs)
-- Computer Knowledge
-- English/Hindi Language
-
-Always be encouraging, precise, and focus on 'speed with accuracy'.
-If asked for a study plan, create a structured timetable.
-If asked about concepts, explain with examples relevant to banking exams.
+You are a helpful, intelligent, and versatile AI assistant powered by Google's Gemini model. 
+While you are integrated into "BankEdge" (an IBPS RRB exam preparation app), you should interact naturally, effectively, and friendly, just like the standard Gemini experience.
+You can assist with math, logic, writing, planning, and general knowledge.
+However, if the user asks about exam specifics, prioritize methods suitable for banking exams (speed math, short tricks).
 `;
 
 export const sendChatMessage = async (history: { role: string; parts: { text: string }[] }[], message: string): Promise<string> => {
@@ -49,14 +41,41 @@ export const generatePracticeQuestions = async (subject: Subject, difficulty: Di
         explanation: { type: Type.STRING },
         topic: { type: Type.STRING },
         difficulty: { type: Type.STRING },
+        // New field for DI Data
+        chartData: {
+          type: Type.OBJECT,
+          nullable: true,
+          description: "Only populate this if the question is Data Interpretation (DI) and needs a graph.",
+          properties: {
+            type: { type: Type.STRING, enum: ['bar', 'pie'] },
+            title: { type: Type.STRING },
+            data: {
+              type: Type.ARRAY,
+              items: {
+                 type: Type.OBJECT,
+                 properties: {
+                   name: { type: Type.STRING },
+                   value: { type: Type.NUMBER }
+                 }
+              }
+            }
+          }
+        }
       },
       required: ["questionText", "options", "correctAnswerIndex", "explanation", "topic", "difficulty"],
     },
   };
 
   const prompt = `Generate ${count} ${difficulty} level multiple-choice questions for IBPS RRB ${subject} specifically focusing on the topic: "${topic}".
-  Ensure the questions match the actual exam pattern and difficulty of IBPS RRB PO/Clerk.
-  Provide detailed explanations for the solutions.`;
+  
+  CRITICAL INSTRUCTION FOR DATA INTERPRETATION (DI):
+  If the topic is related to DI, Graphs, Pie Charts, or Caslets:
+  1. You MUST create a numerical dataset and populate the 'chartData' field in the JSON.
+  2. The 'questionText' should refer to the graph (e.g., "Based on the given bar graph...").
+  3. Ensure the data in 'chartData' perfectly matches the solution logic.
+  
+  For other topics, leave 'chartData' null.
+  Provide detailed explanations.`;
 
   try {
     const response = await ai.models.generateContent({
@@ -123,10 +142,39 @@ export const analyzeExamPattern = async (examType: 'PO' | 'Clerk', year: string)
   }
 };
 
-// --- New Mock Exam Functions ---
+// --- Smart Notes Analysis ---
+
+export const analyzeUserNote = async (noteContent: string, action: 'summarize' | 'formulas' | 'quiz'): Promise<string> => {
+  const prompt = `
+  Act as an expert study companion. 
+  I will provide you with a study note. Please perform the following action: ${action}.
+  
+  Action Definitions:
+  - summarize: Create a bulleted summary of key points.
+  - formulas: Extract any mathematical formulas or short tricks mentioned or implied.
+  - quiz: Generate 3 short practice questions based on this note (with answers hidden at the bottom).
+
+  NOTE CONTENT:
+  "${noteContent.substring(0, 10000)}"
+  `;
+
+  try {
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: prompt,
+    });
+    return response.text || "Analysis failed.";
+  } catch (error) {
+    console.error("Note Analysis Error", error);
+    return "Error analyzing note.";
+  }
+};
+
+
+// --- Mock Exam Functions ---
 
 export const generateMockExam = async (type: 'PO' | 'Clerk'): Promise<MockQuestion[]> => {
-  // Generating a mini-mock (e.g., 10 questions) to ensure speed, as full 80Q is too large for single prompt
+  // Generating a mini-mock (e.g., 10 questions) to ensure speed
   const schema: Schema = {
     type: Type.ARRAY,
     items: {

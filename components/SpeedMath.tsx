@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Zap, Book, Timer, Trophy, ChevronLeft, RefreshCcw, Brain, Eye, X } from 'lucide-react';
 
@@ -78,8 +77,9 @@ const SpeedMath: React.FC = () => {
     let q = '', a = '';
     switch (cat) {
       case 'tables': {
+        // Modified to restrict multiplier to 1-10 as per user request
         const num = Math.floor(Math.random() * 24) + 2; // 2 to 25
-        const mult = Math.floor(Math.random() * 19) + 2; // 2 to 20
+        const mult = Math.floor(Math.random() * 10) + 1; // 1 to 10 ONLY
         q = `${num} × ${mult}`;
         a = (num * mult).toString();
         break;
@@ -229,7 +229,7 @@ const SpeedMath: React.FC = () => {
       </div>
 
       {[
-        { id: 'tables', label: 'Tables (1-25)', icon: Zap, color: 'bg-amber-500' },
+        { id: 'tables', label: 'Tables (1-10)', icon: Zap, color: 'bg-amber-500' },
         { id: 'squares', label: 'Squares (1-50)', icon: Brain, color: 'bg-blue-500' },
         { id: 'cubes', label: 'Cubes (1-25)', icon: Brain, color: 'bg-indigo-500' },
         { id: 'alpha', label: 'Alphabet Ranks', icon: Eye, color: 'bg-emerald-500' },

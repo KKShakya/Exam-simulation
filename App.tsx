@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Menu } from 'lucide-react';
 import Sidebar from './components/Sidebar';
@@ -8,39 +7,42 @@ import PracticeZone from './components/PracticeZone';
 import PatternAnalyzer from './components/PatternAnalyzer';
 import MockExam from './components/MockExam';
 import SpeedMath from './components/SpeedMath';
-import YouTubeZone from './components/YouTubeZone';
+import SmartNotes from './components/SmartNotes';
 
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  // Navigation props to pass data between tabs (e.g. Dashboard -> Practice with specific difficulty)
+  const [navProps, setNavProps] = useState<any>({});
+
+  const handleNavigate = (tab: string, props?: any) => {
+    if (props) setNavProps(props);
+    setActiveTab(tab);
+  };
 
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard':
-        return <Dashboard onNavigate={setActiveTab} />;
+        return <Dashboard onNavigate={handleNavigate} />;
       case 'mock':
         return <MockExam />;
       case 'speed':
         return <SpeedMath />;
-      case 'youtube':
-        return <YouTubeZone />;
+      case 'notes':
+        return <SmartNotes />;
       case 'chat':
         return <ChatInterface />;
       case 'practice':
-        return <PracticeZone />;
+        return <PracticeZone initialTopic={navProps.topic} initialDifficulty={navProps.difficulty} />;
       case 'analysis':
         return <PatternAnalyzer />;
       default:
-        return <Dashboard onNavigate={setActiveTab} />;
+        return <Dashboard onNavigate={handleNavigate} />;
     }
   };
 
   return (
     <div className="flex h-screen bg-slate-50 overflow-hidden">
-      {/* Conditionally render sidebar only if NOT in active exam mode (mock handles its own full screen) 
-          However, MockExam has a 'landing' state that fits in the layout. 
-          The MockExam component uses fixed positioning for the exam mode to overlay everything.
-      */}
       <Sidebar 
         activeTab={activeTab} 
         setActiveTab={setActiveTab} 
