@@ -1,5 +1,7 @@
+
 import { GoogleGenAI, Type, Schema } from "@google/genai";
 import { Question, Subject, Difficulty, PatternAnalysis, MockQuestion } from "../types";
+import { getStaticMockExam } from "./mockDataService";
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
@@ -174,49 +176,10 @@ export const analyzeUserNote = async (noteContent: string, action: 'summarize' |
 // --- Mock Exam Functions ---
 
 export const generateMockExam = async (type: 'PO' | 'Clerk'): Promise<MockQuestion[]> => {
-  // Generating a mini-mock (e.g., 10 questions) to ensure speed
-  const schema: Schema = {
-    type: Type.ARRAY,
-    items: {
-      type: Type.OBJECT,
-      properties: {
-        questionText: { type: Type.STRING },
-        options: { type: Type.ARRAY, items: { type: Type.STRING } },
-        correctAnswerIndex: { type: Type.INTEGER },
-        explanation: { type: Type.STRING },
-        topic: { type: Type.STRING },
-        difficulty: { type: Type.STRING },
-        section: { type: Type.STRING, enum: ['Reasoning', 'Quantitative Aptitude'] }
-      },
-      required: ["questionText", "options", "correctAnswerIndex", "explanation", "topic", "difficulty", "section"]
-    }
-  };
-
-  const prompt = `Generate a Mini-Mock Exam for IBPS RRB ${type} Prelims.
-  Create exactly 10 questions: 5 for Reasoning and 5 for Quantitative Aptitude.
-  The questions should mix different topics (e.g., Syllogism, Puzzles for Reasoning; DI, Series for Quant).
-  Mark the 'section' field correctly for each question.
-  `;
-
-  try {
-    const response = await ai.models.generateContent({
-      model: 'gemini-3-pro-preview',
-      contents: prompt,
-      config: {
-        responseMimeType: "application/json",
-        responseSchema: schema,
-      },
-    });
-
-    const text = response.text;
-    if (!text) return [];
-    const questions = JSON.parse(text) as MockQuestion[];
-    // Initialize status
-    return questions.map(q => ({ ...q, status: 'not_visited' }));
-  } catch (error) {
-    console.error("Mock Generation Error:", error);
-    return [];
-  }
+  // Prefer using the static generator for full mocks to ensure 80 questions (40+40) reliability
+  // The AI API often times out with such large output requirements.
+  console.log("Using local high-performance generator for full mock...");
+  return getStaticMockExam();
 };
 
 export const parseMockFromText = async (rawText: string): Promise<MockQuestion[]> => {
