@@ -1,8 +1,67 @@
+
 import React, { useState, useEffect, useRef } from 'react';
-import { Zap, Book, Timer, Trophy, ChevronLeft, RefreshCcw, Brain, Eye, X, Flame, Star, Hash, Settings, Clock, Plus, Minus, Check } from 'lucide-react';
+import { Zap, Book, Timer, Trophy, ChevronLeft, RefreshCcw, Brain, Eye, X, Flame, Star, Hash, Settings, Clock, Plus, Minus, Check, FileUp, Loader2, ArrowRight, ChevronDown } from 'lucide-react';
+import { extractQuestionsFromPdf } from '../services/geminiService';
 
 type Category = 'tables' | 'squares' | 'cubes' | 'alpha' | 'percent' | 'multiplication' | 'specific_table' | 'speed_addition' | 'speed_subtraction';
 type ViralCategory = 'viral_products' | 'viral_addition' | 'viral_subtraction' | 'viral_multiplication' | 'viral_squares' | 'viral_division';
+
+// --- Custom Select (Light Mode) ---
+const ConfigSelect = ({ value, onChange, options }: { value: string, onChange: (val: string) => void, options: { value: string, label: string }[] }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const selectedLabel = options.find(o => o.value === value)?.label || value;
+
+  return (
+    <div className="relative w-full" ref={dropdownRef}>
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        className={`w-full flex items-center justify-between bg-slate-50 border border-slate-200 text-slate-700 rounded-xl px-4 py-3 outline-none hover:border-emerald-300 focus:ring-2 focus:ring-emerald-100 transition-all font-medium ${isOpen ? 'border-emerald-500 ring-2 ring-emerald-100' : ''}`}
+      >
+        <span className="truncate">{selectedLabel}</span>
+        <ChevronDown className={`text-slate-400 transition-transform duration-200 ${isOpen ? 'rotate-180 text-emerald-500' : ''}`} size={18} />
+      </button>
+
+      {isOpen && (
+        <div className="absolute top-full left-0 w-full mt-2 bg-white/95 backdrop-blur-xl border border-slate-200 rounded-xl overflow-hidden shadow-xl z-50 animate-select-open max-h-60 overflow-y-auto">
+          {options.map((option) => (
+            <button
+              key={option.value}
+              onClick={() => {
+                onChange(option.value);
+                setIsOpen(false);
+              }}
+              className={`w-full text-left px-4 py-3 text-sm flex items-center justify-between transition-colors ${value === option.value ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'}`}
+            >
+              <span>{option.label}</span>
+              {value === option.value && <Check size={16} className="text-emerald-600" />}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// --- Benchmarks for PDF Drill ---
+const PDF_BENCHMARKS: Record<string, { novice: number, pass: number, topper: number }> = {
+  'Simplification': { novice: 45, pass: 30, topper: 20 },
+  'Approximation': { novice: 60, pass: 40, topper: 30 },
+  'Quadratic Eqn': { novice: 90, pass: 50, topper: 40 },
+  'Number Series (Missing)': { novice: 60, pass: 45, topper: 30 },
+  'Number Series (Wrong)': { novice: 90, pass: 60, topper: 45 },
+};
 
 // --- Restored Datasets ---
 
@@ -257,11 +316,19 @@ const STANDARD_CONCEPTS = {
 };
 
 const SpeedMath: React.FC = () => {
-  const [mode, setMode] = useState<'menu' | 'viral-menu' | 'practice' | 'reference' | 'timer-selection'>('menu');
+  const [mode, setMode] = useState<'menu' | 'viral-menu' | 'practice' | 'reference' | 'timer-selection' | 'pdf-upload' | 'pdf-config' | 'pdf-drill' | 'pdf-result'>('menu');
   const [category, setCategory] = useState<string>('tables'); // General or Viral key
   const [customTable, setCustomTable] = useState<{table: string, limit: string}>({ table: '19', limit: '10' });
   const [subtractionMode, setSubtractionMode] = useState<'2num' | '3num'>('2num');
   
+  // PDF Mode State
+  const [pdfFile, setPdfFile] = useState<string | null>(null);
+  const [extractedPdfQuestions, setExtractedPdfQuestions] = useState<{q: string, a: string}[]>([]);
+  const [activePdfQuestions, setActivePdfQuestions] = useState<{q: string, a: string}[]>([]);
+  const [pdfConfig, setPdfConfig] = useState({ topic: 'Simplification', difficulty: 'novice' }); // novice = beginner
+  const [isProcessingPdf, setIsProcessingPdf] = useState(false);
+  const [pdfTimer, setPdfTimer] = useState(0);
+
   const [score, setScore] = useState(0);
   const [totalTime, setTotalTime] = useState(60);
   const [timeLeft, setTimeLeft] = useState(60);
@@ -269,6 +336,8 @@ const SpeedMath: React.FC = () => {
   const [question, setQuestion] = useState({ text: '', answer: '' });
   const [input, setInput] = useState('');
   const [feedback, setFeedback] = useState<'none' | 'correct' | 'wrong'>('none');
+  const [currentQIndex, setCurrentQIndex] = useState(0); // For PDF mode indexing
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Helper: Generate number with distinct digits if possible and no repeats from excluded list
@@ -431,28 +500,103 @@ const SpeedMath: React.FC = () => {
     }
   };
 
+  // --- PDF Drill Functions ---
+
+  const handlePdfUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      setIsProcessingPdf(true);
+      reader.onloadend = async () => {
+        const base64String = (reader.result as string).split(',')[1];
+        setPdfFile(base64String);
+        
+        // Analyze PDF
+        const extracted = await extractQuestionsFromPdf(base64String);
+        setExtractedPdfQuestions(extracted);
+        setIsProcessingPdf(false);
+        setMode('pdf-config');
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const startPdfDrill = () => {
+    if (extractedPdfQuestions.length === 0) return;
+    
+    // Pick random subset of up to 10 questions
+    const shuffled = [...extractedPdfQuestions].sort(() => 0.5 - Math.random());
+    const subset = shuffled.slice(0, Math.min(10, shuffled.length));
+    
+    setActivePdfQuestions(subset);
+    setCurrentQIndex(0);
+    setPdfTimer(0);
+    setInput('');
+    setScore(0);
+    setIsActive(true);
+    setMode('pdf-drill');
+    setTimeout(() => inputRef.current?.focus(), 100);
+  };
+
+  const handlePdfInput = () => {
+     const currentQ = activePdfQuestions[currentQIndex];
+     // Simple string comparison for now. Ideally should parse numerical value.
+     // Removing spaces for loose comparison
+     const cleanInput = input.replace(/\s/g, '').toLowerCase();
+     const cleanAns = currentQ.a.replace(/\s/g, '').toLowerCase();
+
+     if (cleanInput === cleanAns || cleanInput === cleanAns.replace('.0', '')) {
+       setFeedback('correct');
+       setTimeout(() => {
+          setFeedback('none');
+          if (currentQIndex < activePdfQuestions.length - 1) {
+            setCurrentQIndex(prev => prev + 1);
+            setInput('');
+          } else {
+             // Finish
+             setIsActive(false);
+             setMode('pdf-result');
+          }
+       }, 300);
+     } else {
+        setFeedback('wrong');
+        setTimeout(() => setFeedback('none'), 500);
+     }
+  };
+
+  // --- Timer Effects ---
+
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
-    if (isActive && timeLeft > 0) {
+    if (isActive && mode === 'practice' && timeLeft > 0) {
       interval = setInterval(() => {
         setTimeLeft((t) => t - 1);
       }, 1000);
-    } else if (timeLeft === 0 && isActive) {
+    } else if (mode === 'practice' && timeLeft === 0 && isActive) {
       setIsActive(false);
     }
+
+    if (isActive && mode === 'pdf-drill') {
+       interval = setInterval(() => {
+         setPdfTimer(prev => prev + 1);
+       }, 1000);
+    }
+
     return () => clearInterval(interval);
-  }, [isActive, timeLeft]);
+  }, [isActive, timeLeft, mode]);
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setInput(val);
 
-    if (val.trim().toLowerCase() === question.answer.toLowerCase()) {
-      setScore((s) => s + 1);
-      setFeedback('correct');
-      setInput('');
-      nextQuestion(category);
-      setTimeout(() => setFeedback('none'), 200);
+    if (mode === 'practice') {
+      if (val.trim().toLowerCase() === question.answer.toLowerCase()) {
+        setScore((s) => s + 1);
+        setFeedback('correct');
+        setInput('');
+        nextQuestion(category);
+        setTimeout(() => setFeedback('none'), 200);
+      }
     }
   };
 
@@ -465,7 +609,7 @@ const SpeedMath: React.FC = () => {
         <p className="text-slate-500">Master calculation speed for banking exams.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {/* Viral Maths Promo Card */}
         <div 
           onClick={() => setMode('viral-menu')}
@@ -507,7 +651,7 @@ const SpeedMath: React.FC = () => {
                   type="number" 
                   value={customTable.table}
                   onChange={(e) => setCustomTable({...customTable, table: e.target.value})}
-                  className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg font-bold text-lg outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl font-bold text-lg outline-none focus:ring-2 focus:ring-indigo-500"
                   placeholder="12"
                 />
               </div>
@@ -518,7 +662,7 @@ const SpeedMath: React.FC = () => {
                   type="number" 
                   value={customTable.limit}
                   onChange={(e) => setCustomTable({...customTable, limit: e.target.value})}
-                  className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg font-bold text-lg outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl font-bold text-lg outline-none focus:ring-2 focus:ring-indigo-500"
                   placeholder="10"
                 />
               </div>
@@ -531,6 +675,28 @@ const SpeedMath: React.FC = () => {
               >
                 <Zap size={16} /> Start
             </button>
+        </div>
+
+        {/* PDF Drill Card */}
+        <div 
+          onClick={() => setMode('pdf-upload')}
+          className="lg:col-span-1 bg-gradient-to-br from-emerald-600 to-teal-700 rounded-2xl p-5 text-white shadow-lg cursor-pointer hover:shadow-xl transition-all relative overflow-hidden border border-emerald-500 group h-full flex flex-col justify-between"
+        >
+          <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full -ml-10 -mb-10 blur-2xl group-hover:bg-white/20 transition-all"></div>
+          <div className="relative z-10">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="p-2 bg-white/20 rounded-lg">
+                <FileUp size={20} />
+              </div>
+              <h3 className="text-lg font-bold">PDF Analyzer</h3>
+            </div>
+            <p className="text-emerald-100 text-sm mb-4 leading-relaxed">
+              Upload any question PDF. AI will extract questions, benchmark your speed against toppers, and grade you.
+            </p>
+          </div>
+          <button className="bg-white text-emerald-800 px-4 py-2 rounded-lg font-bold shadow-md hover:bg-emerald-50 transition-colors flex items-center gap-2 w-max text-sm">
+             Upload PDF <ChevronLeft className="rotate-180" size={16} />
+          </button>
         </div>
 
         {/* Speed Drills Group */}
@@ -938,6 +1104,209 @@ const SpeedMath: React.FC = () => {
     );
   };
 
+  // --- PDF Drill Views ---
+
+  const renderPdfUpload = () => (
+    <div className="max-w-xl mx-auto text-center animate-in zoom-in-95 duration-200">
+      <button onClick={() => setMode('menu')} className="mb-8 flex items-center justify-center mx-auto text-slate-400 hover:text-emerald-600">
+        <ChevronLeft size={20} /> Back to Menu
+      </button>
+
+      <div className="bg-white p-8 rounded-2xl shadow-xl border border-slate-200">
+        <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6 text-emerald-600">
+          <FileUp size={32} />
+        </div>
+        <h2 className="text-2xl font-bold text-slate-800 mb-2">Upload Question PDF</h2>
+        <p className="text-slate-500 mb-8">AI will read the questions and benchmark your speed.</p>
+        
+        {isProcessingPdf ? (
+          <div className="py-8 text-emerald-600 flex flex-col items-center">
+             <Loader2 size={32} className="animate-spin mb-4" />
+             <p className="font-semibold">Analyzing Document...</p>
+             <p className="text-xs text-slate-400 mt-2">Extracting numerical problems & answers.</p>
+          </div>
+        ) : (
+          <label className="block w-full cursor-pointer">
+            <input type="file" accept="application/pdf" className="hidden" onChange={handlePdfUpload} />
+            <div className="border-2 border-dashed border-slate-300 rounded-xl p-8 hover:bg-slate-50 hover:border-emerald-500 transition-colors">
+               <p className="font-bold text-slate-700">Click to Select PDF</p>
+               <p className="text-xs text-slate-400 mt-1">Supported: .pdf (Max 5MB)</p>
+            </div>
+          </label>
+        )}
+      </div>
+    </div>
+  );
+
+  const renderPdfConfig = () => (
+    <div className="max-w-xl mx-auto text-center animate-in zoom-in-95 duration-200">
+      <div className="bg-white p-8 rounded-2xl shadow-xl border border-slate-200">
+         <h2 className="text-2xl font-bold text-slate-800 mb-6">Drill Configuration</h2>
+         
+         <div className="text-left space-y-4 mb-8">
+           <div>
+             <label className="block text-sm font-bold text-slate-600 mb-2">Topic Detected / Select</label>
+             <ConfigSelect 
+               value={pdfConfig.topic}
+               onChange={(val) => setPdfConfig({...pdfConfig, topic: val})}
+               options={Object.keys(PDF_BENCHMARKS).map(t => ({ value: t, label: t }))}
+             />
+           </div>
+           
+           <div>
+             <label className="block text-sm font-bold text-slate-600 mb-2">Your Target Level</label>
+             <div className="flex bg-slate-100 p-1 rounded-xl">
+                <button 
+                  onClick={() => setPdfConfig({...pdfConfig, difficulty: 'novice'})}
+                  className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${pdfConfig.difficulty === 'novice' ? 'bg-white shadow-sm text-emerald-700' : 'text-slate-500'}`}
+                >
+                  Novice (Day 1)
+                </button>
+                <button 
+                  onClick={() => setPdfConfig({...pdfConfig, difficulty: 'pass'})}
+                  className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${pdfConfig.difficulty === 'pass' ? 'bg-white shadow-sm text-emerald-700' : 'text-slate-500'}`}
+                >
+                  Passable
+                </button>
+                <button 
+                  onClick={() => setPdfConfig({...pdfConfig, difficulty: 'topper'})}
+                  className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${pdfConfig.difficulty === 'topper' ? 'bg-white shadow-sm text-emerald-700' : 'text-slate-500'}`}
+                >
+                  Topper
+                </button>
+             </div>
+           </div>
+         </div>
+         
+         <div className="bg-emerald-50 p-4 rounded-lg text-emerald-800 text-sm mb-6 flex justify-between items-center">
+            <span>Questions Extracted:</span>
+            <span className="font-bold text-xl">{extractedPdfQuestions.length}</span>
+         </div>
+         
+         <button 
+           onClick={startPdfDrill}
+           className="w-full bg-emerald-600 text-white py-3 rounded-lg font-bold hover:bg-emerald-700 shadow-lg flex items-center justify-center gap-2"
+         >
+           Start Drill <ArrowRight size={20} />
+         </button>
+      </div>
+    </div>
+  );
+
+  const renderPdfDrill = () => (
+     <div className="max-w-2xl mx-auto text-center animate-in zoom-in-95 duration-200">
+        <div className="flex justify-between items-center mb-12">
+           <button onClick={() => setMode('pdf-config')} className="text-slate-400 hover:text-slate-600">
+              <X size={24} />
+           </button>
+           <div className="flex items-center space-x-2 text-slate-500 bg-slate-100 px-3 py-1 rounded-full">
+              <Clock size={16} />
+              <span className="font-mono text-lg font-bold">{pdfTimer}s</span>
+           </div>
+           <div className="text-slate-500 font-medium">
+             Q {currentQIndex + 1} / {activePdfQuestions.length}
+           </div>
+        </div>
+
+        <div className="mb-12">
+           <div className={`text-2xl md:text-3xl font-bold text-slate-800 leading-relaxed transition-transform duration-100 ${feedback === 'correct' ? 'scale-105 text-green-600' : ''}`}>
+             {activePdfQuestions[currentQIndex]?.q}
+           </div>
+        </div>
+
+        <div className="max-w-xs mx-auto flex gap-2">
+            <input
+                ref={inputRef}
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handlePdfInput()}
+                placeholder="Answer"
+                className="w-full bg-white border-2 border-slate-200 rounded-xl py-4 text-center text-xl font-bold focus:ring-4 focus:ring-emerald-100 focus:border-emerald-500 outline-none transition-all placeholder:text-slate-300"
+                autoFocus
+            />
+            <button onClick={handlePdfInput} className="bg-emerald-600 text-white rounded-xl px-4 hover:bg-emerald-700">
+               <ChevronLeft className="rotate-180" size={24} />
+            </button>
+        </div>
+     </div>
+  );
+
+  const renderPdfResult = () => {
+    const avgTime = parseFloat((pdfTimer / activePdfQuestions.length).toFixed(1));
+    const benchmarks = PDF_BENCHMARKS[pdfConfig.topic];
+    let verdict = "Keep Practicing";
+    let verdictColor = "text-slate-500";
+    
+    if (avgTime <= benchmarks.topper) {
+      verdict = "Topper Level! 🏆";
+      verdictColor = "text-emerald-600";
+    } else if (avgTime <= benchmarks.pass) {
+      verdict = "Exam Ready (Passable)";
+      verdictColor = "text-blue-600";
+    } else if (avgTime <= benchmarks.novice) {
+       verdict = "Beginner (Day 1)";
+       verdictColor = "text-orange-500";
+    } else {
+       verdict = "Needs Improvement";
+       verdictColor = "text-red-500";
+    }
+
+    return (
+      <div className="max-w-xl mx-auto text-center animate-in zoom-in-95 duration-200">
+        <div className="bg-white p-8 rounded-2xl shadow-xl border border-slate-200">
+           <h2 className="text-3xl font-bold text-slate-800 mb-6">Drill Report Card</h2>
+           
+           <div className="grid grid-cols-2 gap-4 mb-8">
+             <div className="bg-slate-50 p-4 rounded-xl">
+                <p className="text-slate-500 text-sm">Total Time</p>
+                <p className="text-2xl font-bold text-slate-800">{pdfTimer}s</p>
+             </div>
+             <div className="bg-slate-50 p-4 rounded-xl">
+                <p className="text-slate-500 text-sm">Questions</p>
+                <p className="text-2xl font-bold text-slate-800">{activePdfQuestions.length}</p>
+             </div>
+           </div>
+
+           <div className="mb-8">
+             <p className="text-slate-500 uppercase tracking-widest text-xs font-bold mb-2">Your Speed</p>
+             <div className="text-5xl font-bold text-slate-900 mb-2">
+               {avgTime} <span className="text-lg text-slate-400 font-normal">sec/ques</span>
+             </div>
+             <div className={`text-xl font-bold ${verdictColor} bg-slate-50 inline-block px-4 py-2 rounded-lg`}>
+                {verdict}
+             </div>
+           </div>
+
+           <div className="bg-indigo-50 rounded-xl p-6 text-left mb-8">
+              <h4 className="font-bold text-indigo-900 mb-4 text-sm uppercase">Topic Benchmarks: {pdfConfig.topic}</h4>
+              <div className="space-y-3">
+                 <div className="flex justify-between text-sm">
+                    <span className="text-slate-600">Topper</span>
+                    <span className="font-bold text-emerald-600">&lt; {benchmarks.topper}s</span>
+                 </div>
+                 <div className="flex justify-between text-sm">
+                    <span className="text-slate-600">Passable</span>
+                    <span className="font-bold text-blue-600">{benchmarks.pass}s</span>
+                 </div>
+                 <div className="flex justify-between text-sm">
+                    <span className="text-slate-600">Beginner</span>
+                    <span className="font-bold text-orange-600">{benchmarks.novice}s</span>
+                 </div>
+              </div>
+           </div>
+
+           <button 
+             onClick={() => setMode('menu')}
+             className="w-full bg-slate-900 text-white py-3 rounded-lg font-bold hover:bg-slate-800"
+           >
+             Back to Menu
+           </button>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="container mx-auto">
       {mode === 'menu' && renderMainMenu()}
@@ -945,6 +1314,10 @@ const SpeedMath: React.FC = () => {
       {mode === 'reference' && renderReference()}
       {mode === 'timer-selection' && renderTimerSelection()}
       {mode === 'practice' && renderGame()}
+      {mode === 'pdf-upload' && renderPdfUpload()}
+      {mode === 'pdf-config' && renderPdfConfig()}
+      {mode === 'pdf-drill' && renderPdfDrill()}
+      {mode === 'pdf-result' && renderPdfResult()}
     </div>
   );
 };

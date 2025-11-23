@@ -1,8 +1,57 @@
-import React, { useState } from 'react';
-import { Loader2, CheckCircle, XCircle, HelpCircle, RefreshCcw, BarChart2 } from 'lucide-react';
+
+import React, { useState, useRef, useEffect } from 'react';
+import { Loader2, CheckCircle, XCircle, HelpCircle, RefreshCcw, BarChart2, ChevronDown, Check } from 'lucide-react';
 import { Subject, Difficulty, Question } from '../types';
 import { generatePracticeQuestions } from '../services/geminiService';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
+
+// Custom Select for Light Mode
+const LightGlassSelect = ({ value, onChange, options }: { value: string, onChange: (val: string) => void, options: { value: string, label: string }[] }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const selectedLabel = options.find(o => o.value === value)?.label || value;
+
+  return (
+    <div className="relative w-full" ref={dropdownRef}>
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        className={`w-full flex items-center justify-between bg-white border border-slate-200 text-slate-700 rounded-xl px-4 py-3 outline-none hover:border-indigo-300 focus:ring-2 focus:ring-indigo-100 transition-all font-medium ${isOpen ? 'border-indigo-500 ring-2 ring-indigo-100' : ''}`}
+      >
+        <span className="truncate">{selectedLabel}</span>
+        <ChevronDown className={`text-slate-400 transition-transform duration-200 ${isOpen ? 'rotate-180 text-indigo-500' : ''}`} size={18} />
+      </button>
+
+      {isOpen && (
+        <div className="absolute top-full left-0 w-full mt-2 bg-white/90 backdrop-blur-xl border border-slate-200 rounded-xl overflow-hidden shadow-xl z-50 animate-select-open max-h-60 overflow-y-auto">
+          {options.map((option) => (
+            <button
+              key={option.value}
+              onClick={() => {
+                onChange(option.value);
+                setIsOpen(false);
+              }}
+              className={`w-full text-left px-4 py-3 text-sm flex items-center justify-between transition-colors ${value === option.value ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'}`}
+            >
+              <span>{option.label}</span>
+              {value === option.value && <Check size={16} className="text-indigo-600" />}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const PracticeZone: React.FC<{ initialTopic?: string, initialDifficulty?: Difficulty }> = ({ initialTopic, initialDifficulty }) => {
   const [config, setConfig] = useState({
@@ -90,24 +139,20 @@ const PracticeZone: React.FC<{ initialTopic?: string, initialDifficulty?: Diffic
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-2">Subject</label>
-            <select 
-              className="w-full p-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+            <LightGlassSelect 
               value={config.subject}
-              onChange={(e) => setConfig({...config, subject: e.target.value as Subject})}
-            >
-              {Object.values(Subject).map(s => <option key={s} value={s}>{s}</option>)}
-            </select>
+              onChange={(val) => setConfig({...config, subject: val as Subject})}
+              options={Object.values(Subject).map(s => ({ value: s, label: s }))}
+            />
           </div>
           
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-2">Difficulty Level</label>
-            <select 
-              className="w-full p-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+            <LightGlassSelect 
               value={config.difficulty}
-              onChange={(e) => setConfig({...config, difficulty: e.target.value as Difficulty})}
-            >
-              {Object.values(Difficulty).map(d => <option key={d} value={d}>{d}</option>)}
-            </select>
+              onChange={(val) => setConfig({...config, difficulty: val as Difficulty})}
+              options={Object.values(Difficulty).map(d => ({ value: d, label: d }))}
+            />
           </div>
 
           <div className="md:col-span-2">
@@ -116,13 +161,13 @@ const PracticeZone: React.FC<{ initialTopic?: string, initialDifficulty?: Diffic
                <input 
                 type="text" 
                 placeholder="e.g., Data Interpretation, Number Series, Blood Relations..."
-                className="flex-1 p-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                className="flex-1 p-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none bg-slate-50 focus:bg-white transition-all"
                 value={config.topic}
                 onChange={(e) => setConfig({...config, topic: e.target.value})}
               />
               <button 
                 onClick={() => setConfig(prev => ({...prev, topic: 'Data Interpretation'}))}
-                className="px-3 py-2 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100 flex items-center gap-1 text-sm font-medium whitespace-nowrap"
+                className="px-4 py-2 bg-indigo-50 text-indigo-600 rounded-xl hover:bg-indigo-100 flex items-center gap-1 text-sm font-medium whitespace-nowrap transition-colors border border-indigo-100"
               >
                 <BarChart2 size={16} /> Try DI
               </button>
@@ -135,7 +180,7 @@ const PracticeZone: React.FC<{ initialTopic?: string, initialDifficulty?: Diffic
           <button 
             onClick={handleGenerate}
             disabled={loading}
-            className="bg-indigo-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-indigo-700 disabled:opacity-70 transition-colors flex items-center"
+            className="bg-indigo-600 text-white px-8 py-3 rounded-xl font-semibold hover:bg-indigo-700 disabled:opacity-70 transition-colors flex items-center shadow-lg shadow-indigo-500/30"
           >
             {loading ? <><Loader2 className="animate-spin mr-2" /> Generating...</> : 'Generate Questions'}
           </button>

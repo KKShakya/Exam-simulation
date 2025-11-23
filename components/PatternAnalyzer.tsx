@@ -1,8 +1,57 @@
-import React, { useState } from 'react';
+
+import React, { useState, useRef, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { Search, FileText, AlertTriangle, Loader2 } from 'lucide-react';
+import { Search, FileText, AlertTriangle, Loader2, ChevronDown, Check } from 'lucide-react';
 import { PatternAnalysis } from '../types';
 import { analyzeExamPattern } from '../services/geminiService';
+
+// Custom Glass Select Component
+const GlassSelect = ({ value, onChange, options }: { value: string, onChange: (val: string) => void, options: { value: string, label: string }[] }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const selectedLabel = options.find(o => o.value === value)?.label || value;
+
+  return (
+    <div className="relative min-w-[280px]" ref={dropdownRef}>
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        className={`w-full flex items-center justify-between appearance-none bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-xl px-5 py-3 outline-none hover:bg-white/20 transition-all font-medium ${isOpen ? 'ring-2 ring-indigo-500/50' : ''}`}
+      >
+        <span className="truncate">{selectedLabel}</span>
+        <ChevronDown className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} size={18} />
+      </button>
+
+      {isOpen && (
+        <div className="absolute top-full left-0 w-full mt-2 glass-panel-dark rounded-xl overflow-hidden shadow-2xl z-50 animate-select-open max-h-60 overflow-y-auto">
+          {options.map((option) => (
+            <button
+              key={option.value}
+              onClick={() => {
+                onChange(option.value);
+                setIsOpen(false);
+              }}
+              className="w-full text-left px-5 py-3 text-sm text-slate-200 hover:bg-white/10 hover:text-white transition-colors flex items-center justify-between"
+            >
+              <span>{option.label}</span>
+              {value === option.value && <Check size={16} className="text-emerald-400" />}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const PatternAnalyzer: React.FC = () => {
   const [year, setYear] = useState('2024');
@@ -34,31 +83,32 @@ const PatternAnalyzer: React.FC = () => {
            Leverage AI to analyze historical trends and predict expected weightage for specific topics.
          </p>
          
-         <div className="flex flex-col md:flex-row gap-4 bg-white/10 p-4 rounded-xl backdrop-blur-sm">
-           <select 
+         <div className="flex flex-col md:flex-row gap-4 bg-white/5 p-4 rounded-xl backdrop-blur-sm border border-white/10">
+           
+           <GlassSelect 
              value={examType}
-             onChange={(e) => setExamType(e.target.value as 'PO' | 'Clerk')}
-             className="bg-slate-800 border border-slate-600 text-white rounded-lg px-4 py-2 outline-none focus:border-indigo-500"
-           >
-             <option value="PO">IBPS RRB PO (Officer Scale-I)</option>
-             <option value="Clerk">IBPS RRB Clerk (Office Assistant)</option>
-           </select>
+             onChange={(val) => setExamType(val as 'PO' | 'Clerk')}
+             options={[
+               { value: 'PO', label: 'IBPS RRB PO (Officer Scale-I)' },
+               { value: 'Clerk', label: 'IBPS RRB Clerk (Office Assistant)' }
+             ]}
+           />
            
            <input 
              type="text"
              value={year}
              onChange={(e) => setYear(e.target.value)}
              placeholder="Year (e.g., 2023)"
-             className="bg-slate-800 border border-slate-600 text-white rounded-lg px-4 py-2 outline-none focus:border-indigo-500"
+             className="bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-xl px-5 py-3 outline-none focus:ring-2 focus:ring-indigo-500/50 placeholder-white/40 font-medium w-full md:w-48"
            />
            
            <button 
              onClick={handleAnalyze}
              disabled={loading}
-             className="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold transition-colors flex items-center justify-center"
+             className="bg-indigo-500 hover:bg-indigo-600 text-white px-8 py-3 rounded-xl font-semibold transition-colors flex items-center justify-center shadow-lg shadow-indigo-500/30"
            >
              {loading ? <Loader2 className="animate-spin mr-2" size={18} /> : <Search className="mr-2" size={18} />}
-             Analyze Pattern
+             Analyze
            </button>
          </div>
        </div>

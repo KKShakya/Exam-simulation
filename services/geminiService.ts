@@ -229,3 +229,53 @@ export const parseMockFromText = async (rawText: string): Promise<MockQuestion[]
     return [];
   }
 };
+
+// --- PDF Question Extraction ---
+
+export const extractQuestionsFromPdf = async (pdfBase64: string): Promise<{ q: string; a: string }[]> => {
+  const schema: Schema = {
+    type: Type.ARRAY,
+    items: {
+      type: Type.OBJECT,
+      properties: {
+        q: { type: Type.STRING, description: "The question text, including options if present." },
+        a: { type: Type.STRING, description: "The numerical answer or the correct option text." }
+      },
+      required: ["q", "a"]
+    }
+  };
+
+  try {
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: [
+        {
+          inlineData: {
+            mimeType: 'application/pdf',
+            data: pdfBase64
+          }
+        },
+        {
+          text: `You are an expert math tutor for IBPS RRB exams. 
+          Analyze the provided PDF file. 
+          Identify multiple-choice or numerical aptitude questions and their answers. 
+          You must map the answers to the questions correctly. 
+          Return a JSON array of objects with 'q' (question) and 'a' (answer). 
+          Ignore non-mathematical content. Extract as many questions as possible (up to 30).
+          If the PDF contains an answer key at the end, use it to populate the 'a' field.`
+        }
+      ],
+      config: {
+        responseMimeType: "application/json",
+        responseSchema: schema,
+      }
+    });
+
+    const text = response.text;
+    if (!text) return [];
+    return JSON.parse(text) as { q: string; a: string }[];
+  } catch (error) {
+    console.error("PDF Extraction Error:", error);
+    return [];
+  }
+};

@@ -20,6 +20,58 @@
           -ms-overflow-style: none;
           scrollbar-width: none;
       }
+
+      /* Base Theme Variables */
+      :root {
+        --background: #ffffff;
+        --foreground: #09090b;
+        --muted: #f4f4f5;
+        --muted-foreground: #71717a;
+        --popover: #ffffff;
+        --popover-foreground: #09090b;
+        --border: #e4e4e7;
+        --input: #e4e4e7;
+        --primary: #18181b;
+        --primary-foreground: #fafafa;
+        --secondary: #f4f4f5;
+        --secondary-foreground: #18181b;
+        --accent: #f4f4f5;
+        --accent-foreground: #18181b;
+        --destructive: #ef4444;
+        --ring: #18181b;
+        --radius: 0.5rem;
+      }
+
+      /* Glassmorphic Utilities */
+      .glass-panel {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+      }
+      
+      .glass-panel-dark {
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      /* Select Animations */
+      @keyframes slideInFadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(4px) scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+      
+      .animate-select-open {
+        animation: slideInFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      }
     </style>
   <script type="importmap">
 {
