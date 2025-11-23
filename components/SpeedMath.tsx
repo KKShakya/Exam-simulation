@@ -6,7 +6,7 @@ import { extractQuestionsFromPdf } from '../services/geminiService';
 type Category = 'tables' | 'squares' | 'cubes' | 'alpha' | 'percent' | 'multiplication' | 'specific_table' | 'speed_addition' | 'speed_subtraction';
 type ViralCategory = 'viral_products' | 'viral_addition' | 'viral_subtraction' | 'viral_multiplication' | 'viral_squares' | 'viral_division';
 
-// --- Custom Select (Light Mode) ---
+// --- Custom Select (Light Mode - Modern Glass) ---
 const ConfigSelect = ({ value, onChange, options }: { value: string, onChange: (val: string) => void, options: { value: string, label: string }[] }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -27,14 +27,14 @@ const ConfigSelect = ({ value, onChange, options }: { value: string, onChange: (
     <div className="relative w-full" ref={dropdownRef}>
       <button 
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-full flex items-center justify-between bg-slate-50 border border-slate-200 text-slate-700 rounded-xl px-4 py-3 outline-none hover:border-emerald-300 focus:ring-2 focus:ring-emerald-100 transition-all font-medium ${isOpen ? 'border-emerald-500 ring-2 ring-emerald-100' : ''}`}
+        className={`w-full flex items-center justify-between bg-white border border-slate-200 text-slate-700 rounded-xl px-4 py-3 outline-none hover:border-emerald-400 focus:ring-4 focus:ring-emerald-100/50 transition-all font-medium shadow-sm ${isOpen ? 'border-emerald-500 ring-4 ring-emerald-100/50' : ''}`}
       >
         <span className="truncate">{selectedLabel}</span>
         <ChevronDown className={`text-slate-400 transition-transform duration-200 ${isOpen ? 'rotate-180 text-emerald-500' : ''}`} size={18} />
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 w-full mt-2 bg-white/95 backdrop-blur-xl border border-slate-200 rounded-xl overflow-hidden shadow-xl z-50 animate-select-open max-h-60 overflow-y-auto">
+        <div className="absolute top-full left-0 w-full mt-2 bg-white/95 backdrop-blur-xl border border-slate-200 rounded-xl overflow-hidden shadow-xl z-50 animate-select-open max-h-60 overflow-y-auto ring-1 ring-black/5">
           {options.map((option) => (
             <button
               key={option.value}
