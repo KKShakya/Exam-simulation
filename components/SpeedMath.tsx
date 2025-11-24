@@ -282,9 +282,9 @@ const STANDARD_CONCEPTS = {
     }))
   },
   squares: {
-    title: "Squares (1-60)",
+    title: "Squares (1-50)",
     type: "grid-simple",
-    data: Array.from({length: 60}, (_, i) => ({ q: `${i + 1}²`, a: (i + 1) ** 2 }))
+    data: Array.from({length: 50}, (_, i) => ({ q: `${i + 1}²`, a: (i + 1) ** 2 }))
   },
   cubes: {
     title: "Cubes (1-25)",
@@ -414,7 +414,7 @@ const SpeedMath: React.FC = () => {
         break;
       }
       case 'squares': {
-        const num = Math.floor(Math.random() * 59) + 2; // 2 to 60
+        const num = Math.floor(Math.random() * 49) + 2; // 2 to 50
         q = `${num}²`;
         a = (num * num).toString();
         break;
@@ -781,7 +781,7 @@ const SpeedMath: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {[
           { id: 'tables', label: 'Tables (1-20)', icon: Hash, color: 'bg-amber-500' },
-          { id: 'squares', label: 'Squares (1-60)', icon: Brain, color: 'bg-blue-500' },
+          { id: 'squares', label: 'Squares (1-50)', icon: Brain, color: 'bg-blue-500' },
           { id: 'cubes', label: 'Cubes (1-25)', icon: Brain, color: 'bg-indigo-500' },
           { id: 'alpha', label: 'Alphabet Ranks', icon: Eye, color: 'bg-emerald-500' },
           { id: 'percent', label: '% to Fractions', icon: RefreshCcw, color: 'bg-rose-500' },

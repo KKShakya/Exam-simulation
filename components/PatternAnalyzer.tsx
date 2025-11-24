@@ -59,7 +59,7 @@ const GlassSelect = ({ value, onChange, options }: { value: string, onChange: (v
 
 const PatternAnalyzer: React.FC = () => {
   const [year, setYear] = useState('2024');
-  const [examType, setExamType] = useState<'PO' | 'Clerk'>('PO');
+  const [examType, setExamType] = useState<'PO' | 'Clerk'>('Clerk');
   const [data, setData] = useState<PatternAnalysis | null>(null);
   const [loading, setLoading] = useState(false);
 
