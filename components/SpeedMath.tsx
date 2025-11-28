@@ -85,7 +85,17 @@ const FRACTION_MAP = [
   { f: '1/25', p: '4%' },
   { f: '1/30', p: '3.33%' },
   { f: '1/40', p: '2.5%' },
-  { f: '1/50', p: '2%' }
+  { f: '1/50', p: '2%' },
+  // High Value Percentages
+  { f: '3/2', p: '150%' },
+  { f: '5/2', p: '250%' },
+  { f: '7/2', p: '350%' },
+  { f: '9/2', p: '450%' },
+  { f: '11/2', p: '550%' },
+  { f: '13/2', p: '650%' },
+  { f: '15/2', p: '750%' },
+  { f: '17/2', p: '850%' },
+  { f: '19/2', p: '950%' }
 ];
 
 const EXAM_MULTIPLICATIONS = [
@@ -1156,7 +1166,7 @@ const SpeedMath: React.FC = () => {
           <FileUp size={32} />
         </div>
         <h2 className="text-2xl font-bold text-slate-800 mb-2">Upload Question PDF</h2>
-        <p className="text-slate-500 mb-8">AI will read the questions and benchmark your speed.</p>
+        <p className="text-slate-500 mb-8">AI will extract questions, benchmark your speed against toppers, and grade you.</p>
         
         {isProcessingPdf ? (
           <div className="py-8 text-emerald-600 flex flex-col items-center">
