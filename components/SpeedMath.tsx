@@ -1,9 +1,9 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Zap, Book, Timer, Trophy, ChevronLeft, RefreshCcw, Brain, Eye, X, Flame, Star, Hash, Settings, Clock, Plus, Minus, Check, FileUp, Loader2, ArrowRight, ChevronDown, MoveLeft, Box, Cuboid } from 'lucide-react';
+import { Zap, Book, Timer, Trophy, ChevronLeft, RefreshCcw, Brain, Eye, X, Flame, Star, Hash, Settings, Clock, Plus, Minus, Check, FileUp, Loader2, ArrowRight, ChevronDown, MoveLeft, Box, Cuboid, SortAsc, RefreshCw } from 'lucide-react';
 import { extractQuestionsFromPdf } from '../services/geminiService';
 
-type Category = 'tables' | 'squares' | 'cubes' | 'alpha' | 'percent' | 'multiplication' | 'specific_table' | 'speed_addition' | 'speed_subtraction' | 'mensuration';
+type Category = 'tables' | 'squares' | 'cubes' | 'alpha' | 'alpha_rank' | 'alpha_pair' | 'percent' | 'multiplication' | 'specific_table' | 'speed_addition' | 'speed_subtraction' | 'mensuration';
 type ViralCategory = 'viral_products' | 'viral_addition' | 'viral_subtraction' | 'viral_multiplication' | 'viral_squares' | 'viral_division';
 
 // --- Custom Select (Light Mode - Modern Glass) ---
@@ -226,7 +226,7 @@ const VIRAL_CONCEPTS = {
         // Judwa
         let a = Math.floor(Math.random() * 9) + 1;
         let b = Math.floor(Math.random() * (a - 1)); // b < a
-        if(isNaN(b)) { a=6; b=3; }
+        if(isNaN(b)) { a=6; b=3; b=3; }
         const n1 = parseInt(`${a}${b}`);
         const n2 = parseInt(`${b}${a}`);
         return { q: `${n1} - ${n2}`, a: (n1-n2).toString() };
@@ -342,6 +342,21 @@ const STANDARD_CONCEPTS = {
         { code: "EJOTY", val: "5, 10, 15, 20, 25" },
         { code: "CFILORUX", val: "3, 6, 9, 12, 15, 18, 21, 24" }
       ],
+      opposites_list: [
+        { pair: "A-Z", mnemonic: "Azad (Free)" },
+        { pair: "B-Y", mnemonic: "Boy" },
+        { pair: "C-X", mnemonic: "Crux / Crack" },
+        { pair: "D-W", mnemonic: "Dew / Draw" },
+        { pair: "E-V", mnemonic: "EVerest / LoVe" },
+        { pair: "F-U", mnemonic: "FUn / FUr" },
+        { pair: "G-T", mnemonic: "G.T. Road" },
+        { pair: "H-S", mnemonic: "High School" },
+        { pair: "I-R", mnemonic: "Indian Railway" },
+        { pair: "J-Q", mnemonic: "Jungle Queen" },
+        { pair: "K-P", mnemonic: "Kanpur / PK" },
+        { pair: "L-O", mnemonic: "LOve / Light On" },
+        { pair: "M-N", mnemonic: "MaN / MooN" }
+      ],
       opposites: "AZ, BY, CX, DW, EV, FU, GT, HS, IR, JQ, KP, LO, MN".split(', ')
     }
   },
@@ -363,7 +378,7 @@ const STANDARD_CONCEPTS = {
 };
 
 const SpeedMath: React.FC = () => {
-  const [mode, setMode] = useState<'menu' | 'viral-menu' | 'practice' | 'reference' | 'timer-selection' | 'pdf-upload' | 'pdf-config' | 'pdf-drill' | 'pdf-result'>('menu');
+  const [mode, setMode] = useState<'menu' | 'viral-menu' | 'alpha-menu' | 'practice' | 'reference' | 'timer-selection' | 'pdf-upload' | 'pdf-config' | 'pdf-drill' | 'pdf-result'>('menu');
   const [category, setCategory] = useState<string>('tables'); // General or Viral key
   const [customTable, setCustomTable] = useState<{table: string, limit: string}>({ table: '19', limit: '10' });
   const [subtractionMode, setSubtractionMode] = useState<'2num' | '3num'>('2num');
@@ -470,8 +485,35 @@ const SpeedMath: React.FC = () => {
       case 'alpha': {
         const alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         const idx = Math.floor(Math.random() * 26);
-        q = alpha[idx];
+        const char = alpha[idx];
+        
+        if (Math.random() > 0.5) {
+           // Ask for Rank
+           q = `Rank of ${char}`;
+           a = (idx + 1).toString();
+        } else {
+           // Ask for Opposite
+           // A(0) <-> Z(25) | 0+25=25, 1+24=25
+           const oppositeChar = alpha[25 - idx];
+           q = `Opposite of ${char}`;
+           a = oppositeChar;
+        }
+        break;
+      }
+      case 'alpha_rank': {
+        const alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const idx = Math.floor(Math.random() * 26);
+        q = alpha[idx]; // Just the letter
         a = (idx + 1).toString();
+        break;
+      }
+      case 'alpha_pair': {
+        const alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const idx = Math.floor(Math.random() * 26);
+        const char = alpha[idx];
+        const oppositeChar = alpha[25 - idx];
+        q = `Opposite of ${char}`;
+        a = oppositeChar;
         break;
       }
       case 'percent': {
@@ -876,7 +918,13 @@ const SpeedMath: React.FC = () => {
                   <Book size={16} className="mr-2" /> View
                 </button>
                 <button 
-                  onClick={() => initGameSetup(item.id)}
+                  onClick={() => {
+                    if (item.id === 'alpha') {
+                      setMode('alpha-menu');
+                    } else {
+                      initGameSetup(item.id);
+                    }
+                  }}
                   className="flex items-center justify-center py-2 px-4 bg-slate-900 text-white rounded-lg text-sm font-medium hover:bg-slate-800 transition-colors"
                 >
                   <Zap size={16} className="mr-2" /> Play
@@ -886,6 +934,54 @@ const SpeedMath: React.FC = () => {
           </div>
         ))}
       </div>
+    </div>
+  );
+
+  const renderAlphaMenu = () => (
+    <div className="max-w-4xl mx-auto animate-in fade-in slide-in-from-right-4">
+       <button onClick={() => setMode('menu')} className="mb-6 flex items-center text-slate-500 hover:text-indigo-600">
+         <ChevronLeft size={20} /> Back to Menu
+       </button>
+       
+       <div className="text-center mb-8">
+         <h2 className="text-3xl font-bold text-slate-800 flex items-center justify-center gap-3">
+           <Eye className="text-emerald-500" size={32} />
+           Alphabet Mastery
+         </h2>
+         <p className="text-slate-500">Master ranks, opposite pairs, and rapid recall.</p>
+       </div>
+
+       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+         {/* Positions Only */}
+         <div onClick={() => initGameSetup('alpha_rank')} className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:border-emerald-400 hover:shadow-lg cursor-pointer transition-all group">
+            <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600 mb-4 group-hover:scale-110 transition-transform">
+              <SortAsc size={24} />
+            </div>
+            <h3 className="text-xl font-bold text-slate-800 mb-2">Positions Only</h3>
+            <p className="text-slate-500 text-sm mb-4">You see 'P', you type '16'. Rapid fire ranking drill.</p>
+            <button className="w-full py-2 bg-emerald-50 text-emerald-700 rounded-lg font-bold text-sm">Start Drill</button>
+         </div>
+
+         {/* Pairs Only */}
+         <div onClick={() => initGameSetup('alpha_pair')} className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:border-blue-400 hover:shadow-lg cursor-pointer transition-all group">
+            <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600 mb-4 group-hover:scale-110 transition-transform">
+              <RefreshCw size={24} />
+            </div>
+            <h3 className="text-xl font-bold text-slate-800 mb-2">Pairs Only</h3>
+            <p className="text-slate-500 text-sm mb-4">You see 'Opposite of A', you type 'Z'. Master pairs like AZ, BY.</p>
+            <button className="w-full py-2 bg-blue-50 text-blue-700 rounded-lg font-bold text-sm">Start Drill</button>
+         </div>
+
+         {/* Mixed Mode */}
+         <div onClick={() => initGameSetup('alpha')} className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:border-indigo-400 hover:shadow-lg cursor-pointer transition-all group">
+            <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center text-indigo-600 mb-4 group-hover:scale-110 transition-transform">
+              <Zap size={24} />
+            </div>
+            <h3 className="text-xl font-bold text-slate-800 mb-2">Mixed Mode</h3>
+            <p className="text-slate-500 text-sm mb-4">Random mix of positions and pairs. The ultimate test.</p>
+            <button className="w-full py-2 bg-indigo-50 text-indigo-700 rounded-lg font-bold text-sm">Start Drill</button>
+         </div>
+       </div>
     </div>
   );
 
@@ -986,7 +1082,13 @@ const SpeedMath: React.FC = () => {
                   <p className="text-slate-400 text-sm">Memorize these for higher speed.</p>
                 </div>
                 <button 
-                  onClick={() => initGameSetup(category)}
+                  onClick={() => {
+                    if (category === 'alpha') {
+                      setMode('alpha-menu');
+                    } else {
+                      initGameSetup(category);
+                    }
+                  }}
                   className="bg-white text-slate-900 px-6 py-2 rounded-lg font-bold hover:bg-slate-100"
                 >
                   Play Now
@@ -1086,11 +1188,12 @@ const SpeedMath: React.FC = () => {
                    </div>
                    <div className="bg-white p-6 rounded-xl border border-slate-200">
                      <h4 className="font-bold text-slate-700 mb-4">Opposite Pairs</h4>
-                     <div className="flex flex-wrap gap-2">
-                        {(stdData.data.opposites as string[]).map((pair: string, i: number) => (
-                          <span key={i} className="px-3 py-2 bg-orange-50 text-orange-700 rounded-lg font-bold border border-orange-100">
-                            {pair}
-                          </span>
+                     <div className="grid grid-cols-2 gap-2">
+                        {(stdData.data.opposites_list as any[]).map((item: any, i: number) => (
+                          <div key={i} className="flex justify-between items-center p-2 bg-orange-50 rounded-lg border border-orange-100">
+                            <span className="font-bold text-orange-800 text-lg">{item.pair}</span>
+                            <span className="text-xs text-orange-600 font-medium">{item.mnemonic}</span>
+                          </div>
                         ))}
                      </div>
                    </div>
@@ -1117,7 +1220,15 @@ const SpeedMath: React.FC = () => {
   const renderTimerSelection = () => (
     <div className="max-w-xl mx-auto text-center animate-in zoom-in-95 duration-200">
       <button 
-        onClick={() => setMode(Object.keys(VIRAL_CONCEPTS).includes(category) ? 'viral-menu' : 'menu')} 
+        onClick={() => {
+           if (Object.keys(VIRAL_CONCEPTS).includes(category)) {
+             setMode('viral-menu');
+           } else if (['alpha', 'alpha_rank', 'alpha_pair'].includes(category)) {
+             setMode('alpha-menu');
+           } else {
+             setMode('menu');
+           }
+        }} 
         className="mb-8 flex items-center justify-center mx-auto text-slate-400 hover:text-indigo-600"
       >
         <ChevronLeft size={20} /> Back to Options
@@ -1148,13 +1259,28 @@ const SpeedMath: React.FC = () => {
   const renderGame = () => {
     // Calculate potential max score based on 2 seconds per question
     const potential = Math.floor(totalTime / 2);
+    // Determine font size based on category and question length
+    let fontSizeClass = 'text-6xl md:text-8xl';
+    if (category === 'speed_subtraction') fontSizeClass = 'text-4xl';
+    else if (['alpha', 'alpha_rank', 'alpha_pair'].includes(category) && question.text.length > 5) fontSizeClass = 'text-4xl md:text-5xl'; // Smaller for "Opposite of X" text
 
     return (
       <div className="max-w-2xl mx-auto text-center animate-in zoom-in-95 duration-200">
         {timeLeft > 0 ? (
           <>
             <div className="flex justify-between items-center mb-12">
-              <button onClick={() => setMode(Object.keys(VIRAL_CONCEPTS).includes(category) ? 'viral-menu' : 'menu')} className="text-slate-400 hover:text-slate-600">
+              <button 
+                onClick={() => {
+                  if (Object.keys(VIRAL_CONCEPTS).includes(category)) {
+                     setMode('viral-menu');
+                  } else if (['alpha', 'alpha_rank', 'alpha_pair'].includes(category)) {
+                     setMode('alpha-menu');
+                  } else {
+                     setMode('menu');
+                  }
+                }} 
+                className="text-slate-400 hover:text-slate-600"
+              >
                 <X size={24} />
               </button>
               <div className="flex items-center space-x-2 text-slate-500">
@@ -1173,9 +1299,11 @@ const SpeedMath: React.FC = () => {
                  category === 'speed_addition' ? 'Speed Addition' :
                  category === 'speed_subtraction' ? 'Speed Subtraction' :
                  category === 'mensuration' ? 'Mensuration Quiz' :
+                 category === 'alpha_rank' ? 'Position Drill' :
+                 category === 'alpha_pair' ? 'Opposite Pairs' :
                  'Solve Fast'}
               </div>
-              <div className={`font-bold text-slate-800 transition-transform duration-100 ${feedback === 'correct' ? 'scale-110 text-green-600' : ''} ${category === 'speed_subtraction' ? 'text-4xl' : 'text-6xl md:text-8xl'}`}>
+              <div className={`font-bold text-slate-800 transition-transform duration-100 ${feedback === 'correct' ? 'scale-110 text-green-600' : ''} ${fontSizeClass}`}>
                 {question.text}
               </div>
             </div>
@@ -1234,7 +1362,15 @@ const SpeedMath: React.FC = () => {
             
             <div className="flex justify-center gap-4">
               <button 
-                onClick={() => setMode(Object.keys(VIRAL_CONCEPTS).includes(category) ? 'viral-menu' : 'menu')}
+                onClick={() => {
+                  if (Object.keys(VIRAL_CONCEPTS).includes(category)) {
+                     setMode('viral-menu');
+                  } else if (['alpha', 'alpha_rank', 'alpha_pair'].includes(category)) {
+                     setMode('alpha-menu');
+                  } else {
+                     setMode('menu');
+                  }
+                }}
                 className="px-6 py-3 border border-slate-200 rounded-lg font-semibold text-slate-600 hover:bg-slate-50"
               >
                 Exit
@@ -1420,7 +1556,7 @@ const SpeedMath: React.FC = () => {
     return (
       <div className="max-w-xl mx-auto text-center animate-in zoom-in-95 duration-200">
         <div className="bg-white p-8 rounded-2xl shadow-xl border border-slate-200">
-           <h2 className="text-3xl font-bold text-slate-800 mb-6">Drill Report Card</h2>
+           <h2 className="text-3xl font-bold text-slate-900 mb-6">Drill Report Card</h2>
            
            <div className="grid grid-cols-2 gap-4 mb-8">
              <div className="bg-slate-50 p-4 rounded-xl">
@@ -1476,6 +1612,7 @@ const SpeedMath: React.FC = () => {
     <div className="container mx-auto">
       {mode === 'menu' && renderMainMenu()}
       {mode === 'viral-menu' && renderViralMenu()}
+      {mode === 'alpha-menu' && renderAlphaMenu()}
       {mode === 'reference' && renderReference()}
       {mode === 'timer-selection' && renderTimerSelection()}
       {mode === 'practice' && renderGame()}
