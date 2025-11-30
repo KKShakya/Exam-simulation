@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Zap, Book, Timer, Trophy, ChevronLeft, RefreshCcw, Brain, Eye, X, Flame, Star, Hash, Settings, Clock, Plus, Minus, Check, FileUp, Loader2, ArrowRight, ChevronDown, MoveLeft, Box, Cuboid, SortAsc, RefreshCw } from 'lucide-react';
+import { Zap, Book, Timer, Trophy, ChevronLeft, RefreshCcw, Brain, Eye, X, Flame, Star, Hash, Settings, Clock, Plus, Minus, Check, FileUp, Loader2, ArrowRight, ChevronDown, MoveLeft, Box, Cuboid, SortAsc, RefreshCw, Lightbulb, MousePointer2, ChevronRight } from 'lucide-react';
 import { extractQuestionsFromPdf } from '../services/geminiService';
 
 type Category = 'tables' | 'squares' | 'cubes' | 'alpha' | 'alpha_rank' | 'alpha_pair' | 'percent' | 'multiplication' | 'specific_table' | 'speed_addition' | 'speed_subtraction' | 'mensuration';
@@ -377,8 +377,109 @@ const STANDARD_CONCEPTS = {
   }
 };
 
+const CHEAT_SHEET_DATA = [
+  {
+    title: "Arithmetic (Hierarchy Models)",
+    icon: RefreshCcw,
+    color: "indigo",
+    sections: [
+      {
+        subtitle: "Speed, Time, Distance (STD)",
+        points: [
+          { label: "The King Rule", desc: "Distance is King (Top). Speed & Time are Servants." },
+          { label: "The Trigger", desc: "See Distance? → DIVIDE (D/S or D/T). Missing Distance? → MULTIPLY (S×T)." },
+          { label: "Boats", desc: "Downstream (+): Helping Hand (B+W). Upstream (-): The Bully (B-W)." }
+        ]
+      },
+      {
+        subtitle: "Profit & Loss",
+        points: [
+          { label: "The King Rule", desc: "Profit is King. Investment & Time are Servants." },
+          { label: "Ratios", desc: "Given Inv & Time → MULTIPLY for Profit. Given Profit & Time → DIVIDE for Investment." },
+          { label: "Time Trap", desc: "Use 'Time money was in machine', not calendar time." }
+        ]
+      }
+    ]
+  },
+  {
+    title: "Reasoning (Visual Models)",
+    icon: Brain,
+    color: "purple",
+    sections: [
+      {
+        subtitle: "Syllogism",
+        points: [
+          { label: "Stranger Territory", desc: "No touch + No Cross = Definite False, but Possibility True." },
+          { label: "Only A Few", desc: "A→B: Restricted (Some A not B). B→A: Free (All B can be A)." },
+          { label: "School Trap", desc: "If 'Only few A are B' & 'All B are C' → Can All A be C? YES." }
+        ]
+      },
+      {
+        subtitle: "Blood Relations",
+        points: [
+          { label: "In-Laws", desc: "Son/Daughter-in-Law: 1st Person is married." },
+          { label: "Gender Cheat", desc: "If B has Wife/Husband → B is married. If B has Sister → A is married." }
+        ]
+      },
+      {
+        subtitle: "Seating & Direction",
+        points: [
+          { label: "Hand Rule", desc: "Palm = Right. Nails = Left." },
+          { label: "Circular", desc: "Inside: Anti-Clockwise = Right. Outside: Pretend Inside, then FLIP answer." }
+        ]
+      }
+    ]
+  },
+  {
+    title: "Calculation Speed (No-Pen)",
+    icon: Zap,
+    color: "amber",
+    sections: [
+      {
+        subtitle: "Simplification Hacks",
+        points: [
+          { label: "Percent Swap", desc: "A% of B = B% of A. Move % to the friendly number." },
+          { label: "Split & Kill", desc: "512 × 12 → (512 × 10) + (512 × 2)." },
+          { label: "Approximation", desc: "Options far apart? Round to nearest 10/50/100." }
+        ]
+      },
+      {
+        subtitle: "Number Series",
+        points: [
+          { label: "Dip → Rise", desc: "Decimal Pattern (×0.5, ×1...)." },
+          { label: "Rocket Launch", desc: "Huge Gap = Multiplication. Work backwards." },
+          { label: "Magic Neighbors", desc: "Cube ± 1: 0, 7, 26, 63, 124, 215, 342." }
+        ]
+      },
+      {
+        subtitle: "Quadratics",
+        points: [
+          { label: "Sign Method", desc: "(-,+)→(+,+). (+,+)→(-,-). (+,-)→(-,+). (-,-)→(+,-)." },
+          { label: "Free Marks", desc: "If Both Constant Terms Negative → CND." }
+        ]
+      }
+    ]
+  },
+  {
+    title: "Exam Strategy",
+    icon: Trophy,
+    color: "emerald",
+    sections: [
+      {
+        subtitle: "Topper's Process",
+        points: [
+          { label: "Rough Sheet", desc: "Fold it. Write Answers Only, never copy question." },
+          { label: "Mouse Hand", desc: "Left Hand on Mouse (Click), Right Hand with Pen (Write)." },
+          { label: "Alien Search", desc: "In Alpha-Numeric, scan for Numbers/Symbols, not Letters." },
+          { label: "Chinese Coding", desc: "Use Shapes (Circles, Triangles), do not write words." }
+        ]
+      }
+    ]
+  }
+];
+
 const SpeedMath: React.FC = () => {
-  const [mode, setMode] = useState<'menu' | 'viral-menu' | 'alpha-menu' | 'practice' | 'reference' | 'timer-selection' | 'pdf-upload' | 'pdf-config' | 'pdf-drill' | 'pdf-result'>('menu');
+  const [mode, setMode] = useState<'menu' | 'viral-menu' | 'alpha-menu' | 'tricks-sheet' | 'practice' | 'reference' | 'timer-selection' | 'pdf-upload' | 'pdf-config' | 'pdf-drill' | 'pdf-result'>('menu');
   const [category, setCategory] = useState<string>('tables'); // General or Viral key
   const [customTable, setCustomTable] = useState<{table: string, limit: string}>({ table: '19', limit: '10' });
   const [subtractionMode, setSubtractionMode] = useState<'2num' | '3num'>('2num');
@@ -753,6 +854,31 @@ const SpeedMath: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Topper's Cheat Sheet Card */}
+        <div 
+           onClick={() => setMode('tricks-sheet')}
+           className="col-span-1 md:col-span-2 lg:col-span-4 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 rounded-2xl p-6 text-white shadow-xl cursor-pointer transform hover:scale-[1.005] transition-all relative overflow-hidden group border border-slate-700"
+        >
+           <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl -mr-12 -mt-12 group-hover:bg-indigo-500/20 transition-all"></div>
+           <div className="relative z-10 flex items-center justify-between">
+             <div className="flex-1">
+               <div className="flex items-center gap-2 mb-2">
+                 <span className="bg-yellow-400 text-slate-900 text-xs font-extrabold px-2 py-0.5 rounded uppercase tracking-wider">Premium Resource</span>
+               </div>
+               <h3 className="text-2xl font-bold mb-2 flex items-center gap-2">
+                  <Lightbulb className="text-yellow-400 fill-yellow-400" />
+                  Additional Tricks: Topper's Cheat Sheet
+               </h3>
+               <p className="text-slate-300 text-sm max-w-2xl leading-relaxed">
+                  Access the ultimate compilation of <strong>King Rules</strong>, <strong>Visual Models</strong>, and <strong>No-Pen Protocols</strong>. Everything you need to revise before the exam.
+               </p>
+             </div>
+             <div className="hidden md:flex bg-white/10 p-3 rounded-full">
+                <ChevronRight className="text-white" size={24} />
+             </div>
+           </div>
+        </div>
+
         {/* Viral Maths Promo Card */}
         <div 
           onClick={() => setMode('viral-menu')}
@@ -934,6 +1060,61 @@ const SpeedMath: React.FC = () => {
           </div>
         ))}
       </div>
+    </div>
+  );
+
+  const renderTricksSheet = () => (
+    <div className="animate-in fade-in slide-in-from-right-4 pb-12 max-w-6xl mx-auto">
+       <button onClick={() => setMode('menu')} className="mb-6 flex items-center text-slate-500 hover:text-indigo-600 transition-colors group">
+         <ChevronLeft size={20} className="group-hover:-translate-x-1 transition-transform" /> Back to Menu
+       </button>
+       
+       <div className="mb-10 text-center">
+         <h2 className="text-4xl font-extrabold text-slate-900 mb-3 flex items-center justify-center gap-3">
+           <Trophy className="text-yellow-500" size={40} fill="currentColor" />
+           The Topper's Cheat Sheet
+         </h2>
+         <p className="text-slate-500 text-lg">Consolidated King Rules, Visual Models & No-Pen Protocols</p>
+       </div>
+
+       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 masonry-grid">
+         {CHEAT_SHEET_DATA.map((section, idx) => {
+           const Icon = section.icon;
+           return (
+             <div key={idx} className="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden">
+               <div className={`bg-${section.color}-50 p-4 border-b border-${section.color}-100 flex items-center gap-3`}>
+                 <div className={`p-2 bg-${section.color}-100 text-${section.color}-700 rounded-lg`}>
+                   <Icon size={24} />
+                 </div>
+                 <h3 className={`text-xl font-bold text-${section.color}-900`}>{section.title}</h3>
+               </div>
+               
+               <div className="p-6 space-y-8">
+                 {section.sections.map((sub, sIdx) => (
+                   <div key={sIdx}>
+                     <h4 className="font-bold text-slate-800 text-lg mb-3 border-l-4 border-slate-200 pl-3">{sub.subtitle}</h4>
+                     <ul className="space-y-4">
+                       {sub.points.map((pt, pIdx) => (
+                         <li key={pIdx} className="text-slate-600 leading-relaxed text-sm">
+                           <span className={`font-bold text-${section.color}-700 block mb-1`}>{pt.label}</span>
+                           <span className="bg-slate-50 px-3 py-2 rounded-lg block border border-slate-100">
+                             {pt.desc.split(/(King|Servants|DIVIDE|MULTIPLY|Helping Hand|The Bully|Profit|Investment|Restricted|Free|NO|YES|married|Empty Spot|Right|Left|Numbers|Symbols|Shapes)/g).map((part, i) => {
+                               if (['King', 'Servants', 'DIVIDE', 'MULTIPLY', 'Helping Hand', 'The Bully', 'Profit', 'Investment', 'Restricted', 'Free', 'NO', 'YES', 'married', 'Empty Spot', 'Right', 'Left', 'Numbers', 'Symbols', 'Shapes'].includes(part)) {
+                                 return <span key={i} className="font-extrabold text-slate-800 bg-yellow-100 px-1 rounded mx-0.5">{part}</span>;
+                               }
+                               return part;
+                             })}
+                           </span>
+                         </li>
+                       ))}
+                     </ul>
+                   </div>
+                 ))}
+               </div>
+             </div>
+           );
+         })}
+       </div>
     </div>
   );
 
@@ -1613,6 +1794,7 @@ const SpeedMath: React.FC = () => {
       {mode === 'menu' && renderMainMenu()}
       {mode === 'viral-menu' && renderViralMenu()}
       {mode === 'alpha-menu' && renderAlphaMenu()}
+      {mode === 'tricks-sheet' && renderTricksSheet()}
       {mode === 'reference' && renderReference()}
       {mode === 'timer-selection' && renderTimerSelection()}
       {mode === 'practice' && renderGame()}
