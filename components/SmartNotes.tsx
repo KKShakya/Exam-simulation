@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Plus, Save, FileText, Sparkles, Trash2, Calendar, Search, Copy } from 'lucide-react';
 import { Note } from '../types';
@@ -10,15 +11,105 @@ const SmartNotes: React.FC = () => {
   const [analysisResult, setAnalysisResult] = useState<string>('');
   const [searchTerm, setSearchTerm] = useState('');
 
+  // Define the Inequality Note Content
+  const inequalityNoteContent = `# ⚖️ Inequality: The "Either/Or" Master Rules
+
+Don't guess. Use this 3-step verification process to spot a valid **Either/Or** case instantly.
+
+### 🕵️ Step 1: The Trigger (Scan Options)
+
+Before checking the statement, look at the conclusions. The **Either/Or** check is triggered ONLY if:
+
+1.  **Both elements are the same** in both conclusions (e.g., A and B).
+2.  **Both conclusions are Individually False** (or cannot be determined) based on the statement.
+
+-----
+
+### Step 2: Identify the Case Type
+
+Once Step 1 is cleared, check which of the two scenarios applies:
+
+#### **Case A: The "Established Relation" (The Combo Sign)**
+
+  * **The Scenario:** The statement establishes a clear combined relationship like A ≥ B or A ≤ B.
+  * **The Rule:** The two conclusions must break this relationship into its two individual parts.
+  * **Required Pairs:**
+      * **Statement:** A ≥ B -> **Conclusions:** (A > B) and (A = B)
+      * **Statement:** A ≤ B -> **Conclusions:** (A < B) and (A = B)
+
+> **Logic:** Since A is greater than or equal to B, it must be one or the other. It cannot be neither.
+
+-----
+
+#### **Case B: The "No Relation" (The Blocked Path)**
+
+  * **The Scenario:** The statement contains **Opposite Signs** between the elements (e.g., A > M < B or A ≥ P ≤ B). This means the relationship is **Unknown**.
+  * **The Rule:** When the relationship is unknown, *anything* is possible. Therefore, your conclusions must cover **all three possible symbols** (>, <, and =) combined.
+  * **Required Pairs:**
+    1.  **Conc 1:** A > B  |  **Conc 2:** A ≤ B (Covers >, <, =)
+    2.  **Conc 1:** A < B  |  **Conc 2:** A ≥ B (Covers <, >, =)
+    3.  **Conc 1:** A = B  |  **Conc 2:** A ≠ B (Covers =, >, <)
+
+> **Logic:** Since we don't know the relationship, A could be bigger, smaller, or equal. If the options cover all 3 possibilities, one of them *must* be true.
+
+-----
+
+### ⚠️ Common Traps (Don't Be Fooled)
+
+**1. The "Only One True" Trap**
+If the Statement is A ≥ B:
+
+  * **Conc 1:** A ≥ B (True)
+  * **Conc 2:** A = B (False/Possible)
+  * **Result:** This is **Only Conclusion 1 Follows**, NOT Either/Or.
+  * *Why?* For Either/Or, **BOTH** conclusions must be individually False/Uncertain first.
+
+**2. The "Missing Symbol" Trap (No Relation Case)**
+If the Statement has **No Relation** (Opposite Signs):
+
+  * **Conc 1:** A > B
+  * **Conc 2:** A = B
+  * **Result:** **Neither/Nor**.
+  * *Why?* You are missing the (<) possibility. Since "No Relation" means *anything* is possible, A could be smaller than B. Since that option isn't listed, it's not a perfect Either/Or pair.
+
+-----
+
+### 🚀 Summary Cheat Sheet
+
+| Condition | Statement Type | Required Conclusions |
+| :--- | :--- | :--- |
+| **Case 1** | A ≥ B | (>) and (=) |
+| **Case 1** | A ≤ B | (<) and (=) |
+| **Case 2** | **No Relation** (Opposite Signs) | Must cover all 3 signs combined: (> & ≤) OR (< & ≥) |`;
+
   // Load from Local Storage on Mount
   useEffect(() => {
     const savedNotes = localStorage.getItem('bankedge_notes');
+    const inequalityNote: Note = {
+      id: 'inequality-master-rules',
+      title: '⚖️ Inequality: The Either/Or Master Rules',
+      content: inequalityNoteContent,
+      date: Date.now(),
+      tags: ['Reasoning', 'Inequality', 'Rules']
+    };
+
     if (savedNotes) {
-      const parsed = JSON.parse(savedNotes);
-      setNotes(parsed);
-      if (parsed.length > 0) setActiveNoteId(parsed[0].id);
+      const parsed: Note[] = JSON.parse(savedNotes);
+      
+      // Check if the inequality note already exists (by ID or Title) to prevent duplicates
+      const exists = parsed.some(n => n.id === inequalityNote.id || n.title === inequalityNote.title);
+      
+      if (!exists) {
+        // Inject the new note at the top if it doesn't exist
+        const updatedNotes = [inequalityNote, ...parsed];
+        setNotes(updatedNotes);
+        setActiveNoteId(inequalityNote.id);
+      } else {
+        setNotes(parsed);
+        if (parsed.length > 0) setActiveNoteId(parsed[0].id);
+      }
     } else {
-      // Default note if empty
+      // Default notes if storage is empty
       const defaultNote: Note = { 
         id: '1', 
         title: 'Percentage to Fraction Tricks', 
@@ -26,8 +117,10 @@ const SmartNotes: React.FC = () => {
         date: Date.now(), 
         tags: ['Quant', 'Tricks'] 
       };
-      setNotes([defaultNote]);
-      setActiveNoteId(defaultNote.id);
+      
+      const initialNotes = [inequalityNote, defaultNote];
+      setNotes(initialNotes);
+      setActiveNoteId(inequalityNote.id);
     }
   }, []);
 
