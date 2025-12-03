@@ -1,9 +1,9 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Zap, Book, Timer, Trophy, ChevronLeft, RefreshCcw, Brain, Eye, X, Flame, Star, Hash, Settings, Clock, Plus, Minus, Check, FileUp, Loader2, ArrowRight, ChevronDown, MoveLeft, Box, Cuboid, SortAsc, RefreshCw, Lightbulb, MousePointer2, ChevronRight, Gem, TrendingUp } from 'lucide-react';
+import { Zap, Book, Timer, Trophy, ChevronLeft, RefreshCcw, Brain, Eye, X, Flame, Star, Hash, Settings, Clock, Plus, Minus, Check, FileUp, Loader2, ArrowRight, ChevronDown, MoveLeft, Box, Cuboid, SortAsc, RefreshCw, Lightbulb, MousePointer2, ChevronRight, Gem, TrendingUp, Target, Divide } from 'lucide-react';
 import { extractQuestionsFromPdf } from '../services/geminiService';
 
-type Category = 'tables' | 'squares' | 'cubes' | 'alpha' | 'alpha_rank' | 'alpha_pair' | 'percent' | 'multiplication' | 'specific_table' | 'speed_addition' | 'speed_subtraction' | 'mensuration' | 'golden_numbers' | 'ci_rates';
+type Category = 'tables' | 'squares' | 'cubes' | 'alpha' | 'alpha_rank' | 'alpha_pair' | 'percent' | 'multiplication' | 'specific_table' | 'speed_addition' | 'speed_subtraction' | 'mensuration' | 'golden_numbers' | 'ci_rates' | 'quadratic_blitz' | 'unit_digit';
 type ViralCategory = 'viral_products' | 'viral_addition' | 'viral_subtraction' | 'viral_multiplication' | 'viral_squares' | 'viral_division';
 
 // --- Custom Select (Light Mode - Modern Glass) ---
@@ -752,6 +752,53 @@ const SpeedMath: React.FC = () => {
         opts = rawOptions.sort(() => 0.5 - Math.random());
         break;
       }
+      case 'quadratic_blitz': {
+        const type = Math.random();
+        if (type < 0.4) {
+          // CND Case (Both C negative)
+          const c1 = Math.floor(Math.random() * 50) + 10;
+          const c2 = Math.floor(Math.random() * 50) + 10;
+          const b1 = Math.floor(Math.random()*10)+5;
+          const b2 = Math.floor(Math.random()*10)+5;
+          q = `I. 2x² + ${b1}x - ${c1} = 0   II. 3y² - ${b2}y - ${c2} = 0`;
+          a = "CND";
+        } else if (type < 0.7) {
+          // X positive roots (from -,+ eq), Y negative roots (from +,+ eq) => X > Y
+          // Eq I: (-, +) e.g. x^2 - 15x + 28 = 0
+          // Eq II: (+, +) e.g. y^2 + 13y + 21 = 0
+          q = `I. 2x² - 15x + 28 = 0   II. 2y² + 13y + 21 = 0`;
+          a = "X > Y";
+        } else {
+          // X negative roots (from +,+ eq), Y positive roots (from -,+ eq) => X < Y
+          q = `I. 3x² + 10x + 8 = 0   II. 2y² - 17y + 36 = 0`;
+          a = "X < Y";
+        }
+        opts = ["X > Y", "X < Y", "X ≥ Y", "X ≤ Y", "CND"];
+        break;
+      }
+      case 'unit_digit': {
+        const mode = Math.random() > 0.5 ? 'mult' : 'mult_add';
+        if (mode === 'mult') {
+            const n1 = Math.floor(Math.random() * 900) + 100;
+            const n2 = Math.floor(Math.random() * 900) + 100;
+            const n3 = Math.floor(Math.random() * 900) + 100;
+            q = `Unit digit of: ${n1} × ${n2} × ${n3}`;
+            const u1 = n1 % 10;
+            const u2 = n2 % 10;
+            const u3 = n3 % 10;
+            a = ((u1 * u2 * u3) % 10).toString();
+        } else {
+            const n1 = Math.floor(Math.random() * 900) + 100;
+            const n2 = Math.floor(Math.random() * 900) + 100;
+            const n3 = Math.floor(Math.random() * 900) + 100;
+            q = `Unit digit of: ${n1} × ${n2} + ${n3}`;
+            const u1 = n1 % 10;
+            const u2 = n2 % 10;
+            const u3 = n3 % 10;
+            a = ((u1 * u2 + u3) % 10).toString();
+        }
+        break;
+      }
     }
     return { text: q, answer: a, options: opts };
   };
@@ -795,7 +842,7 @@ const SpeedMath: React.FC = () => {
     setInput('');
     nextQuestion(category);
     // Only focus input if standard drill (no options)
-    const isOptionDrill = category === 'mensuration' || category === 'ci_rates';
+    const isOptionDrill = category === 'mensuration' || category === 'ci_rates' || category === 'quadratic_blitz';
     if (!isOptionDrill) {
        setTimeout(() => inputRef.current?.focus(), 100);
     }
@@ -1123,6 +1170,8 @@ const SpeedMath: React.FC = () => {
       {/* Standard Modules */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {[
+          { id: 'quadratic_blitz', label: 'Quadratic Sign Blitz', icon: RefreshCw, color: 'bg-orange-500' },
+          { id: 'unit_digit', label: 'Unit Digit Sniper', icon: Target, color: 'bg-pink-500' },
           { id: 'tables', label: 'Tables (1-20)', icon: Hash, color: 'bg-amber-500' },
           { id: 'golden_numbers', label: 'Golden Numbers', icon: Gem, color: 'bg-yellow-500' },
           { id: 'squares', label: 'Squares (1-50)', icon: Brain, color: 'bg-blue-500' },
@@ -1636,7 +1685,7 @@ const SpeedMath: React.FC = () => {
     // Determine font size based on category and question length
     let fontSizeClass = 'text-6xl md:text-8xl';
     if (category === 'speed_subtraction') fontSizeClass = 'text-4xl';
-    else if (['alpha', 'alpha_rank', 'alpha_pair', 'golden_numbers', 'ci_rates'].includes(category) && question.text.length > 5) fontSizeClass = 'text-4xl md:text-5xl'; // Smaller for "Opposite of X" text or Golden Numbers drill
+    else if (['alpha', 'alpha_rank', 'alpha_pair', 'golden_numbers', 'ci_rates', 'quadratic_blitz', 'unit_digit'].includes(category) && question.text.length > 5) fontSizeClass = 'text-3xl md:text-4xl font-mono'; // Smaller for text/complex questions
 
     return (
       <div className="max-w-2xl mx-auto text-center animate-in zoom-in-95 duration-200">
@@ -1677,15 +1726,17 @@ const SpeedMath: React.FC = () => {
                  category === 'alpha_pair' ? 'Opposite Pairs' :
                  category === 'golden_numbers' ? 'Find the Factor' :
                  category === 'ci_rates' ? 'Compound Interest' :
+                 category === 'quadratic_blitz' ? 'Sign Method Blitz' :
+                 category === 'unit_digit' ? 'Unit Digit Sniper' :
                  'Solve Fast'}
               </div>
-              <div className={`font-bold text-slate-800 transition-transform duration-100 ${feedback === 'correct' ? 'scale-110 text-green-600' : ''} ${fontSizeClass}`}>
+              <div className={`font-bold text-slate-800 transition-transform duration-100 whitespace-pre-line ${feedback === 'correct' ? 'scale-110 text-green-600' : ''} ${fontSizeClass}`}>
                 {question.text}
               </div>
             </div>
 
             {question.options ? (
-               // Multiple Choice Interface for Mensuration/Formulas
+               // Multiple Choice Interface
                <div className="max-w-lg mx-auto grid grid-cols-1 md:grid-cols-2 gap-4">
                  {question.options.map((opt, idx) => (
                    <button
