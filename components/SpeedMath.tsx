@@ -497,6 +497,37 @@ const CHEAT_SHEET_DATA = [
           { label: "Direction (NEWS)", desc: "All faces outside: Clockwise is Right, Anti-clockwise is Left." },
           { label: "Circular Seating", desc: "Facing Inside: Anti-clockwise is Right. Facing Outside: Clockwise is Right." }
         ]
+      },
+      {
+        subtitle: "Coding-Decoding (Vowels)",
+        points: [
+          { 
+            label: "Vowel Center Logic", 
+            desc: "Vowels (AEIOU) are always sandwiched between specific consonants. Z, D, H, N, T come before them (-1). B, F, J, P, V come after them (+1). Memorize these columns to instantly spot vowel-based patterns.",
+            visual: (
+              <div className="flex justify-center items-center gap-6 mt-4 font-mono select-none">
+                <div className="flex flex-col items-center gap-2">
+                  <span className="text-[10px] uppercase text-slate-400 tracking-wider font-bold">Before</span>
+                  {['Z','D','H','N','T'].map(c => <span key={c} className="text-slate-500 font-bold text-lg bg-slate-100 w-8 h-8 flex items-center justify-center rounded border border-slate-200">{c}</span>)}
+                </div>
+                <div className="flex flex-col items-center gap-2 pt-6">
+                   {Array(5).fill('→').map((a,i) => <span key={i} className="text-slate-300 h-8 flex items-center">{a}</span>)}
+                </div>
+                <div className="flex flex-col items-center gap-2">
+                  <span className="text-[10px] uppercase text-indigo-500 tracking-wider font-extrabold">Vowel</span>
+                  {['A','E','I','O','U'].map(c => <span key={c} className="text-white bg-indigo-600 font-extrabold text-xl w-10 h-10 flex items-center justify-center rounded-lg shadow-md border-b-4 border-indigo-800">{c}</span>)}
+                </div>
+                <div className="flex flex-col items-center gap-2 pt-6">
+                   {Array(5).fill('←').map((a,i) => <span key={i} className="text-slate-300 h-8 flex items-center">{a}</span>)}
+                </div>
+                <div className="flex flex-col items-center gap-2">
+                  <span className="text-[10px] uppercase text-slate-400 tracking-wider font-bold">After</span>
+                  {['B','F','J','P','V'].map(c => <span key={c} className="text-slate-500 font-bold text-lg bg-slate-100 w-8 h-8 flex items-center justify-center rounded border border-slate-200">{c}</span>)}
+                </div>
+              </div>
+            )
+          }
+        ]
       }
     ]
   },
@@ -1419,10 +1450,11 @@ const SpeedMath: React.FC = () => {
                        {sub.subtitle}
                      </h4>
                      <ul className="space-y-4">
-                       {sub.points.map((pt, pIdx) => (
+                       {sub.points.map((pt: any, pIdx) => (
                          <li key={pIdx}>
                            <span className="block font-bold text-slate-800 text-sm mb-1">{pt.label}</span>
                            <span className="block text-slate-600 text-sm leading-relaxed">{pt.desc}</span>
+                           {pt.visual && <div className="mt-2">{pt.visual}</div>}
                          </li>
                        ))}
                      </ul>
