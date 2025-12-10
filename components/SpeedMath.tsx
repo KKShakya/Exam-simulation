@@ -432,7 +432,10 @@ const CHEAT_SHEET_DATA = [
       {
          subtitle: "Boats & Streams",
          points: [
-            { label: "Golden Shortcut", desc: "Round Trips? Distance = Total Time × (B² - S²) / 2B" },
+            { 
+              label: "Golden Shortcut (Round Trip)", 
+              desc: "Distance (One Side) = Total Time × (B² - S²) / 2B. This gives the one-way distance. Use when Total Time is given for a round trip and Actual (or Ratio) speeds of Boat & Stream are known." 
+            },
             { label: "Option Attack", desc: "Don't solve quadratics. Plug options into B+S and B-S. Correct one divides Distance cleanly." },
             { label: "Speed Definitions", desc: "Down(D) = B+S. Up(U) = B-S. Boat = (D+U)/2. Stream = (D-U)/2." }
          ]
@@ -505,24 +508,47 @@ const CHEAT_SHEET_DATA = [
             label: "Vowel Center Logic", 
             desc: "Vowels (AEIOU) are always sandwiched between specific consonants. Z, D, H, N, T come before them (-1). B, F, J, P, V come after them (+1). Memorize these columns to instantly spot vowel-based patterns.",
             visual: (
-              <div className="flex justify-center items-center gap-6 mt-4 font-mono select-none">
-                <div className="flex flex-col items-center gap-2">
-                  <span className="text-[10px] uppercase text-slate-400 tracking-wider font-bold">Before</span>
-                  {['Z','D','H','N','T'].map(c => <span key={c} className="text-slate-500 font-bold text-lg bg-slate-100 w-8 h-8 flex items-center justify-center rounded border border-slate-200">{c}</span>)}
+              <div className="flex justify-center items-center gap-6 mt-4 font-serif select-none p-6 rounded-lg shadow-inner bg-[#e8dcc5] border-4 border-[#c2b280] relative overflow-hidden">
+                {/* Parchment Overlay Effect */}
+                <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-transparent to-black/10 pointer-events-none"></div>
+                <div className="absolute top-0 left-0 w-full h-1 bg-black/10"></div>
+                <div className="absolute bottom-0 left-0 w-full h-1 bg-black/10"></div>
+                
+                <div className="flex flex-col items-center gap-2 z-10">
+                  <span className="text-[10px] uppercase text-[#5c4d32] tracking-widest font-bold mb-2 opacity-70">Before (-1)</span>
+                  {['Z','D','H','N','T'].map(c => <span key={c} className="text-[#2c2417] font-bold text-2xl h-10 w-10 flex items-center justify-center drop-shadow-sm">{c}</span>)}
                 </div>
-                <div className="flex flex-col items-center gap-2 pt-6">
-                   {Array(5).fill('→').map((a,i) => <span key={i} className="text-slate-300 h-8 flex items-center">{a}</span>)}
+                
+                <div className="flex flex-col items-center gap-2 pt-8 z-10 mx-4">
+                   {Array(5).fill(0).map((_,i) => (
+                     <div key={i} className="h-10 flex items-center justify-center relative w-16 group">
+                        <div className="h-0.5 w-full bg-[#5c4d32] rounded-full opacity-40"></div>
+                        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 border-t-2 border-r-2 border-[#5c4d32] rotate-45 opacity-40"></div>
+                        <span className="absolute -top-3 text-[10px] font-bold text-[#5c4d32] opacity-60">+1</span>
+                     </div>
+                   ))}
                 </div>
-                <div className="flex flex-col items-center gap-2">
-                  <span className="text-[10px] uppercase text-indigo-500 tracking-wider font-extrabold">Vowel</span>
-                  {['A','E','I','O','U'].map(c => <span key={c} className="text-white bg-indigo-600 font-extrabold text-xl w-10 h-10 flex items-center justify-center rounded-lg shadow-md border-b-4 border-indigo-800">{c}</span>)}
+                
+                <div className="flex flex-col items-center gap-2 z-10">
+                  <span className="text-[10px] uppercase text-[#8b0000] tracking-widest font-extrabold mb-2 opacity-80">Vowel</span>
+                  {['A','E','I','O','U'].map(c => (
+                     <span key={c} className="text-[#8b0000] font-extrabold text-3xl h-10 w-10 flex items-center justify-center drop-shadow-md transform scale-110">{c}</span>
+                  ))}
                 </div>
-                <div className="flex flex-col items-center gap-2 pt-6">
-                   {Array(5).fill('←').map((a,i) => <span key={i} className="text-slate-300 h-8 flex items-center">{a}</span>)}
+                
+                <div className="flex flex-col items-center gap-2 pt-8 z-10 mx-4">
+                   {Array(5).fill(0).map((_,i) => (
+                     <div key={i} className="h-10 flex items-center justify-center relative w-16">
+                        <div className="h-0.5 w-full bg-[#5c4d32] rounded-full opacity-40"></div>
+                        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 border-t-2 border-r-2 border-[#5c4d32] rotate-45 opacity-40"></div>
+                        <span className="absolute -top-3 text-[10px] font-bold text-[#5c4d32] opacity-60">+1</span>
+                     </div>
+                   ))}
                 </div>
-                <div className="flex flex-col items-center gap-2">
-                  <span className="text-[10px] uppercase text-slate-400 tracking-wider font-bold">After</span>
-                  {['B','F','J','P','V'].map(c => <span key={c} className="text-slate-500 font-bold text-lg bg-slate-100 w-8 h-8 flex items-center justify-center rounded border border-slate-200">{c}</span>)}
+                
+                <div className="flex flex-col items-center gap-2 z-10">
+                  <span className="text-[10px] uppercase text-[#5c4d32] tracking-widest font-bold mb-2 opacity-70">After (+1)</span>
+                  {['B','F','J','P','V'].map(c => <span key={c} className="text-[#2c2417] font-bold text-2xl h-10 w-10 flex items-center justify-center drop-shadow-sm">{c}</span>)}
                 </div>
               </div>
             )
