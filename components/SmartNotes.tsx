@@ -282,7 +282,7 @@ Memorize these numbers. They appear frequently because they have many factors, a
 
   return (
     <div className="h-[calc(100vh-8rem)] flex gap-6 animate-in fade-in">
-      {/* Sidebar List */}
+      {/* Sidebar List (Updated to Golden Card Style) */}
       <div className={`
         ${isExpanded ? 'hidden' : 'w-1/3'} 
         bg-white rounded-xl shadow-sm border border-slate-200 flex flex-col overflow-hidden transition-all
@@ -314,27 +314,36 @@ Memorize these numbers. They appear frequently because they have many factors, a
            </div>
         </div>
         
-        <div className="flex-1 overflow-y-auto p-2 space-y-2">
+        <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50">
           {filteredNotes.map(note => (
             <div 
               key={note.id}
               onClick={() => { setActiveNoteId(note.id); setAnalysisResult(''); }}
-              className={`p-3 rounded-lg cursor-pointer transition-all group relative ${
-                activeNoteId === note.id ? 'bg-indigo-50 border border-indigo-100' : 'hover:bg-slate-50 border border-transparent'
+              className={`p-4 rounded-xl cursor-pointer transition-all group relative border ${
+                activeNoteId === note.id 
+                  ? 'bg-amber-50 border-amber-200 shadow-md ring-1 ring-amber-100' 
+                  : 'bg-white border-slate-200 hover:border-amber-100 hover:bg-amber-50/30 hover:shadow-sm'
               }`}
             >
-              <div className="font-semibold text-slate-800 text-sm mb-1 pr-6 truncate">{note.title}</div>
-              <div className="text-xs text-slate-500 line-clamp-2">{note.content || "Empty note..."}</div>
-              <div className="flex items-center gap-2 mt-2 text-[10px] text-slate-400">
-                <Calendar size={12} />
-                {new Date(note.date).toLocaleDateString()}
+              <div className={`font-bold text-md mb-2 pr-6 truncate ${activeNoteId === note.id ? 'text-amber-800' : 'text-slate-800'}`}>{note.title}</div>
+              <div className="text-xs text-slate-500 line-clamp-2 leading-relaxed mb-3">{note.content || "Empty note..."}</div>
+              <div className="flex items-center justify-between mt-2">
+                 <div className="flex items-center gap-2 text-[10px] text-slate-400 font-medium uppercase tracking-wide">
+                    <Calendar size={12} />
+                    {new Date(note.date).toLocaleDateString()}
+                 </div>
+                 {/* Simulate 'Golden View' factor chips if tags exist, else generic */}
+                 <div className="flex gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
+                 </div>
               </div>
               
               <button 
                 onClick={(e) => { e.stopPropagation(); handleDelete(note.id); }}
-                className="absolute top-2 right-2 p-1.5 text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                className="absolute top-3 right-3 p-1.5 text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
               >
-                <Trash2 size={14} />
+                <Trash2 size={16} />
               </button>
             </div>
           ))}

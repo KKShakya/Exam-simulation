@@ -563,6 +563,13 @@ const CHEAT_SHEET_DATA = [
     color: "amber",
     sections: [
       {
+        subtitle: "Double (x2) & Half (1/2)",
+        points: [
+           { label: "Double (x2) Rule", desc: "If the last digit is ≥ 5, the doubled first digit gets a +1. Example: 26 × 2. Double 2 is 4. Since 6 > 5, 4 becomes 5. Last digit of 6×2 is 2. Answer: 52." },
+           { label: "Half (1/2) Rule", desc: "Even-Even (288/2 = 144) is direct. If tens/hundreds is Odd (116): Half it without decimal (11->5). The last digit comes from the carry (16/2=8, which is >5). If both digits are Odd, answer is decimal." }
+        ]
+      },
+      {
         subtitle: "Mensuration",
         points: [
            { label: "Divisibility by 11", desc: "Volume/Area with π? Answer must be divisible by 11. (Sum Odd - Sum Even = 0 or 11)." },
@@ -1468,22 +1475,37 @@ const SpeedMath: React.FC = () => {
                   <h3 className="text-2xl font-bold text-slate-800">{section.title}</h3>
                </div>
                
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                  {section.sections.map((sub, sIdx) => (
-                   <div key={sIdx} className="bg-slate-50 rounded-2xl p-6 border border-slate-100 hover:border-indigo-100 transition-colors">
-                     <h4 className="font-bold text-lg text-slate-700 mb-4 flex items-center gap-2">
-                       <span className="w-2 h-2 rounded-full bg-indigo-500"></span>
+                   <div key={sIdx} className="bg-slate-50/50 rounded-2xl p-6 border border-slate-100/80 hover:border-indigo-100 transition-colors">
+                     <h4 className="font-bold text-lg text-slate-700 mb-6 flex items-center gap-2">
+                       <span className={`w-2 h-2 rounded-full bg-${section.color}-500`}></span>
                        {sub.subtitle}
                      </h4>
-                     <ul className="space-y-4">
-                       {sub.points.map((pt: any, pIdx) => (
-                         <li key={pIdx}>
-                           <span className="block font-bold text-slate-800 text-sm mb-1">{pt.label}</span>
-                           <span className="block text-slate-600 text-sm leading-relaxed">{pt.desc}</span>
-                           {pt.visual && <div className="mt-2">{pt.visual}</div>}
-                         </li>
-                       ))}
-                     </ul>
+                     {/* Updated to Grid of Cards Style */}
+                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                       {sub.points.map((pt: any, pIdx) => {
+                         // Default card style
+                         let cardBg = `bg-white hover:bg-${section.color}-50`;
+                         let cardBorder = `border-slate-200 hover:border-${section.color}-200`;
+                         let titleColor = `text-slate-800`;
+                         
+                         // Apply Golden Style specifically for Calculation Speed section (Amber)
+                         if (section.color === 'amber') {
+                            cardBg = "bg-amber-50 hover:bg-amber-100";
+                            cardBorder = "border-amber-100 hover:border-amber-200";
+                            titleColor = "text-amber-700";
+                         }
+
+                         return (
+                           <div key={pIdx} className={`p-5 rounded-xl border shadow-sm transition-all duration-200 hover:shadow-md flex flex-col h-full ${cardBg} ${cardBorder} ${pt.visual ? 'col-span-1 sm:col-span-2' : ''}`}>
+                             <span className={`block font-bold text-md mb-2 ${titleColor}`}>{pt.label}</span>
+                             <span className="block text-slate-600 text-sm leading-relaxed flex-1">{pt.desc}</span>
+                             {pt.visual && <div className="mt-4 pt-4 border-t border-slate-200/50 w-full flex justify-center">{pt.visual}</div>}
+                           </div>
+                         );
+                       })}
+                     </div>
                    </div>
                  ))}
                </div>
