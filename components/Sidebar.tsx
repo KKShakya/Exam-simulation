@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { LayoutDashboard, BookOpen, BarChart2, Menu, X, MonitorPlay, Zap, FileText, Youtube, Feather, Globe } from 'lucide-react';
+import { LayoutDashboard, BookOpen, BarChart2, Menu, X, MonitorPlay, Zap, FileText, Youtube, Feather, Globe, Monitor } from 'lucide-react';
 
 interface SidebarProps {
   activeTab: string;
@@ -15,6 +15,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, isOpen, setI
     { id: 'speed', label: 'Speed Math', icon: Zap },
     { id: 'english', label: 'English Fever', icon: Feather },
     { id: 'gk', label: 'GK Mania', icon: Globe },
+    { id: 'computer', label: 'Computer Se Pyaar', icon: Monitor },
     { id: 'notes', label: 'Smart Notes', icon: FileText },
     { id: 'mock', label: 'Mock Exam', icon: MonitorPlay },
     { id: 'video', label: 'Video Classes', icon: Youtube },

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { MonitorPlay, Zap, FileText, Youtube, BarChart2, ArrowRight, Feather, Globe } from 'lucide-react';
+import { MonitorPlay, Zap, FileText, Youtube, BarChart2, ArrowRight, Feather, Globe, Monitor } from 'lucide-react';
 
 interface DashboardProps {
   onNavigate: (tab: string, props?: any) => void;
@@ -76,7 +76,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
           </p>
         </div>
 
-        {/* GK Mania (NEW) */}
+        {/* GK Mania */}
         <div 
           onClick={() => onNavigate('gk')}
           className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-blue-400 hover:shadow-md transition-all cursor-pointer group"
@@ -90,6 +90,23 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
           <h3 className="text-xl font-bold text-slate-800 mb-2">GK Mania</h3>
           <p className="text-slate-500 text-sm">
             Banking Awareness, Static GK, and Monthly Current Affairs timeline.
+          </p>
+        </div>
+
+        {/* Computer Se Pyaar (NEW) */}
+        <div 
+          onClick={() => onNavigate('computer')}
+          className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-cyan-400 hover:shadow-md transition-all cursor-pointer group"
+        >
+          <div className="flex items-start justify-between mb-4">
+            <div className="p-3 bg-cyan-100 text-cyan-600 rounded-xl group-hover:scale-110 transition-transform">
+              <Monitor size={28} />
+            </div>
+            <ArrowRight size={20} className="text-slate-300 group-hover:text-cyan-500 transition-colors" />
+          </div>
+          <h3 className="text-xl font-bold text-slate-800 mb-2">Computer Se Pyaar</h3>
+          <p className="text-slate-500 text-sm">
+            Zero to Hero in Computer Awareness. Memory Hierarchy, Networking & Protocols.
           </p>
         </div>
 
