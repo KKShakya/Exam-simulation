@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Clock, GitMerge, Box, Scissors, Hash, AlertTriangle, Feather, ChevronLeft, BookOpen, GraduationCap, Crosshair, Layout, Link, Sparkles, ScanEye, CheckCircle2, Award, ChevronDown, ChevronUp } from 'lucide-react';
+import { Clock, GitMerge, Box, Scissors, Hash, AlertTriangle, Feather, ChevronLeft, BookOpen, GraduationCap, Crosshair, Layout, Link, Sparkles, ScanEye, CheckCircle2, Award, ChevronDown, ChevronUp, Link2 } from 'lucide-react';
 
 // Data Structure for Rules
 const ENGLISH_MODULES = [
@@ -177,6 +177,55 @@ const ENGLISH_MODULES = [
         content: "Most verbs take 'By', but some are special:\n• Known TO (not by)\n• Surprised AT\n• Filled WITH\n• Married TO"
       }
     ]
+  },
+  {
+    id: 'm9',
+    title: "MODULE 9: THE ROOTS (Etymology & Vocab)",
+    icon: Link2,
+    color: "emerald",
+    description: "Decode thousands of words by mastering Latin and Greek roots.",
+    points: [
+      {
+        title: "spec / spect (Latin: see, look)",
+        content: "• **Example Words:** inspect, respect, spectator, perspective, spectacle\n• **💡 Mnemonic Trick:** SPECtacles help you see."
+      },
+      {
+        title: "scrib / script (Latin: write)",
+        content: "• **Example Words:** describe, manuscript, inscription, prescribe, subscription\n• **💡 Mnemonic Trick:** SCRIPT = written words."
+      },
+      {
+        title: "dict (Latin: say)",
+        content: "• **Example Words:** predict, contradict, verdict, dictionary, dictate\n• **💡 Mnemonic Trick:** DICTionary = collection of words said."
+      },
+      {
+        title: "port (Latin: carry)",
+        content: "• **Example Words:** transport, import, export, portable, deport\n• **💡 Mnemonic Trick:** PORTer carries luggage."
+      },
+      {
+        title: "tract (Latin: pull, drag)",
+        content: "• **Example Words:** attract, distract, contract, subtract, protract\n• **💡 Mnemonic Trick:** TRACTor pulls soil."
+      },
+      {
+        title: "vid / vis (Latin: see)",
+        content: "• **Example Words:** video, visual, evidence, invisible, revise\n• **💡 Mnemonic Trick:** VISion = ability to see."
+      },
+      {
+        title: "form (Latin: shape)",
+        content: "• **Example Words:** deform, reform, transform, uniform\n• **💡 Mnemonic Trick:** REform → make shape again."
+      },
+      {
+        title: "voc / vok (Latin: call, voice)",
+        content: "• **Example Words:** vocal, provoke, invoke, advocate\n• **💡 Mnemonic Trick:** VOCal = related to voice."
+      },
+      {
+        title: "chrono (Greek: time)",
+        content: "• **Example Words:** chronological, synchronize, anachronism\n• **💡 Mnemonic Trick:** Chrono = time (like chronometer)."
+      },
+      {
+        title: "log / loqu (Greek/Latin: word, speech)",
+        content: "• **Example Words:** dialogue, monologue, eloquent, logical\n• **💡 Mnemonic Trick:** LOGic → power of words."
+      }
+    ]
   }
 ];
 
@@ -199,7 +248,7 @@ const EnglishFever: React.FC = () => {
                     English Fever
                 </h1>
                 <p className="text-slate-500 max-w-2xl mx-auto">
-                    The 120 Rules of Grammar condensed into 8 High-Impact Modules. Master these to crack Error Detection.
+                    The 120 Rules of Grammar & The Root Method condensed into 9 High-Impact Modules.
                 </p>
             </div>
 
@@ -246,7 +295,7 @@ const EnglishFever: React.FC = () => {
                                 </div>
                             </button>
 
-                            <div className={`transition-all duration-300 ease-in-out ${isExpanded ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                            <div className={`transition-all duration-300 ease-in-out ${isExpanded ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'}`}>
                                 <div className="px-6 pb-6 pt-2 space-y-4">
                                     <div className="h-px w-full bg-current opacity-10 mb-4"></div>
                                     {module.points.map((point, idx) => (
@@ -256,7 +305,7 @@ const EnglishFever: React.FC = () => {
                                                 {point.title}
                                             </h4>
                                             <p className="text-sm text-slate-700 whitespace-pre-line leading-relaxed pl-3.5 border-l-2 border-slate-300 border-opacity-30">
-                                                {point.content}
+                                               <span dangerouslySetInnerHTML={{ __html: point.content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
                                             </p>
                                         </div>
                                     ))}
@@ -269,9 +318,9 @@ const EnglishFever: React.FC = () => {
             
             <div className="mt-12 p-8 bg-slate-900 rounded-2xl text-white text-center shadow-xl">
                  <Sparkles className="mx-auto text-yellow-400 mb-4" size={32} />
-                 <h3 className="text-xl font-bold mb-2">Pro Tip: The 'Read Aloud' Technique</h3>
+                 <h3 className="text-xl font-bold mb-2">Pro Tip: The Root Strategy</h3>
                  <p className="text-slate-400 max-w-lg mx-auto mb-6">
-                    In Error Detection, if a sentence sounds "clunky" or awkward when read aloud, 90% of the time, that's where the error is. Trust your gut, then verify with rules.
+                    Mastering 50 roots can unlock the meaning of 5000+ English words. When you see a new word, break it down like a puzzle.
                  </p>
             </div>
         </div>

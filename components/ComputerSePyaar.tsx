@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Monitor, Cpu, Wifi, Database, Shield, HardDrive, ChevronDown, Binary, History, FileText, Keyboard, Layers, MousePointer2 } from 'lucide-react';
+import { Monitor, Cpu, Wifi, Database, Shield, HardDrive, ChevronDown, Binary, History, FileText, Keyboard, Layers, MousePointer2, Info, Clock, Terminal } from 'lucide-react';
 
 const COMPUTER_MODULES = [
   {
@@ -8,23 +8,23 @@ const COMPUTER_MODULES = [
     title: 'Hardware & Memory (The Brain)',
     icon: Cpu,
     color: 'cyan',
-    description: "Hierarchy, Registers, Volatility & Booting.",
+    description: "Booting, Memory Types, Keys & Peripherals.",
     points: [
       {
-        title: "Memory Hierarchy (Speed & Access)",
-        content: "• **Registers:** CPU Internal (Fastest). **Accumulator** stores intermediate results.\n• **Cache:** Uses **SRAM** (Static, No Refresh needed). Volatile.\n• **RAM:** Uses **DRAM** (Dynamic, Needs Refresh). DDR is DRAM. Volatile.\n• **Secondary:** HDD, SSD, Magnetic Tape (Sequential Access/Slowest)."
+        title: "The Booting Process & BIOS",
+        content: "• **BIOS (Basic Input Output System):** Firmware in ROM that initiates hardware checks.\n• **POST (Power-On Self Test):** Initial diagnostic test to check hardware components.\n• **Cold Booting:** Starting a computer from its 'off' state.\n• **Warm Booting:** Restarting a computer without turning it off (using Ctrl+Alt+Del or Restart button)."
       },
       {
-        title: "Storage Classifications",
-        content: "• **Volatile:** Data lost without power (Registers, Cache, RAM).\n• **Non-Volatile:** Retains data (ROM, HDD, Flash Memory).\n• **ROM Types:** MROM (Masked), EPROM (UV Erasable), EEPROM (Electrically Erasable/Flash)."
+        title: "Memory Hierarchy & ROM Types",
+        content: "• **Primary Memory:** Fast, internal (RAM, ROM, Cache).\n• **Secondary Memory:** External backup (HDD, SSD, Pen Drive, Magnetic Tape).\n• **ROM Subtypes:** \n  - **MROM:** Masked ROM (Hardwired during manufacture).\n  - **PROM:** Programmable (One-time write).\n  - **EPROM:** Erasable via **UV Rays**.\n  - **EEPROM:** Electrically Erasable (Example: **Flash Memory** used in Pen Drives)."
       },
       {
-        title: "System Operations",
-        content: "• **Virtual Memory:** Hard disk space used as RAM when RAM is full.\n• **Swapping:** Moving data between RAM and Virtual Memory.\n• **MMU:** Memory Management Unit (Allocates memory).\n• **Driver:** Software interface for peripherals."
+        title: "Keyboard & Peripheral Classifications",
+        content: "• **Toggle Keys:** Caps Lock, Num Lock, Scroll Lock (ON/OFF behavior).\n• **Modifier Keys:** Ctrl, Alt, Shift (Used in combination).\n• **Alphanumeric:** Letters and Numbers.\n• **Function Keys:** F1 to F12.\n• **Drivers:** Essential software required for the OS to communicate with peripherals like Printers/Scanners.\n• **PSS:** Portable Scanning System (Wireless handheld device for inventory) vs **POS** (Point of Sale)."
       },
       {
-        title: "Booting & Peripherals",
-        content: "• **BIOS:** Firmware in ROM. **POST:** Hardware check.\n• **Booting:** Cold (Switch On) vs Warm (Restart).\n• **Keys:** Toggle (Caps/Num), Modifier (Ctrl/Alt/Shift).\n• **Printers:** Laser (Non-impact), Dot Matrix (Impact)."
+        title: "Printers & Display",
+        content: "• **Laser Printer:** Uses laser beams on photosensitive surfaces. High speed and quality.\n• **Impact Printers:** Dot Matrix, Daisy Wheel (Physical striking).\n• **Monitor:** Output device for visual soft-copy."
       }
     ]
   },
@@ -33,19 +33,19 @@ const COMPUTER_MODULES = [
     title: 'Networking & Protocols (The Web)',
     icon: Wifi,
     color: 'indigo',
-    description: "Switching, OSI, VPN & DNS.",
+    description: "Internet Evolution, Switching & Security.",
     points: [
       {
-        title: "Switching Techniques",
-        content: "• **Packet Switching:** Data sent in packets (Used in Internet).\n• **Circuit Switching:** Dedicated line (Used in Telephone calls).\n• **Message Switching:** Store and forward (Intermediate nodes)."
+        title: "Internet History Timeline",
+        content: "• **1969:** **ARPANET** (First network) created by US Army.\n• **1983:** Official 'Birth of Internet' via TCP/IP adoption.\n• **Late 1980s:** Tim Berners-Lee introduces **WWW**.\n• **1990s:** Emergence of Search Engines (Google, Yahoo)."
       },
       {
-        title: "Important Protocols",
-        content: "• **DNS:** Domain Name System (URL → IP Address).\n• **SNMP:** Simple Network Management Protocol.\n• **VPN:** Virtual Private Network (Secure Tunnel).\n• **WPA:** Wi-Fi Protected Access (Security)."
+        title: "Network Switching Techniques",
+        content: "• **Packet Switching:** Data split into packets with destination addresses (Used by the Internet).\n• **Circuit Switching:** Dedicated physical line established (Used in traditional Telephony).\n• **Message Switching:** Uses intermediate nodes to relay whole messages (Distributed networks)."
       },
       {
-        title: "OSI Model Layers (7 Layers)",
-        content: "1. **Physical:** Bits, Cables, Hub.\n2. **Data Link:** Frames, Switch, MAC Address.\n3. **Network:** Packets, Router, IP Address.\n4. **Transport:** TCP/UDP (End-to-End).\n5. **Presentation:** Encryption, Compression.\n6. **Application:** HTTP, FTP, SMTP."
+        title: "Protocols & Connectivity",
+        content: "• **DNS:** Domain Name System (Maps URLs like google.com to IP addresses).\n• **SNMP:** Simple Network Management Protocol (Manages devices).\n• **FTP:** File Transfer Protocol (Uploading/Downloading).\n• **VPN:** Virtual Private Network (Secure remote access).\n• **WPA:** Wi-Fi Protected Access (Wireless authentication).\n• **Modem:** Modulates (Digital to Analog) and Demodulates for telephone line communication."
       }
     ]
   },
@@ -54,61 +54,36 @@ const COMPUTER_MODULES = [
     title: 'Office & Email (The Tools)',
     icon: FileText,
     color: 'blue',
-    description: "Email Structure, CC/BCC & MS Shortcuts.",
+    description: "Email Fundamentals & Office Mastery.",
     points: [
       {
-        title: "Email Fundamentals",
-        content: "• **Format:** username@domain.com\n• **CC (Carbon Copy):** Visible to all recipients.\n• **BCC (Blind Carbon Copy):** Hidden from others.\n• **Spam:** Unsolicited/Junk mail."
+        title: "Email Structure & Folders",
+        content: "• **Format:** username@serviceprovider.com\n• **CC (Carbon Copy):** All recipients see each other.\n• **BCC (Blind Carbon Copy):** Recipients are hidden from others.\n• **Folders:** \n  - **Inbox:** Received mail.\n  - **Outbox:** Temporarily held before sending.\n  - **Sent:** Successfully delivered.\n  - **Drafts:** Saved but not sent.\n  - **Spam:** Unsolicited/junk emails."
       },
       {
-        title: "Microsoft Word",
-        content: "• **Max Zoom:** 500%.\n• **Drop Cap:** Large initial letter (Default 3 lines).\n• **Ctrl + F1:** Show/Hide Ribbon.\n• **Gutter Margin:** Margin added for binding."
-      },
-      {
-        title: "Excel & PowerPoint",
-        content: "• **Excel Zoom:** 400% Max.\n• **=TODAY():** Date only. **=NOW():** Date + Time.\n• **PPT Zoom:** 400% Max.\n• **F5:** Start Slideshow. **Shift+F5:** Start from current."
+        title: "MS Word & Excel Quick Facts",
+        content: "• **MS Word Max Zoom:** 500%.\n• **Excel/PPT Max Zoom:** 400%.\n• **Gutter Margin:** Added for binding side.\n• **Drop Cap:** Large initial letter (Default 3 lines).\n• **Excel Today():** Current Date only. **Now():** Date + Time."
       }
     ]
   },
   {
     id: 'software',
-    title: 'Software, OS & DBMS (The Logic)',
+    title: 'Software & Logic (The System)',
     icon: Database,
     color: 'purple',
-    description: "System Software, Open Source & DB Terms.",
+    description: "System Tools, DBMS & Software Types.",
     points: [
       {
-        title: "System Software Stack",
-        content: "• **Loader:** Loads program from HDD to RAM.\n• **Linker:** Links small program objects.\n• **Assembler:** Assembly → Machine Language.\n• **Debugger:** Detects & removes bugs."
+        title: "System Software Components",
+        content: "• **Processor (CPU):** Executes program instructions.\n• **Loader:** Transfers programs from HDD to RAM for execution.\n• **Linker:** Links small object files into a single executable.\n• **Assembler:** Converts assembly code to machine code.\n• **Debugger:** Detects and removes errors/bugs from code."
       },
       {
-        title: "Database Concepts",
-        content: "• **Schema:** The structure/skeleton of the DB.\n• **Instances:** The actual data records at a specific time.\n• **SQL:** DDL (Create), DML (Insert), DCL (Grant)."
+        title: "Database Management (DBMS)",
+        content: "• **Schema:** The logical structure/skeleton of the database.\n• **Instances:** The actual data records stored at a specific moment.\n• **Key Commands:** DDL (Structure), DML (Data), DCL (Control), TCL (Transactions)."
       },
       {
-        title: "Software Types",
-        content: "• **Open Source:** Code is free & modifiable (Linux, Firefox).\n• **Utility:** Disk Defragmenter (Optimizes storage/speed).\n• **Modem:** Modulator-Demodulator (Analog ↔ Digital)."
-      }
-    ]
-  },
-  {
-    id: 'history',
-    title: 'History & Pioneers (The Roots)',
-    icon: History,
-    color: 'amber',
-    description: "Internet Timeline & Inventors.",
-    points: [
-      {
-        title: "Internet Evolution",
-        content: "• **1969:** ARPANET (First Network, US Army).\n• **1983:** Internet officially born (TCP/IP).\n• **Late 80s:** WWW (Tim Berners-Lee).\n• **90s:** Search Engines (Google)."
-      },
-      {
-        title: "The Pioneers",
-        content: "• **Father of Computer:** Charles Babbage.\n• **First Programmer:** Ada Lovelace.\n• **Queen of Software:** Grace Hopper (COBOL)."
-      },
-      {
-        title: "Generations",
-        content: "1. Vacuum Tubes (ENIAC)\n2. Transistors\n3. ICs (Integrated Circuits)\n4. Microprocessors (VLSI)\n5. AI & ULSI"
+        title: "Software Categories",
+        content: "• **Open Source:** Free to use, source code is modifiable (Linux, Mozilla Firefox).\n• **Utility Software:** Enhances system performance (Disk Defragmenter - rearranges files to free space).\n• **Multimedia:** Integration of Text, Sound, Graphics, and Video."
       }
     ]
   },
@@ -117,15 +92,15 @@ const COMPUTER_MODULES = [
     title: 'Security & Malware (The Shield)',
     icon: Shield,
     color: 'rose',
-    description: "Threats & Defense.",
+    description: "Threats, Phishing & Defense.",
     points: [
       {
-        title: "Malware Types",
-        content: "• **Phishing:** Fake emails/sites for passwords.\n• **Keylogger:** Records keystrokes.\n• **Ransomware:** Encrypts files for money.\n• **Trojan:** Disguised as safe software."
+        title: "Malware Definitions",
+        content: "• **Phishing:** Fraudulent emails/sites to steal credentials.\n• **Trojan:** Disguised as legitimate software.\n• **Worm:** Self-replicating malware that eats network bandwidth.\n• **Keylogger:** Records keystrokes to steal passwords."
       },
       {
-        title: "Defense",
-        content: "• **Firewall:** Monitors traffic (Hardware/Software).\n• **Antivirus:** Scans & removes files.\n• **Encryption:** Cipher text security."
+        title: "Defensive Measures",
+        content: "• **Firewall:** Monitors incoming/outgoing traffic based on rules.\n• **Antivirus:** Scans and removes malicious files.\n• **Encryption:** Scrambling data so it's unreadable without a key."
       }
     ]
   }
@@ -135,16 +110,14 @@ const DATA_UNITS = [
   { unit: "Bit", val: "0 or 1 (Smallest)" },
   { unit: "Nibble", val: "4 Bits" },
   { unit: "Byte", val: "8 Bits" },
-  { unit: "Kilobyte (KB)", val: "1024 Bytes" },
-  { unit: "Megabyte (MB)", val: "1024 KB" },
-  { unit: "Gigabyte (GB)", val: "1024 MB" },
-  { unit: "Terabyte (TB)", val: "1024 GB" },
-  { unit: "Petabyte (PB)", val: "1024 TB" },
-  { unit: "Exabyte (EB)", val: "1024 PB" },
-  { unit: "Zettabyte (ZB)", val: "1024 EB" },
-  { unit: "Yottabyte (YB)", val: "1024 ZB" },
-  { unit: "Brontobyte", val: "1024 YB" },
-  { unit: "Geopbyte", val: "Highest Known" },
+  { unit: "Kilobyte (KB)", val: "1,000 / 1,024 Bytes" },
+  { unit: "Megabyte (MB)", val: "1 Million Bytes" },
+  { unit: "Gigabyte (GB)", val: "1 Billion Bytes" },
+  { unit: "Terabyte (TB)", val: "1 Trillion Bytes" },
+  { unit: "Petabyte (PB)", val: "1,024 TB" },
+  { unit: "Exabyte (EB)", val: "1,024 PB" },
+  { unit: "Zettabyte (ZB)", val: "1,024 EB" },
+  { unit: "Yottabyte (YB)", val: "1,024 ZB" },
 ];
 
 const ComputerSePyaar: React.FC = () => {
@@ -156,14 +129,23 @@ const ComputerSePyaar: React.FC = () => {
 
   return (
     <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 pb-12">
+      {/* Header with detailed note */}
       <div className="text-center space-y-4 mb-10">
         <h1 className="text-4xl font-bold text-slate-900 flex items-center justify-center gap-3">
           <Monitor className="text-cyan-600" size={40} />
           Computer Se Pyaar
         </h1>
         <p className="text-slate-500 max-w-2xl mx-auto">
-          The ultimate A-Z guide for IBPS RRB PO & Clerk Computer Awareness. Target 20/20.
+          Detailed A-Z guide for IBPS RRB PO & Clerk. Master Hardware, Networking, Software, and more.
         </p>
+        <div className="flex justify-center gap-2">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-cyan-100 text-cyan-700 rounded-full text-xs font-bold border border-cyan-200 shadow-sm">
+                <Terminal size={14} /> Exam Oriented
+            </span>
+             <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-bold border border-indigo-200 shadow-sm">
+                <Clock size={14} /> Updated for 2025
+            </span>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -228,14 +210,15 @@ const ComputerSePyaar: React.FC = () => {
           })}
         </div>
 
-        {/* Right Column: Data Hierarchy Table */}
-        <div className="lg:col-span-1">
-           <div className="bg-slate-900 text-white rounded-3xl p-6 shadow-xl border border-slate-700 sticky top-4">
+        {/* Right Column: Data Hierarchy & Quick Facts */}
+        <div className="lg:col-span-1 space-y-6">
+           {/* Storage Table */}
+           <div className="bg-slate-900 text-white rounded-3xl p-6 shadow-xl border border-slate-700">
               <div className="flex items-center gap-3 mb-6 border-b border-slate-700 pb-4">
                  <Binary className="text-emerald-400" size={24} />
                  <div>
-                    <h3 className="font-bold text-lg">Data Units Ladder</h3>
-                    <p className="text-slate-400 text-xs">Memorize the sequence</p>
+                    <h3 className="font-bold text-lg">Data Units Hierarchy</h3>
+                    <p className="text-slate-400 text-xs">Smallest to Largest</p>
                  </div>
               </div>
               
@@ -250,9 +233,37 @@ const ComputerSePyaar: React.FC = () => {
 
               <div className="mt-6 pt-4 border-t border-slate-700 text-center">
                  <p className="text-xs text-slate-500">
-                    Pro Tip: 1 Byte = 8 Bits.<br/>All units after Byte multiply by 1024.
+                    Pro Tip: 1 Byte = 8 Bits.<br/>1 Nibble = 4 Bits.
                  </p>
               </div>
+           </div>
+
+           {/* Quick Ref Box */}
+           <div className="bg-amber-50 rounded-3xl p-6 border border-amber-200 shadow-sm">
+              <div className="flex items-center gap-3 mb-4">
+                 <div className="p-2 bg-amber-100 text-amber-600 rounded-xl">
+                   <Info size={20} />
+                 </div>
+                 <h3 className="font-bold text-amber-900">Exam Tips</h3>
+              </div>
+              <ul className="space-y-3 text-sm text-amber-800">
+                <li className="flex gap-2">
+                  <div className="w-1 h-1 bg-amber-400 rounded-full mt-2 flex-shrink-0"></div>
+                  <span><strong>EPROM</strong> is erased by UV rays; <strong>EEPROM</strong> is electrical.</span>
+                </li>
+                <li className="flex gap-2">
+                  <div className="w-1 h-1 bg-amber-400 rounded-full mt-2 flex-shrink-0"></div>
+                  <span><strong>ARPANET</strong> (1969) initiated the internet.</span>
+                </li>
+                <li className="flex gap-2">
+                  <div className="w-1 h-1 bg-amber-400 rounded-full mt-2 flex-shrink-0"></div>
+                  <span><strong>Loader</strong> transfers programs from HDD to RAM.</span>
+                </li>
+                <li className="flex gap-2">
+                  <div className="w-1 h-1 bg-amber-400 rounded-full mt-2 flex-shrink-0"></div>
+                  <span><strong>Switching:</strong> Internet uses Packet; Telephony uses Circuit.</span>
+                </li>
+              </ul>
            </div>
         </div>
 
