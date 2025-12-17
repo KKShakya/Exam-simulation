@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Clock, GitMerge, Box, Scissors, Hash, AlertTriangle, Feather, ChevronLeft, BookOpen, GraduationCap, Crosshair, Layout, Link, Sparkles, ScanEye, CheckCircle2 } from 'lucide-react';
+import { Clock, GitMerge, Box, Scissors, Hash, AlertTriangle, Feather, ChevronLeft, BookOpen, GraduationCap, Crosshair, Layout, Link, Sparkles, ScanEye, CheckCircle2, Award, ChevronDown, ChevronUp } from 'lucide-react';
 
 // Data Structure for Rules
 const ENGLISH_MODULES = [
@@ -156,330 +156,123 @@ const ENGLISH_MODULES = [
         content: "• One... One's\n• Everyone... His\n\n❌ Wrong: One must do his duty.\n✅ Right: One must do one's duty."
       }
     ]
-  }
-];
-
-// Data for Trap Hunter Protocol
-const SVPM_PROTOCOL = [
-  {
-    layer: "Layer 1",
-    code: "S",
-    title: "SUBJECT-VERB (The Skeleton)",
-    desc: "The most common error (50% of questions).",
-    color: "blue",
-    icon: Layout,
-    action: "Find the Main Verb first. Then find Who is doing it.",
-    check: [
-      "Singular Subject → Singular Verb? (e.g., The list of boys is...)",
-      "Compound Subject? (e.g., Ram as well as his friends is...)",
-    ],
-    mindset: "Ignore the middle words. Do the Head and the Tail match?"
   },
   {
-    layer: "Layer 2",
-    code: "V",
-    title: "VERB TENSE (The Timeline)",
-    desc: "The logic error.",
-    color: "amber",
-    icon: Clock,
-    action: "Scan for 'Time Words' (Yesterday, Since, Now, Next year).",
-    check: [
-      "Does the Tense match the Time Word? (Last week + V2)",
-      "Is the sentence consistent? (Starts in Past → Stays in Past)",
-      "Has/Have/Had → Is it followed by V3?"
-    ]
-  },
-  {
-    layer: "Layer 3",
-    code: "P",
-    title: "PREPOSITIONS & PRONOUNS (The Joints)",
-    desc: "The tricky 'invisible' error.",
-    color: "purple",
-    icon: Link,
-    action: "Circle every small word (in, at, on, with, by, who, which).",
-    check: [
-      "Fixed Prepositions: Does the verb allow this? (Discuss about → Wrong)",
-      "Pronouns: Who (Doer) vs Whom (Receiver)?",
-      "Consistency: One... One's?"
-    ]
-  },
-  {
-    layer: "Layer 4",
-    code: "M",
-    title: "MODIFIERS (The Decor)",
-    desc: "The 'Minute' error (Adjectives, Adverbs, Articles).",
-    color: "rose",
-    icon: Sparkles,
-    action: "Look at descriptive words (Good, Bad, Few, Many, Only, Enough).",
-    check: [
-      "Quantifiers: Few (Countable) vs Little (Uncountable)",
-      "Placement: Is 'Enough' in the right spot? (Smart enough)",
-      "Articles: Specific (The) vs General (A/An)"
+    id: 'm8',
+    title: "MODULE 8: THE FINISHING TOUCHES",
+    icon: Award,
+    color: "indigo",
+    description: "Advanced redundant errors, confusing pairs, and passive voice exceptions.",
+    points: [
+      {
+        title: "1. The 'Superfluous' Trap (Redundancy)",
+        content: "• Return back → Return\n• Revert back → Revert\n• Repeat again → Repeat\n• Final conclusion → Conclusion\n• Blunder mistake → Blunder\n• Cousin brother/sister → Cousin\n• Equally good as → As good"
+      },
+      {
+        title: "2. Confusing Pairs (Mains)",
+        content: "• Affect (Verb) vs Effect (Noun).\n• Beside (Next to) vs Besides (In addition).\n• Compliment (Praise) vs Complement (Complete).\n• Loose (Adj) vs Lose (Verb)."
+      },
+      {
+        title: "3. Passive Voice Prepositions",
+        content: "Most verbs take 'By', but some are special:\n• Known TO (not by)\n• Surprised AT\n• Filled WITH\n• Married TO"
+      }
     ]
   }
 ];
 
 const EnglishFever: React.FC = () => {
-    const [view, setView] = useState<'menu' | 'rules' | 'trap-hunter'>('menu');
+    const [expandedModule, setExpandedModule] = useState<string | null>('m1');
 
-    if (view === 'menu') {
-        return (
-            <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4">
-                <div className="text-center space-y-4 mb-12">
-                    <h1 className="text-4xl font-bold text-slate-900 flex items-center justify-center gap-3">
-                        <Feather className="text-pink-600" size={40} />
-                        English Fever
-                    </h1>
-                    <p className="text-slate-500 max-w-2xl mx-auto">
-                        Master the language section with curated rules, vocabulary, and logic traps.
-                    </p>
-                </div>
+    const toggleModule = (id: string) => {
+        if (expandedModule === id) {
+            setExpandedModule(null);
+        } else {
+            setExpandedModule(id);
+        }
+    };
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {/* English Rules Card */}
-                    <div 
-                        onClick={() => setView('rules')}
-                        className="bg-white rounded-2xl p-6 shadow-lg border border-slate-100 hover:shadow-xl hover:border-pink-300 transition-all cursor-pointer group relative overflow-hidden h-full flex flex-col justify-between"
-                    >
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-pink-100 rounded-full -mr-10 -mt-10 blur-2xl group-hover:bg-pink-200 transition-all"></div>
-                        <div className="relative z-10">
-                            <div className="w-14 h-14 bg-pink-50 text-pink-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                                <BookOpen size={28} />
-                            </div>
-                            <h3 className="text-xl font-bold text-slate-800 mb-2 group-hover:text-pink-600 transition-colors">English Rules</h3>
-                            <p className="text-slate-500 text-sm leading-relaxed mb-6">
-                                The "Master Cheat Sheet". Grammar modules, connector logic, and specific exam traps organized for revision.
-                            </p>
-                        </div>
-                        <button className="relative z-10 w-full bg-pink-50 text-pink-600 py-3 rounded-xl font-bold text-sm hover:bg-pink-600 hover:text-white transition-all flex items-center justify-center gap-2">
-                            Open Rules <ChevronLeft className="rotate-180" size={16} />
-                        </button>
-                    </div>
-
-                    {/* Trap Hunter Card */}
-                    <div 
-                        onClick={() => setView('trap-hunter')}
-                        className="bg-white rounded-2xl p-6 shadow-lg border border-slate-100 hover:shadow-xl hover:border-emerald-300 transition-all cursor-pointer group relative overflow-hidden h-full flex flex-col justify-between"
-                    >
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-100 rounded-full -mr-10 -mt-10 blur-2xl group-hover:bg-emerald-200 transition-all"></div>
-                        <div className="relative z-10">
-                            <div className="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                                <Crosshair size={28} />
-                            </div>
-                            <h3 className="text-xl font-bold text-slate-800 mb-2 group-hover:text-emerald-600 transition-colors">Trap Hunter</h3>
-                            <p className="text-slate-500 text-sm leading-relaxed mb-6">
-                                The S.V.P.M. Scanning Protocol. A 4-layer strategy to dismantle error detection questions.
-                            </p>
-                        </div>
-                        <button className="relative z-10 w-full bg-emerald-50 text-emerald-600 py-3 rounded-xl font-bold text-sm hover:bg-emerald-600 hover:text-white transition-all flex items-center justify-center gap-2">
-                            Start Scanning <ChevronLeft className="rotate-180" size={16} />
-                        </button>
-                    </div>
-
-                    {/* Placeholder: Vocab Vault */}
-                    <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200 opacity-60 cursor-not-allowed h-full flex flex-col justify-between">
-                         <div className="relative z-10">
-                            <div className="w-14 h-14 bg-slate-200 text-slate-400 rounded-xl flex items-center justify-center mb-6">
-                                <GraduationCap size={28} />
-                            </div>
-                            <h3 className="text-xl font-bold text-slate-400 mb-2">Vocab Vault</h3>
-                            <p className="text-slate-400 text-sm leading-relaxed mb-6">
-                                Root words, phrasal verbs, and confusion pairs.
-                            </p>
-                         </div>
-                         <button className="w-full bg-slate-200 text-slate-400 py-3 rounded-xl font-bold text-sm cursor-not-allowed flex items-center justify-center gap-2">
-                            Coming Soon
-                         </button>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
-    if (view === 'trap-hunter') {
-        return (
-            <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-right-4 pb-10">
-                {/* Header with Back Button */}
-                <div className="flex items-center gap-4 mb-4">
-                    <button 
-                        onClick={() => setView('menu')} 
-                        className="p-2 bg-white border border-slate-200 hover:bg-slate-100 rounded-full text-slate-500 hover:text-slate-800 transition-colors shadow-sm"
-                    >
-                        <ChevronLeft size={24} />
-                    </button>
-                    <div>
-                        <h1 className="text-2xl font-extrabold text-slate-800 flex items-center gap-2">
-                            <Crosshair className="text-emerald-600" size={24} />
-                            Trap Hunter
-                        </h1>
-                        <p className="text-slate-500 text-sm">The S.V.P.M. Scanning Protocol</p>
-                    </div>
-                </div>
-
-                <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-200">
-                    <div className="flex items-center gap-4 mb-6">
-                         <div className="p-3 bg-emerald-100 text-emerald-700 rounded-xl">
-                             <ScanEye size={32} />
-                         </div>
-                         <div>
-                             <h2 className="text-xl font-bold text-slate-800">How to use this protocol?</h2>
-                             <p className="text-slate-500">Scan every error detection question in these 4 layers, in this exact order.</p>
-                         </div>
-                    </div>
-                    
-                    <div className="space-y-6">
-                        {SVPM_PROTOCOL.map((layer, idx) => {
-                            const Icon = layer.icon;
-                            // Helper for colors
-                            const getColors = (c: string) => {
-                                switch(c) {
-                                    case 'blue': return { bg: 'bg-blue-50', text: 'text-blue-700', border: 'border-blue-100', dot: 'bg-blue-500' };
-                                    case 'amber': return { bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-100', dot: 'bg-amber-500' };
-                                    case 'purple': return { bg: 'bg-purple-50', text: 'text-purple-700', border: 'border-purple-100', dot: 'bg-purple-500' };
-                                    case 'rose': return { bg: 'bg-rose-50', text: 'text-rose-700', border: 'border-rose-100', dot: 'bg-rose-500' };
-                                    default: return { bg: 'bg-slate-50', text: 'text-slate-700', border: 'border-slate-100', dot: 'bg-slate-500' };
-                                }
-                            };
-                            const theme = getColors(layer.color);
-
-                            return (
-                                <div key={idx} className={`border rounded-2xl overflow-hidden ${theme.border} bg-white transition-all hover:shadow-md`}>
-                                    <div className={`p-4 border-b ${theme.border} ${theme.bg} flex justify-between items-center`}>
-                                        <div className="flex items-center gap-3">
-                                            <div className={`w-10 h-10 rounded-full bg-white flex items-center justify-center font-bold text-lg shadow-sm ${theme.text}`}>
-                                                {layer.code}
-                                            </div>
-                                            <div>
-                                                <h3 className={`font-bold text-lg ${theme.text}`}>{layer.title}</h3>
-                                                <span className="text-xs font-medium opacity-80 uppercase tracking-wider">{layer.layer}</span>
-                                            </div>
-                                        </div>
-                                        <div className={`p-2 bg-white rounded-lg ${theme.text} opacity-50`}>
-                                            <Icon size={20} />
-                                        </div>
-                                    </div>
-                                    <div className="p-6 space-y-4">
-                                        <p className="text-slate-600 font-medium border-l-4 border-slate-200 pl-4 py-1 italic">
-                                            "{layer.desc}"
-                                        </p>
-                                        
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            <div>
-                                                <h4 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-3">Action Plan</h4>
-                                                <p className="text-slate-700 bg-slate-50 p-3 rounded-lg border border-slate-100 text-sm">
-                                                    {layer.action}
-                                                </p>
-                                                {layer.mindset && (
-                                                    <div className="mt-3">
-                                                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Mindset</h4>
-                                                        <p className="text-indigo-600 font-medium text-sm">
-                                                            "{layer.mindset}"
-                                                        </p>
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <div>
-                                                 <h4 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-3">The Checklist</h4>
-                                                 <ul className="space-y-2">
-                                                     {layer.check.map((item, i) => (
-                                                         <li key={i} className="flex items-start gap-2 text-sm text-slate-600">
-                                                             <CheckCircle2 size={16} className={`mt-0.5 flex-shrink-0 ${theme.text}`} />
-                                                             <span>{item}</span>
-                                                         </li>
-                                                     ))}
-                                                 </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
-    // Default: English Rules View
     return (
-        <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in slide-in-from-right-4 pb-10">
-            {/* Header with Back Button */}
-            <div className="flex items-center gap-4 mb-4">
-                <button 
-                    onClick={() => setView('menu')} 
-                    className="p-2 bg-white border border-slate-200 hover:bg-slate-100 rounded-full text-slate-500 hover:text-slate-800 transition-colors shadow-sm"
-                >
-                    <ChevronLeft size={24} />
-                </button>
-                <div>
-                    <h1 className="text-2xl font-extrabold text-slate-800 flex items-center gap-2">
-                        <BookOpen className="text-pink-600" size={24} />
-                        English Rules
-                    </h1>
-                    <p className="text-slate-500 text-sm">The Master Cheat Sheet</p>
-                </div>
+        <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 pb-12">
+            <div className="text-center space-y-4 mb-10">
+                <h1 className="text-4xl font-bold text-slate-900 flex items-center justify-center gap-3">
+                    <Feather className="text-pink-600" size={40} />
+                    English Fever
+                </h1>
+                <p className="text-slate-500 max-w-2xl mx-auto">
+                    The 120 Rules of Grammar condensed into 8 High-Impact Modules. Master these to crack Error Detection.
+                </p>
             </div>
 
-            <div className="grid grid-cols-1 gap-8">
-                {ENGLISH_MODULES.map((module, idx) => {
+            <div className="grid grid-cols-1 gap-4">
+                {ENGLISH_MODULES.map((module) => {
                     const Icon = module.icon;
-                    const isTrap = module.id === 'm7';
+                    const isExpanded = expandedModule === module.id;
                     
-                    // Dynamic classes based on color prop
-                    const getColors = (c: string) => {
-                       switch(c) {
-                          case 'blue': return { bg: 'bg-blue-50', text: 'text-blue-600', border: 'border-blue-100', dot: 'bg-blue-500' };
-                          case 'amber': return { bg: 'bg-amber-50', text: 'text-amber-600', border: 'border-amber-100', dot: 'bg-amber-500' };
-                          case 'purple': return { bg: 'bg-purple-50', text: 'text-purple-600', border: 'border-purple-100', dot: 'bg-purple-500' };
-                          case 'emerald': return { bg: 'bg-emerald-50', text: 'text-emerald-600', border: 'border-emerald-100', dot: 'bg-emerald-500' };
-                          case 'rose': return { bg: 'bg-rose-50', text: 'text-rose-600', border: 'border-rose-100', dot: 'bg-rose-500' };
-                          case 'cyan': return { bg: 'bg-cyan-50', text: 'text-cyan-600', border: 'border-cyan-100', dot: 'bg-cyan-500' };
-                          case 'red': return { bg: 'bg-red-50', text: 'text-red-600', border: 'border-red-100', dot: 'bg-red-500' };
-                          default: return { bg: 'bg-indigo-50', text: 'text-indigo-600', border: 'border-indigo-100', dot: 'bg-indigo-500' };
-                       }
-                    }
-                    const theme = getColors(module.color);
+                    // Colors
+                    const colorMap: Record<string, string> = {
+                        blue: "bg-blue-50 text-blue-700 border-blue-100 hover:border-blue-300",
+                        amber: "bg-amber-50 text-amber-700 border-amber-100 hover:border-amber-300",
+                        purple: "bg-purple-50 text-purple-700 border-purple-100 hover:border-purple-300",
+                        emerald: "bg-emerald-50 text-emerald-700 border-emerald-100 hover:border-emerald-300",
+                        rose: "bg-rose-50 text-rose-700 border-rose-100 hover:border-rose-300",
+                        cyan: "bg-cyan-50 text-cyan-700 border-cyan-100 hover:border-cyan-300",
+                        red: "bg-red-50 text-red-700 border-red-100 hover:border-red-300",
+                        indigo: "bg-indigo-50 text-indigo-700 border-indigo-100 hover:border-indigo-300"
+                    };
+                    const themeClass = colorMap[module.color] || colorMap.blue;
 
                     return (
-                        <div key={idx} className={`rounded-3xl shadow-sm border overflow-hidden ${isTrap ? 'bg-red-50/30 border-red-200 ring-1 ring-red-100' : 'bg-white border-slate-200'}`}>
-                             <div className={`p-6 border-b flex items-center gap-4 ${isTrap ? 'border-red-100 bg-red-100/40' : `${theme.border} ${theme.bg}`}`}>
-                                <div className={`p-3 rounded-xl ${isTrap ? 'bg-red-500 text-white shadow-lg shadow-red-500/30' : 'bg-white shadow-sm'} ${!isTrap && theme.text}`}>
-                                    <Icon size={24} />
+                        <div 
+                            key={module.id} 
+                            className={`rounded-2xl transition-all duration-300 overflow-hidden border ${isExpanded ? 'shadow-md ring-1 ring-opacity-50' : 'shadow-sm'} ${themeClass}`}
+                        >
+                            <button 
+                                onClick={() => toggleModule(module.id)}
+                                className="w-full px-6 py-5 flex items-center justify-between text-left focus:outline-none"
+                            >
+                                <div className="flex items-center gap-4">
+                                    <div className={`p-2 rounded-lg bg-white bg-opacity-60`}>
+                                        <Icon size={24} />
+                                    </div>
+                                    <div>
+                                        <h3 className="font-bold text-lg">{module.title}</h3>
+                                        {module.description && (
+                                            <p className="text-xs opacity-80 mt-1 font-medium">{module.description}</p>
+                                        )}
+                                    </div>
                                 </div>
-                                <div>
-                                    <h2 className={`text-xl font-bold ${isTrap ? 'text-red-900' : 'text-slate-800'}`}>{module.title}</h2>
-                                    {module.description && <p className="text-sm text-red-700 mt-1 font-medium">{module.description}</p>}
+                                <div className={`transform transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}>
+                                    <ChevronDown size={20} />
                                 </div>
-                             </div>
+                            </button>
 
-                             <div className="p-8">
-                                <div className={`grid grid-cols-1 ${isTrap ? 'md:grid-cols-2 lg:grid-cols-3' : 'md:grid-cols-2'} gap-6`}>
-                                    {module.points.map((pt, pIdx) => (
-                                        <div key={pIdx} className={`rounded-2xl p-5 border transition-all hover:shadow-md ${isTrap ? 'bg-white border-red-100 hover:border-red-300' : 'bg-slate-50/50 border-slate-100 hover:bg-white hover:border-indigo-200'}`}>
-                                            <h3 className={`font-bold text-base mb-3 flex items-start gap-2 ${isTrap ? 'text-red-700' : 'text-slate-700'}`}>
-                                                {isTrap && <AlertTriangle size={16} className="mt-1 flex-shrink-0 fill-red-100 text-red-500" />}
-                                                {!isTrap && <span className={`w-2 h-2 rounded-full ${theme.dot} mt-2 flex-shrink-0`}></span>}
-                                                {pt.title}
-                                            </h3>
-                                            <p className="text-slate-600 text-sm leading-relaxed whitespace-pre-line pl-4 border-l-2 border-slate-200">
-                                                {pt.content}
+                            <div className={`transition-all duration-300 ease-in-out ${isExpanded ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                                <div className="px-6 pb-6 pt-2 space-y-4">
+                                    <div className="h-px w-full bg-current opacity-10 mb-4"></div>
+                                    {module.points.map((point, idx) => (
+                                        <div key={idx} className="bg-white bg-opacity-60 rounded-xl p-4 border border-white border-opacity-50">
+                                            <h4 className="font-bold text-sm mb-2 flex items-center gap-2">
+                                                <div className="w-1.5 h-1.5 rounded-full bg-current"></div>
+                                                {point.title}
+                                            </h4>
+                                            <p className="text-sm text-slate-700 whitespace-pre-line leading-relaxed pl-3.5 border-l-2 border-slate-300 border-opacity-30">
+                                                {point.content}
                                             </p>
                                         </div>
                                     ))}
                                 </div>
-                             </div>
+                            </div>
                         </div>
                     );
                 })}
             </div>
             
-            <div className="mt-12 bg-slate-900 text-slate-300 rounded-2xl p-8 text-center">
-               <h3 className="text-white font-bold text-lg mb-2">How to use this Master Sheet?</h3>
-               <p className="text-sm max-w-2xl mx-auto leading-relaxed">
-                 1. <span className="text-white font-bold">Tagging:</span> Mark questions you get wrong with these Module headers (e.g., "Error: Module 2").<br/>
-                 2. <span className="text-white font-bold">Review:</span> Scroll through just the bold formulas before every mock.<br/>
-                 3. <span className="text-white font-bold">Traps:</span> Module 7 is your "Safety Net". Read it twice.
-               </p>
+            <div className="mt-12 p-8 bg-slate-900 rounded-2xl text-white text-center shadow-xl">
+                 <Sparkles className="mx-auto text-yellow-400 mb-4" size={32} />
+                 <h3 className="text-xl font-bold mb-2">Pro Tip: The 'Read Aloud' Technique</h3>
+                 <p className="text-slate-400 max-w-lg mx-auto mb-6">
+                    In Error Detection, if a sentence sounds "clunky" or awkward when read aloud, 90% of the time, that's where the error is. Trust your gut, then verify with rules.
+                 </p>
             </div>
         </div>
     );

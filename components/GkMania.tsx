@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Globe, Building2, MapPin, Newspaper, ChevronLeft, Landmark, Plane, Users, Swords, Briefcase, Award, Zap, CalendarDays, Trophy, Laptop, Gavel, Scale, AlertTriangle } from 'lucide-react';
+import { Globe, Building2, MapPin, Newspaper, ChevronLeft, Landmark, Plane, Users, Swords, Briefcase, Award, Zap, CalendarDays, Trophy, Laptop, Gavel, Scale, AlertTriangle, FileWarning, ClipboardList } from 'lucide-react';
 
 // Data Structures
 
@@ -84,50 +84,182 @@ const BANKING_AWARENESS = [
 
 const STATIC_GK = [
   {
-    category: "Organisations (DRDO/UNESCO)",
+    category: "Currency Mnemonics (Tricks)",
+    icon: Globe,
+    items: [
+      { k: "PESO Trick", v: "MACD CPU (Mexico, Arg, Chile, Dom Rep, Col, Phil, Uru)" },
+      { k: "RUPEE Trick", v: "Mama Shree ne Bhai se Pakistan Manga" },
+      { k: "RUPEE Countries", v: "Maldives, Mauritius, SL, Nepal, India, Indo, Sey, Pak" },
+      { k: "WON", v: "North & South Korea" }
+    ]
+  },
+  {
+    category: "Intl. Orgs & HQs (Grouped)",
     icon: Building2,
     items: [
-      { k: "UNESCO HQ", v: "Paris (193 Members). India Exec Board '25-'29." },
-      { k: "DRDO", v: "Est 1958. Motto: 'Balasya Mulam Vigyanam'." },
-      { k: "UNFPA", v: "New York, USA" },
-      { k: "FIDE (Chess)", v: "Lausanne" },
-      { k: "Asian Hockey Fed", v: "Kuala Lumpur" }
+      { k: "Vienna (Energy/Ind)", v: "UNIDO, OPEC, IAEA" },
+      { k: "Montreal", v: "WADA (Anti-Doping)" },
+      { k: "Lausanne", v: "FIDE (Chess)" },
+      { k: "Jakarta", v: "ASEAN" },
+      { k: "Kuala Lumpur", v: "Asian Hockey Federation" }
     ]
   },
   {
-    category: "Geography & Nature",
-    icon: MapPin,
+    category: "Power Plants & Defense",
+    icon: Zap,
     items: [
-      { k: "Vijayanagar (JSW Plant)", v: "Karnataka (Famous for Hampi Ruins)" },
-      { k: "Ramsar Sites", v: "94 sites (TN max) 🔥 x2" },
-      { k: "Kuno National Park", v: "MP (Cheetahs) 🔥 x2" },
-      { k: "Erta Ale Volcano", v: "Ethiopia (Active)" },
-      { k: "Kanchanjangha NP", v: "Sikkim (IUCN 'Good')" }
+      { k: "Kaiga Atomic", v: "Karnataka (Record 962 Days)" },
+      { k: "Narora Atomic", v: "Uttar Pradesh" },
+      { k: "Mundra", v: "Gujarat (Thermal/Coal) 🔥 Not Atomic" },
+      { k: "Ex Maitri", v: "India-Thailand" },
+      { k: "Ex Garuda Shakti", v: "India-Indonesia" }
     ]
   },
   {
-    category: "Culture & GI Tags",
+    category: "Culture, Festivals & States",
     icon: Award,
     items: [
-      { k: "GI: Naga Mircha", v: "Nagaland (King Chili)" },
-      { k: "GI: Lepcha Instruments", v: "Sikkim" },
-      { k: "GI: Ambaji Marble", v: "Gujarat" },
-      { k: "GI: Tezpur Lychee", v: "Assam" },
-      { k: "Fest: Hornbill", v: "Nagaland (Partners: UK, Switz + 3)" }
-    ]
-  },
-  {
-    category: "Airports & Firsts",
-    icon: Plane,
-    items: [
-      { k: "Gen Z Post Office", v: "IIT Delhi (First in India)" },
-      { k: "Anna Int. Airport", v: "Chennai" },
-      { k: "Indira Gandhi Int.", v: "Delhi (Water-Positive)" }
+      { k: "Monkey Buffet", v: "Thailand (Lopburi, Nov)" },
+      { k: "Huttari Dance", v: "Karnataka (Kodagu)" },
+      { k: "Kalinga Award", v: "Odisha (Science)" },
+      { k: "Bhagalpur", v: "Bihar (Silk City)" },
+      { k: "TN Initiative", v: "SHG Women Identity Cards" }
     ]
   }
 ];
 
 const CURRENT_AFFAIRS = [
+  {
+    month: "Feb 2026 Strategy (Static Linked)",
+    sections: [
+      {
+        type: "🚨 Critical Corrections",
+        icon: AlertTriangle,
+        color: "red",
+        points: [
+          "**Dinar Mnemonic:** **K-L-I-J-S-A-B-T** (Click-Sabt).",
+          "**Countries:** Kuwait, Libya, Iraq, Jordan, Serbia, Algeria, Bahrain, Tunisia.",
+          "**Correction:** 'Bisquit' is incorrect. Iran uses Rial. 'U' is invalid.",
+          "**Typo Alert:** **Daporijo** Airport (Arunachal), not 'Poriju'."
+        ]
+      },
+      {
+        type: "Stream B: News-Linked Static",
+        icon: Zap,
+        color: "blue",
+        points: [
+          "**Tiroda Thermal Plant:** **Gondia, Maharashtra** (Adani). News: ADB Funding.",
+          "**Green Hydrogen Ports:** Deendayal (GJ), Paradip (OD), VOC (TN).",
+          "**Bhoj Wetland:** **Bhopal, MP**. News: De-notification threat.",
+          "**Rana Pratap Sagar Dam:** **Chambal River**, Rajasthan.",
+          "**Airports in News:** Daporijo & Tezu (Arunachal), Devi Ahilyabai (Indore)."
+        ]
+      },
+      {
+        type: "Stream A: Pure Static",
+        icon: Building2,
+        color: "emerald",
+        points: [
+          "**UNFPA HQ:** **New York** (UNEP is Nairobi).",
+          "**MICR:** Magnetic Ink Character Recognition.",
+          "**Murugappa Gold Cup:** Hockey.",
+          "**Pulitzer:** Journalism/Lit/Music (US)."
+        ]
+      },
+      {
+        type: "Currency Power Players",
+        icon: Globe,
+        color: "amber",
+        points: [
+          "**Won:** South & North Korea.",
+          "**Yen:** Japan. **Yuan:** China.",
+          "**Rand:** South Africa. **Real:** Brazil.",
+          "**Krona:** Iceland (Reykjavik). **Dirham:** Morocco."
+        ]
+      }
+    ]
+  },
+  {
+    month: "Nov-Dec 2025 (Blockbuster Verified)",
+    sections: [
+      {
+        type: "😲 The 'Unlikely' Real Events",
+        icon: Zap,
+        color: "red",
+        points: [
+          "**Nepal Interim PM:** **Sushila Karki** (Former Chief Justice).",
+          "**FIFA Peace Prize:** **Donald Trump** (Dec 2025) presented by Infantino.",
+          "**Tata in Morocco:** First overseas defense plant (Casablanca) for **WhAP 8x8**."
+        ]
+      },
+      {
+        type: "State & Summits",
+        icon: Globe,
+        color: "blue",
+        points: [
+          "**Tamil Nadu:** First ID Cards for **Women SHGs** (25kg free luggage).",
+          "**ASEAN:** 11 Members (Newest: **Timor-Leste**).",
+          "**FIFA WC 2026:** Hosts **Canada, Mexico, USA**."
+        ]
+      }
+    ]
+  },
+  {
+    month: "Dec 2025 (Stream B - Verified)",
+    sections: [
+      {
+        type: "🚨 Critical Traps (Sound-Alike)",
+        icon: AlertTriangle,
+        color: "red",
+        points: [
+          "**Helicopter Deal:** **MH-60 Romeo** (USA) ≠ MA-60 (China).",
+          "**Scheme Name:** **Tech-Textiles/Tex-Fund** (Textile Min) ≠ Tax-RAM.",
+          "**UNESCO Role:** India in **Exec Board** (25-29) ≠ Director (Audrey Azoulay)."
+        ]
+      },
+      {
+        type: "Banking & Economy",
+        icon: Landmark,
+        color: "blue",
+        points: [
+          "**Rare Earth Scheme:** Cabinet approved **₹7,280 Cr** for magnets (EVs).",
+          "**RBI Penalty:** **₹3.10 Lakh** on Manna Krishna Investments (NBFC).",
+          "**ADB Loan:** **$400 Million** for Maharashtra (Rural Conn).",
+          "**Tea Exports:** India is **2nd** (China is 1st)."
+        ]
+      },
+      {
+        type: "Defense & Exercises",
+        icon: Swords,
+        color: "emerald",
+        points: [
+          "**Ekuverin:** India-Maldives at **Thiruvananthapuram, Kerala**.",
+          "**Harimau Shakti:** India-Malaysia at **Rajasthan**."
+        ]
+      },
+      {
+        type: "Appointments",
+        icon: Briefcase,
+        color: "purple",
+        points: [
+          "**RBI ED:** Usha Janakiraman (Dec 1).",
+          "**PNB ED:** Amit Kumar Srivastava.",
+          "**DP World Amb:** Abhishek Sharma (Cricketer).",
+          "**Intl IDEA Chair:** Gyanesh Kumar (CEC)."
+        ]
+      },
+      {
+        type: "Awards & Records",
+        icon: Trophy,
+        color: "amber",
+        points: [
+          "**Riyadh Metro:** Guinness Record **Longest Driverless** (176km). <span class='text-xs bg-amber-100 text-amber-800 px-1 rounded'>Exam Trap: Longest = Shanghai</span>",
+          "**Water Positive:** IGIA (Delhi) - First major airport.",
+          "**Obituary:** Kumari Kamala (Bharatanatyam, 91)."
+        ]
+      }
+    ]
+  },
   {
     month: "Nov-Dec 2025 Capsule",
     sections: [
@@ -248,8 +380,110 @@ const MINISTRY_DATA = {
     ]
 };
 
+// NEW RECOVERY DATA SET
+const RECOVERY_DATA = [
+  {
+    title: "📂 Recovery Set 1: Marathon Details",
+    icon: Zap,
+    color: "amber",
+    items: [
+      {
+        topic: "Appointments (Tenures & Specifics)",
+        points: [
+          "**Sandeep Pradhan:** SEBI WTM for **3 Years**.",
+          "**Justice Vikram Nath:** Exec Chairman of **NALSA**.",
+          "**Rahul Dravid:** Brand Amb for **Paradip Phosphates**.",
+          "**Rohit Sharma:** Amb for **ICC T20 WC 2026**."
+        ]
+      },
+      {
+        topic: "Defense & Locations",
+        points: [
+          "**Garud 2025:** Held at **Mont-de-Marsan Air Base**, France.",
+          "**Surya Kiran:** Held at **Pithoragarh, Uttarakhand**.",
+          "**Deep Ocean Mission:** Phase 1 lab at **500m depth** (Target 6000m).",
+          "**Ikubarin:** Joint Ex with **Maldives** (Standard) / Malawi (Note)."
+        ]
+      },
+      {
+        topic: "Stats & One-Liners",
+        points: [
+          "**Defense Production:** Record **₹1.54 Lakh Cr**.",
+          "**Tea Exports:** India Rank **2nd** (China 1st).",
+          "**Driverless Metro:** Guinness Record **146 Stations**.",
+          "**Nov 26:** Constitution Day (76th).",
+          "**Nov 21:** World TV Day | **Dec 1:** Nagaland Day."
+        ]
+      }
+    ]
+  },
+  {
+    title: "📂 Recovery Set 2: Nov-Dec Deep Dive",
+    icon: AlertTriangle,
+    color: "red",
+    items: [
+      {
+        topic: "Phonetic Corrections (Crucial)",
+        points: [
+          "**'Gen Z' Post Office:** At **IIT Delhi** (Not 'Janjiri').",
+          "**Michelle Bachelet:** Indira Gandhi Prize (Not 'Misal').",
+          "**Hayli Gubbi:** Ethiopian Volcano Eruption (Not 'Hailu')."
+        ]
+      },
+      {
+        topic: "Schemes & Cities",
+        points: [
+          "**PM Kisan (21st):** Released from **Coimbatore, TN**.",
+          "**PM Fasal Bima:** Added cover for **'Wild Animal Attacks'**.",
+          "**SBI:** Discontinued **'M-Cash'** service (Nov 30)."
+        ]
+      },
+      {
+        topic: "Banking & Economy",
+        points: [
+          "**HDFC Bank:** Top Brand Value **$44.9 Billion**.",
+          "**Adani in Assam:** Total Investment **₹63,000 Cr**."
+        ]
+      },
+      {
+        topic: "State GI & Sports",
+        points: [
+          "**Nagaland:** Naga Mircha, Tomato Tree.",
+          "**Sikkim:** Lepcha Instruments. **Gujarat:** Ambaji Marble.",
+          "**Hockey WC 2026:** Hosts **Netherlands & Belgium**.",
+          "**Kabaddi (Women):** India lost to **Chinese Taipei**."
+        ]
+      }
+    ]
+  },
+  {
+    title: "📂 Recovery Set 3: Alliances & Sports",
+    icon: Globe,
+    color: "blue",
+    items: [
+      {
+        topic: "BIMSTEC (Mini SAARC)",
+        points: [
+          "**Members (7):** Bangladesh, Bhutan, India, Myanmar, SL, Thai, Nepal.",
+          "**Est:** June 6, 1997 (Bangkok Declaration).",
+          "**Sec Gen:** Indra Mani Pandey (India).",
+          "**Chair:** Bangladesh."
+        ]
+      },
+      {
+        topic: "Sports Hosts & Awards",
+        points: [
+          "**Squash World Cup:** Chennai (3rd time host). India Rank: 3.",
+          "**FIFA WC 2026:** Canada, Mexico, USA.",
+          "**Dronacharya Award:** For Coaches."
+        ]
+      }
+    ]
+  }
+];
+
 const GkMania: React.FC = () => {
-    const [view, setView] = useState<'menu' | 'banking' | 'static' | 'current' | 'rbi' | 'ministries'>('menu');
+    const [view, setView] = useState<'menu' | 'banking' | 'static' | 'current' | 'rbi' | 'ministries' | 'recovery'>('menu');
 
     if (view === 'menu') {
         return (
@@ -265,6 +499,26 @@ const GkMania: React.FC = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {/* Recovery Card (NEW) */}
+                    <div 
+                        onClick={() => setView('recovery')}
+                        className="bg-red-50 rounded-2xl p-6 shadow-lg border border-red-100 hover:shadow-xl hover:border-red-300 transition-all cursor-pointer group relative overflow-hidden h-full flex flex-col justify-between"
+                    >
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-red-100 rounded-full -mr-10 -mt-10 blur-2xl group-hover:bg-red-200 transition-all"></div>
+                        <div className="relative z-10">
+                            <div className="w-14 h-14 bg-red-100 text-red-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                                <ClipboardList size={28} />
+                            </div>
+                            <h3 className="text-xl font-bold text-red-800 mb-2 group-hover:text-red-900 transition-colors">Master Recovery Sheet</h3>
+                            <p className="text-red-600 text-sm leading-relaxed mb-6 font-medium">
+                                The missing details. Specific dates, tenures, correct spellings, and "gap-fillers" from Marathon sessions.
+                            </p>
+                        </div>
+                        <button className="relative z-10 w-full bg-white text-red-600 py-3 rounded-xl font-bold text-sm hover:bg-red-600 hover:text-white transition-all flex items-center justify-center gap-2 shadow-sm border border-red-200">
+                            Review Missing Data <ChevronLeft className="rotate-180" size={16} />
+                        </button>
+                    </div>
+
                     {/* Banking Awareness */}
                     <div 
                         onClick={() => setView('banking')}
@@ -370,6 +624,60 @@ const GkMania: React.FC = () => {
     }
 
     // --- SUB-VIEWS ---
+
+    if (view === 'recovery') {
+        return (
+            <div className="max-w-5xl mx-auto space-y-6 animate-in fade-in slide-in-from-right-4 pb-10">
+                <div className="flex items-center gap-4 mb-4">
+                    <button onClick={() => setView('menu')} className="p-2 bg-white border border-slate-200 hover:bg-slate-100 rounded-full text-slate-500 hover:text-slate-800 transition-colors shadow-sm">
+                        <ChevronLeft size={24} />
+                    </button>
+                    <div>
+                        <h1 className="text-2xl font-extrabold text-slate-800 flex items-center gap-2">
+                            <ClipboardList className="text-red-600" size={24} />
+                            Master Recovery Sheet
+                        </h1>
+                        <p className="text-slate-500 text-sm">Detailed stats & corrections missed in previous summaries.</p>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {RECOVERY_DATA.map((section, idx) => {
+                        const Icon = section.icon;
+                        const colors = {
+                            amber: "bg-amber-50 border-amber-200 text-amber-900",
+                            red: "bg-red-50 border-red-200 text-red-900",
+                            blue: "bg-blue-50 border-blue-200 text-blue-900"
+                        }[section.color] || "bg-slate-50 border-slate-200 text-slate-900";
+
+                        return (
+                            <div key={idx} className={`rounded-2xl p-6 border shadow-sm ${colors}`}>
+                                <div className="flex items-center gap-3 mb-6 border-b border-black/5 pb-4">
+                                    <Icon size={24} className="opacity-75" />
+                                    <h3 className="text-xl font-bold">{section.title}</h3>
+                                </div>
+                                <div className="space-y-6">
+                                    {section.items.map((item, i) => (
+                                        <div key={i}>
+                                            <h4 className="text-sm font-bold opacity-70 uppercase tracking-wider mb-2">{item.topic}</h4>
+                                            <ul className="space-y-2">
+                                                {item.points.map((pt, p) => (
+                                                    <li key={p} className="text-sm leading-relaxed flex gap-2">
+                                                        <span className="opacity-50 mt-1.5">•</span>
+                                                        <span dangerouslySetInnerHTML={{ __html: pt.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
+        );
+    }
 
     if (view === 'banking') {
         return (
