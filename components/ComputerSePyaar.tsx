@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Monitor, Cpu, Wifi, Database, Shield, HardDrive, ChevronDown, Binary, History, FileText, Keyboard, Layers, MousePointer2, Info, Clock, Terminal, Hash, Activity, Zap, ShieldCheck, Star, Box, ZapOff, Globe, Lock, ListChecks } from 'lucide-react';
+import { Monitor, Cpu, Wifi, Database, Shield, HardDrive, ChevronDown, Binary, History, FileText, Keyboard, Layers, MousePointer2, Info, Clock, Terminal, Hash, Activity, Zap, ShieldCheck, Star, Box, ZapOff, Globe, Lock, ListChecks, FileSearch, Sparkles, ArrowLeft } from 'lucide-react';
 
 const COMPUTER_MODULES = [
   {
@@ -178,195 +178,272 @@ const MOST_ASKED_QA = [
 ];
 
 const ComputerSePyaar: React.FC = () => {
+  const [activeSubView, setActiveSubView] = useState<'menu' | 'detailed' | 'flashcards'>('menu');
   const [expandedModule, setExpandedModule] = useState<string | null>('hardware');
 
-  return (
-    <div className="max-w-7xl mx-auto space-y-12 animate-in fade-in slide-in-from-bottom-4 pb-12 px-4">
-      {/* Header */}
-      <div className="text-center space-y-4 mb-10">
-        <h1 className="text-4xl font-extrabold text-slate-900 flex items-center justify-center gap-3">
-          <Monitor className="text-cyan-600" size={40} />
-          Computer Se Pyaar
-        </h1>
-        <p className="text-slate-500 max-w-2xl mx-auto font-medium">
-          Mains Targeted Master Guide. Vivek Pandey Session Sync & RRB PO/Clerk '24 Trends.
-        </p>
-        <div className="flex justify-center flex-wrap gap-2">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-cyan-100 text-cyan-700 rounded-full text-xs font-bold border border-cyan-200 shadow-sm">
-                <Terminal size={14} /> Exam Targeted
-            </span>
-             <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-bold border border-indigo-200 shadow-sm">
-                <History size={14} /> 2024-25 Sync
-            </span>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-bold border border-amber-200 shadow-sm">
-                <Activity size={14} /> High Weightage
-            </span>
+  // Helper for back navigation
+  const goBack = () => setActiveSubView('menu');
+
+  if (activeSubView === 'menu') {
+    return (
+      <div className="max-w-7xl mx-auto space-y-12 animate-in fade-in slide-in-from-bottom-4 pb-12 px-4">
+        {/* Header */}
+        <div className="text-center space-y-4 mb-10">
+          <h1 className="text-5xl font-extrabold text-slate-900 flex items-center justify-center gap-3">
+            <Monitor className="text-indigo-600" size={48} />
+            Computer Se Pyaar
+          </h1>
+          <p className="text-slate-500 max-w-2xl mx-auto text-lg font-medium">
+            Zero to Hero master guide for IBPS RRB PO/Clerk. Select your learning mode.
+          </p>
+        </div>
+
+        {/* Menu Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          {/* Detailed Version Entry */}
+          <div 
+            onClick={() => setActiveSubView('detailed')}
+            className="group relative bg-white rounded-[2.5rem] p-10 shadow-sm border border-slate-200 hover:border-indigo-400 hover:shadow-2xl transition-all cursor-pointer overflow-hidden flex flex-col items-center text-center"
+          >
+            <div className="absolute top-0 right-0 w-48 h-48 bg-indigo-50 rounded-full blur-3xl -mr-24 -mt-24 group-hover:bg-indigo-100 transition-colors"></div>
+            
+            <div className="relative z-10">
+              <div className="w-24 h-24 bg-indigo-50 text-indigo-600 rounded-3xl flex items-center justify-center mb-8 shadow-inner group-hover:scale-110 transition-transform duration-500">
+                <FileSearch size={48} />
+              </div>
+              <h2 className="text-3xl font-bold text-slate-900 mb-4">Detailed Version</h2>
+              <p className="text-slate-500 leading-relaxed text-lg">
+                Comprehensive syllabus, hierarchy models, networking protocols, and high-impact notes.
+              </p>
+              
+              <div className="mt-8 flex gap-2 justify-center">
+                 <span className="px-3 py-1 bg-indigo-50 text-indigo-600 text-xs font-bold rounded-full uppercase tracking-wider">Modules</span>
+                 <span className="px-3 py-1 bg-indigo-50 text-indigo-600 text-xs font-bold rounded-full uppercase tracking-wider">Cheat Sheets</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Flash Cards Entry */}
+          <div 
+            onClick={() => setActiveSubView('flashcards')}
+            className="group relative bg-white rounded-[2.5rem] p-10 shadow-sm border border-slate-200 hover:border-amber-400 hover:shadow-2xl transition-all cursor-pointer overflow-hidden flex flex-col items-center text-center"
+          >
+            <div className="absolute top-0 right-0 w-48 h-48 bg-amber-50 rounded-full blur-3xl -mr-24 -mt-24 group-hover:bg-amber-100 transition-colors"></div>
+            
+            <div className="relative z-10">
+              <div className="w-24 h-24 bg-amber-50 text-amber-600 rounded-3xl flex items-center justify-center mb-8 shadow-inner group-hover:scale-110 transition-transform duration-500">
+                <Sparkles size={48} />
+              </div>
+              <h2 className="text-3xl font-bold text-slate-900 mb-4">Flash Cards</h2>
+              <p className="text-slate-500 leading-relaxed text-lg">
+                Active recall mode for shortcuts, binary conversions, and rapid-fire concepts.
+              </p>
+              
+              <div className="mt-8 flex gap-2 justify-center">
+                 <span className="px-3 py-1 bg-amber-50 text-amber-600 text-xs font-bold rounded-full uppercase tracking-wider">Active Recall</span>
+                 <span className="px-3 py-1 bg-amber-50 text-amber-600 text-xs font-bold rounded-full uppercase tracking-wider">Practice</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+    );
+  }
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
-        {/* Left Column: Modules (8 cols) */}
-        <div className="lg:col-span-8 space-y-4">
-          {COMPUTER_MODULES.map((module) => {
-            const Icon = module.icon;
-            const isExpanded = expandedModule === module.id;
-            
-            const colorMap: Record<string, string> = {
-                cyan: "bg-cyan-50 text-cyan-700 border-cyan-100",
-                blue: "bg-blue-50 text-blue-700 border-blue-100",
-                indigo: "bg-indigo-50 text-indigo-700 border-indigo-100",
-                purple: "bg-purple-50 text-purple-700 border-purple-100",
-                rose: "bg-rose-50 text-rose-700 border-rose-100",
-                amber: "bg-amber-50 text-amber-700 border-amber-100",
-            };
-            const themeClass = colorMap[module.color] || colorMap.cyan;
+  if (activeSubView === 'detailed') {
+    return (
+      <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in slide-in-from-right-4 pb-12 px-4">
+        {/* Navigation Header */}
+        <div className="flex items-center justify-between border-b border-slate-200 pb-6 mb-4">
+           <button 
+             onClick={goBack}
+             className="flex items-center gap-2 text-slate-500 hover:text-indigo-600 font-bold transition-colors"
+           >
+             <ArrowLeft size={20} /> Back to Menu
+           </button>
+           <h2 className="text-2xl font-black text-slate-900 flex items-center gap-2">
+             <FileSearch className="text-indigo-600" size={24} /> Detailed Master Notes
+           </h2>
+        </div>
 
-            return (
-              <div key={module.id} className={`rounded-2xl border transition-all ${isExpanded ? 'shadow-md ring-1 ring-opacity-50' : 'shadow-sm'} ${themeClass}`}>
-                <button 
-                  onClick={() => setExpandedModule(isExpanded ? null : module.id)}
-                  className="w-full px-6 py-5 flex items-center justify-between text-left focus:outline-none"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="p-2 rounded-lg bg-white bg-opacity-60"><Icon size={24} /></div>
-                    <div>
-                      <h3 className="font-bold text-lg">{module.title}</h3>
-                      <p className="text-xs opacity-80 mt-1 font-medium">{module.description}</p>
-                    </div>
-                  </div>
-                  <ChevronDown size={20} className={`transform transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
-                </button>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Left Column: Modules (8 cols) */}
+          <div className="lg:col-span-8 space-y-4">
+            {COMPUTER_MODULES.map((module) => {
+              const Icon = module.icon;
+              const isExpanded = expandedModule === module.id;
+              
+              const colorMap: Record<string, string> = {
+                  cyan: "bg-cyan-50 text-cyan-700 border-cyan-100",
+                  blue: "bg-blue-50 text-blue-700 border-blue-100",
+                  indigo: "bg-indigo-50 text-indigo-700 border-indigo-100",
+                  purple: "bg-purple-50 text-purple-700 border-purple-100",
+                  rose: "bg-rose-50 text-rose-700 border-rose-100",
+                  amber: "bg-amber-50 text-amber-700 border-amber-100",
+              };
+              const themeClass = colorMap[module.color] || colorMap.cyan;
 
-                <div className={`transition-all overflow-hidden ${isExpanded ? 'max-h-[1200px] opacity-100' : 'max-h-0 opacity-0'}`}>
-                  <div className="px-6 pb-6 pt-2 space-y-4">
-                    <div className="h-px w-full bg-current opacity-10 mb-4"></div>
-                    {module.points.map((point, idx) => (
-                      <div key={idx} className="bg-white bg-opacity-60 rounded-xl p-4 border border-white border-opacity-50">
-                        <h4 className="font-bold text-sm mb-2 flex items-center gap-2">
-                          <div className="w-1.5 h-1.5 rounded-full bg-current"></div>
-                          {point.title}
-                        </h4>
-                        <p className="text-sm text-slate-700 whitespace-pre-line leading-relaxed pl-3.5 border-l-2 border-slate-300 border-opacity-30">
-                          <span dangerouslySetInnerHTML={{ __html: point.content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
-                        </p>
+              return (
+                <div key={module.id} className={`rounded-2xl border transition-all ${isExpanded ? 'shadow-md ring-1 ring-opacity-50' : 'shadow-sm'} ${themeClass}`}>
+                  <button 
+                    onClick={() => setExpandedModule(isExpanded ? null : module.id)}
+                    className="w-full px-6 py-5 flex items-center justify-between text-left focus:outline-none"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="p-2 rounded-lg bg-white bg-opacity-60"><Icon size={24} /></div>
+                      <div>
+                        <h3 className="font-bold text-lg">{module.title}</h3>
+                        <p className="text-xs opacity-80 mt-1 font-medium">{module.description}</p>
                       </div>
-                    ))}
+                    </div>
+                    <ChevronDown size={20} className={`transform transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                  </button>
+
+                  <div className={`transition-all overflow-hidden ${isExpanded ? 'max-h-[1200px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                    <div className="px-6 pb-6 pt-2 space-y-4">
+                      <div className="h-px w-full bg-current opacity-10 mb-4"></div>
+                      {module.points.map((point, idx) => (
+                        <div key={idx} className="bg-white bg-opacity-60 rounded-xl p-4 border border-white border-opacity-50">
+                          <h4 className="font-bold text-sm mb-2 flex items-center gap-2">
+                            <div className="w-1.5 h-1.5 rounded-full bg-current"></div>
+                            {point.title}
+                          </h4>
+                          <p className="text-sm text-slate-700 whitespace-pre-line leading-relaxed pl-3.5 border-l-2 border-slate-300 border-opacity-30">
+                            <span dangerouslySetInnerHTML={{ __html: point.content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
+                          </p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
+
+          {/* Right Column: Reference Cards (4 cols) */}
+          <div className="lg:col-span-4 space-y-6">
+             <div className="bg-indigo-900 text-white rounded-3xl p-6 shadow-xl border border-indigo-700 relative overflow-hidden">
+                <div className="flex items-center gap-3 mb-6 border-b border-indigo-700 pb-4">
+                   <Hash className="text-amber-400" size={24} />
+                   <h3 className="font-bold text-lg">IP Address Classes</h3>
+                </div>
+                <div className="space-y-3">
+                   {IP_CLASSES.map((item, i) => (
+                      <div key={i} className="flex justify-between items-center text-sm p-2 rounded-lg hover:bg-white/10 transition-colors">
+                         <span className="font-bold text-indigo-300">{item.class}</span>
+                         <span className="text-white font-mono text-xs">{item.range}</span>
+                      </div>
+                   ))}
+                </div>
+             </div>
+
+             <div className="bg-slate-900 text-white rounded-3xl p-6 shadow-xl border border-slate-700 relative overflow-hidden">
+                <div className="flex items-center gap-3 mb-6 border-b border-slate-700 pb-4">
+                   <Binary className="text-emerald-400" size={24} />
+                   <h3 className="font-bold text-lg">Data Units Guide</h3>
+                </div>
+                <div className="space-y-3">
+                   {DATA_UNITS.map((item, i) => (
+                      <div key={i} className="flex justify-between items-center text-sm p-2 rounded-lg hover:bg-white/5 transition-colors">
+                         <span className="font-bold text-indigo-300">{item.unit}</span>
+                         <span className="text-emerald-400 font-mono text-xs">{item.val}</span>
+                      </div>
+                   ))}
+                </div>
+             </div>
+          </div>
         </div>
 
-        {/* Right Column: Reference Cards (4 cols) */}
-        <div className="lg:col-span-4 space-y-6">
-           
-           {/* IP ADDRESS CLASSES */}
-           <div className="bg-indigo-900 text-white rounded-3xl p-6 shadow-xl border border-indigo-700 relative overflow-hidden group">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full blur-2xl -mr-12 -mt-12 group-hover:bg-white/20 transition-all"></div>
-              <div className="flex items-center gap-3 mb-6 border-b border-indigo-700 pb-4">
-                 <Hash className="text-amber-400" size={24} />
-                 <h3 className="font-bold text-lg">IP Address Classes</h3>
-              </div>
-              <div className="space-y-3">
-                 {IP_CLASSES.map((item, i) => (
-                    <div key={i} className="flex justify-between items-center text-sm p-2 rounded-lg hover:bg-white/10 transition-colors">
-                       <span className="font-bold text-indigo-300">{item.class}</span>
-                       <span className="text-white font-mono text-xs">{item.range}</span>
-                    </div>
-                 ))}
-              </div>
-           </div>
+        {/* Highlight Grid (Mains Points, Tips, QA) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-10 border-t border-slate-100">
+          <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm h-full flex flex-col">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 bg-amber-100 text-amber-600 rounded-xl"><Info size={24} /></div>
+              <h3 className="font-bold text-slate-800 text-xl">Mains '25 Points</h3>
+            </div>
+            <ul className="space-y-4 text-sm text-slate-600 flex-1">
+              {MAINS_FLASH_POINTS.map((pt, i) => (
+                <li key={i} className="flex gap-3">
+                  <div className="w-2 h-2 bg-amber-400 rounded-full mt-1.5 flex-shrink-0"></div>
+                  <span><strong>{pt.title}:</strong> {pt.text}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-           {/* DATA UNITS */}
-           <div className="bg-slate-900 text-white rounded-3xl p-6 shadow-xl border border-slate-700 relative overflow-hidden group">
-              <div className="absolute bottom-0 left-0 w-24 h-24 bg-emerald-400/10 rounded-full blur-2xl -ml-12 -mb-12 group-hover:bg-emerald-400/20 transition-all"></div>
-              <div className="flex items-center gap-3 mb-6 border-b border-slate-700 pb-4">
-                 <Binary className="text-emerald-400" size={24} />
-                 <h3 className="font-bold text-lg">Data Units Guide</h3>
-              </div>
-              <div className="space-y-3">
-                 {DATA_UNITS.map((item, i) => (
-                    <div key={i} className="flex justify-between items-center text-sm p-2 rounded-lg hover:bg-white/5 transition-colors">
-                       <span className="font-bold text-indigo-300">{item.unit}</span>
-                       <span className="text-emerald-400 font-mono text-xs">{item.val}</span>
-                    </div>
-                 ))}
-              </div>
-           </div>
+          <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm h-full flex flex-col">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 bg-indigo-100 text-indigo-600 rounded-xl"><Zap size={24} /></div>
+              <h3 className="font-bold text-slate-800 text-xl">Rapid Exam Tips</h3>
+            </div>
+            <ul className="space-y-5 flex-1">
+              {RAPID_TIPS.map((tip, i) => (
+                <li key={i} className="flex gap-3">
+                  <div className="p-1 bg-green-100 text-green-600 rounded-full h-fit mt-0.5"><ShieldCheck size={16} /></div>
+                  <div className="text-sm">
+                     <span className="font-bold block text-slate-900">{tip.title}</span>
+                     <p className="text-slate-500">{tip.text}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm h-full flex flex-col">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 bg-emerald-100 text-emerald-600 rounded-xl"><ListChecks size={24} /></div>
+              <h3 className="font-bold text-slate-800 text-xl">Most Asked Q&A</h3>
+            </div>
+            <div className="space-y-4 flex-1 overflow-y-auto pr-2">
+               {MOST_ASKED_QA.map((item, idx) => (
+                  <div key={idx} className="p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-white transition-colors">
+                     <div className="text-xs font-bold text-emerald-600 uppercase tracking-widest mb-1">{item.q}</div>
+                     <div className="text-sm text-slate-700 font-medium">{item.a}</div>
+                  </div>
+               ))}
+            </div>
+          </div>
         </div>
       </div>
+    );
+  }
 
-      {/* FLASHCARDS SECTION */}
-      <div className="space-y-8">
-        <div className="flex items-center gap-4 px-2">
-           <div className="h-px bg-slate-200 flex-1"></div>
-           <h2 className="text-3xl font-bold text-slate-800 flex items-center gap-3">
-             <Layers className="text-indigo-600" /> Flashcards
+  // Flashcards View (Empty Placeholder)
+  return (
+    <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in slide-in-from-left-4 pb-12 px-4">
+      <div className="flex items-center justify-between border-b border-slate-200 pb-6 mb-4">
+           <button 
+             onClick={goBack}
+             className="flex items-center gap-2 text-slate-500 hover:text-amber-600 font-bold transition-colors"
+           >
+             <ArrowLeft size={20} /> Back to Menu
+           </button>
+           <h2 className="text-2xl font-black text-slate-900 flex items-center gap-2">
+             <Sparkles className="text-amber-600" size={24} /> Interactive Flashcards
            </h2>
-           <div className="h-px bg-slate-200 flex-1"></div>
+      </div>
+
+      <div className="bg-white rounded-[2.5rem] p-12 md:p-24 shadow-sm border border-slate-200 text-center flex flex-col items-center">
+        <div className="w-24 h-24 bg-amber-50 text-amber-500 rounded-[2rem] flex items-center justify-center mb-8 shadow-inner border border-amber-100">
+          <Sparkles size={48} />
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-           
-           {/* MAINS FLASH CARDS */}
-           <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-md transition-shadow h-full flex flex-col">
-              <div className="flex items-center gap-3 mb-6">
-                 <div className="p-2 bg-amber-100 text-amber-600 rounded-xl">
-                   <Info size={24} />
-                 </div>
-                 <h3 className="font-bold text-slate-800 text-xl">Mains '25 Flashcards</h3>
-              </div>
-              <ul className="space-y-4 text-sm text-slate-600 flex-1">
-                {MAINS_FLASH_POINTS.map((pt, i) => (
-                  <li key={i} className="flex gap-3">
-                    <div className="w-2 h-2 bg-amber-400 rounded-full mt-1.5 flex-shrink-0"></div>
-                    <span><strong>{pt.title}:</strong> {pt.text}</span>
-                  </li>
-                ))}
-              </ul>
-           </div>
-
-           {/* RAPID EXAM TIPS */}
-           <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-md transition-shadow h-full flex flex-col">
-              <div className="flex items-center gap-3 mb-6">
-                 <div className="p-2 bg-indigo-100 text-indigo-600 rounded-xl">
-                   <Zap size={24} />
-                 </div>
-                 <h3 className="font-bold text-slate-800 text-xl">Rapid Exam Tips</h3>
-              </div>
-              <ul className="space-y-5 flex-1">
-                {RAPID_TIPS.map((tip, i) => (
-                  <li key={i} className="flex gap-3">
-                    <div className="p-1 bg-green-100 text-green-600 rounded-full h-fit mt-0.5"><ShieldCheck size={16} /></div>
-                    <div className="text-sm">
-                       <span className="font-bold block text-slate-900">{tip.title}</span>
-                       <p className="text-slate-500">{tip.text}</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-           </div>
-
-           {/* MOST ASKED TOPICS AND QUESTIONS */}
-           <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-md transition-shadow h-full flex flex-col">
-              <div className="flex items-center gap-3 mb-6">
-                 <div className="p-2 bg-emerald-100 text-emerald-600 rounded-xl">
-                   <ListChecks size={24} />
-                 </div>
-                 <h3 className="font-bold text-slate-800 text-xl">Most Asked Q&A</h3>
-              </div>
-              <div className="space-y-4 flex-1 overflow-y-auto pr-2">
-                 {MOST_ASKED_QA.map((item, idx) => (
-                    <div key={idx} className="p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-white transition-colors">
-                       <div className="text-xs font-bold text-emerald-600 uppercase tracking-widest mb-1">{item.q}</div>
-                       <div className="text-sm text-slate-700 font-medium">{item.a}</div>
-                    </div>
-                 ))}
-              </div>
-           </div>
-
+        <h2 className="text-4xl font-extrabold text-slate-900 mb-4">Flash Cards Mode</h2>
+        <p className="text-slate-500 max-w-lg mx-auto text-lg leading-relaxed">
+          This section is being optimized for the 2025 RRB Mains pattern. Interactive flip-cards for rapid-fire recall will be added here.
+        </p>
+        
+        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 w-full max-w-4xl opacity-15 select-none pointer-events-none">
+           {[1,2,3,4].map(i => (
+             <div key={i} className="h-48 bg-slate-100 rounded-3xl border-2 border-dashed border-slate-300 flex items-center justify-center">
+                <Box className="text-slate-300" size={32} />
+             </div>
+           ))}
+        </div>
+        
+        <div className="mt-12">
+          <button disabled className="bg-slate-100 text-slate-400 px-10 py-4 rounded-2xl font-bold cursor-not-allowed border border-slate-200">
+             Coming Soon
+          </button>
         </div>
       </div>
     </div>
