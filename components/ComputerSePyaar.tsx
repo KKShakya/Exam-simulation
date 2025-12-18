@@ -1,6 +1,97 @@
 
 import React, { useState } from 'react';
-import { Monitor, Cpu, Wifi, Database, Shield, HardDrive, ChevronDown, Binary, History, FileText, Keyboard, Layers, MousePointer2, Info, Clock, Terminal, Hash, Activity, Zap, ShieldCheck, Star, Box, ZapOff, Globe, Lock, ListChecks, FileSearch, Sparkles, ArrowLeft } from 'lucide-react';
+import { Monitor, Cpu, Wifi, Database, Shield, HardDrive, ChevronDown, Binary, History, FileText, Keyboard, Layers, MousePointer2, Info, Clock, Terminal, Hash, Activity, Zap, ShieldCheck, Star, Box, ZapOff, Globe, Lock, ListChecks, FileSearch, Sparkles, ArrowLeft, Lightbulb, ZapIcon } from 'lucide-react';
+
+const FLASHCARD_DATA = [
+  {
+    category: "History & Landmarks",
+    icon: History,
+    color: "amber",
+    items: [
+      { q: "1st Indian PC", a: "Siddharth" },
+      { q: "1st Installation", a: "ISI Kolkata" },
+      { q: "Father of WWW", a: "Tim Berners-Lee" },
+      { q: "1st High-Level Lang", a: "FORTRAN (Formula Translation)" }
+    ]
+  },
+  {
+    category: "Hardware Logic",
+    icon: Cpu,
+    color: "cyan",
+    items: [
+      { q: "CPU Traffic Cop", a: "Control Unit (CU)" },
+      { q: "Fastest Memory", a: "Registers > Cache > RAM" },
+      { q: "Impact Printer", a: "Dot Matrix, Daisy Wheel (Strikes)" },
+      { q: "Non-Impact", a: "Laser, Inkjet (No Strike)" }
+    ]
+  },
+  {
+    category: "Memory & Units",
+    icon: HardDrive,
+    color: "blue",
+    items: [
+      { q: "1 Nibble", a: "4 Bits" },
+      { q: "1 Byte", a: "8 Bits" },
+      { q: "Volatile (Temporary)", a: "RAM, Cache" },
+      { q: "Non-Volatile", a: "ROM, HDD, SSD" }
+    ]
+  },
+  {
+    category: "Storage Capacities",
+    icon: Database,
+    color: "indigo",
+    items: [
+      { q: "CD-ROM", a: "700 - 850 MB" },
+      { q: "DVD", a: "4.7 GB - 17 GB" },
+      { q: "Blu-ray", a: "Up to 100 GB" },
+      { q: "Standard Sector", a: "512 Bytes" }
+    ]
+  },
+  {
+    category: "Networking Hub",
+    icon: Wifi,
+    color: "purple",
+    items: [
+      { q: "Hub", a: "Broadcasts (Dumb Device)" },
+      { q: "Switch", a: "Unicasts (Intelligent Device)" },
+      { q: "Bluetooth Std", a: "IEEE 802.15" },
+      { q: "WiFi Std", a: "IEEE 802.11" }
+    ]
+  },
+  {
+    category: "Security & Malware",
+    icon: Shield,
+    color: "rose",
+    items: [
+      { q: "Worm", a: "Self-Replicates (No Host Needed)" },
+      { q: "Virus", a: "Self-Replicates (Host Program Needed)" },
+      { q: "Trojan", a: "Hidden Malware (No Replication)" },
+      { q: "Firewall", a: "Filters Network Traffic" }
+    ]
+  },
+  {
+    category: "MS Office Blitz",
+    icon: FileText,
+    color: "emerald",
+    items: [
+      { q: "PPT New Slide", a: "Ctrl + M" },
+      { q: "Excel Save As", a: "F12" },
+      { q: "Clear Format", a: "Ctrl + Space" },
+      { q: "Min Excel Table", a: "1 Row × 1 Column" }
+    ]
+  },
+  {
+    category: "Binary & Digital",
+    icon: Binary,
+    color: "slate",
+    items: [
+      { q: "1024 GB", a: "1 Terabyte (TB)" },
+      { q: "1024 TB", a: "1 Petabyte (PB)" },
+      { q: "MODEM", a: "Modulator-Demodulator" },
+      { q: "UPI Logic", a: "GPay, PhonePe (Real-time)" }
+    ]
+  }
+];
 
 const COMPUTER_MODULES = [
   {
@@ -408,7 +499,7 @@ const ComputerSePyaar: React.FC = () => {
     );
   }
 
-  // Flashcards View (Empty Placeholder)
+  // FLASHCARDS VIEW
   return (
     <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in slide-in-from-left-4 pb-12 px-4">
       <div className="flex items-center justify-between border-b border-slate-200 pb-6 mb-4">
@@ -419,31 +510,78 @@ const ComputerSePyaar: React.FC = () => {
              <ArrowLeft size={20} /> Back to Menu
            </button>
            <h2 className="text-2xl font-black text-slate-900 flex items-center gap-2">
-             <Sparkles className="text-amber-600" size={24} /> Interactive Flashcards
+             <Sparkles className="text-amber-600" size={24} /> Revision Flashcards
            </h2>
       </div>
 
-      <div className="bg-white rounded-[2.5rem] p-12 md:p-24 shadow-sm border border-slate-200 text-center flex flex-col items-center">
-        <div className="w-24 h-24 bg-amber-50 text-amber-500 rounded-[2rem] flex items-center justify-center mb-8 shadow-inner border border-amber-100">
-          <Sparkles size={48} />
+      <div className="bg-gradient-to-br from-amber-50 to-white rounded-[2.5rem] p-8 md:p-12 shadow-sm border border-slate-200">
+        <div className="text-center mb-12">
+            <h3 className="text-2xl font-bold text-slate-800 mb-2">5-Minute Super Revision</h3>
+            <p className="text-slate-500">Condensed data clusters for quick recall and high-speed retention.</p>
         </div>
-        <h2 className="text-4xl font-extrabold text-slate-900 mb-4">Flash Cards Mode</h2>
-        <p className="text-slate-500 max-w-lg mx-auto text-lg leading-relaxed">
-          This section is being optimized for the 2025 RRB Mains pattern. Interactive flip-cards for rapid-fire recall will be added here.
-        </p>
-        
-        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 w-full max-w-4xl opacity-15 select-none pointer-events-none">
-           {[1,2,3,4].map(i => (
-             <div key={i} className="h-48 bg-slate-100 rounded-3xl border-2 border-dashed border-slate-300 flex items-center justify-center">
-                <Box className="text-slate-300" size={32} />
-             </div>
-           ))}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+           {FLASHCARD_DATA.map((card, idx) => {
+              const Icon = card.icon;
+              const colorClasses: Record<string, string> = {
+                 amber: "bg-amber-100 text-amber-600 border-amber-200",
+                 cyan: "bg-cyan-100 text-cyan-600 border-cyan-200",
+                 blue: "bg-blue-100 text-blue-600 border-blue-200",
+                 indigo: "bg-indigo-100 text-indigo-600 border-indigo-200",
+                 purple: "bg-purple-100 text-purple-600 border-purple-200",
+                 rose: "bg-rose-100 text-rose-600 border-rose-200",
+                 emerald: "bg-emerald-100 text-emerald-600 border-emerald-200",
+                 slate: "bg-slate-100 text-slate-600 border-slate-200",
+              };
+              
+              return (
+                <div key={idx} className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-all group overflow-hidden relative">
+                   {/* Decorative icon background */}
+                   <div className="absolute -bottom-6 -right-6 opacity-5 group-hover:opacity-10 transition-opacity">
+                      <Icon size={120} />
+                   </div>
+
+                   <div className="flex items-center gap-3 mb-6 relative z-10">
+                      <div className={`p-2 rounded-xl ${colorClasses[card.color]}`}>
+                        <Icon size={20} />
+                      </div>
+                      <h4 className="font-bold text-slate-800 text-sm tracking-tight">{card.category}</h4>
+                   </div>
+
+                   <div className="space-y-4 relative z-10">
+                      {card.items.map((item, i) => (
+                        <div key={i} className="group/item">
+                           <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">{item.q}</div>
+                           <div className="text-sm font-bold text-slate-700 group-hover/item:text-indigo-600 transition-colors">{item.a}</div>
+                        </div>
+                      ))}
+                   </div>
+                </div>
+              );
+           })}
         </div>
-        
-        <div className="mt-12">
-          <button disabled className="bg-slate-100 text-slate-400 px-10 py-4 rounded-2xl font-bold cursor-not-allowed border border-slate-200">
-             Coming Soon
-          </button>
+
+        <div className="mt-16 bg-slate-900 text-white rounded-3xl p-8 flex flex-col md:flex-row items-center justify-between gap-6 overflow-hidden relative">
+           <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
+           <div className="space-y-2 relative z-10">
+              <h4 className="text-xl font-bold flex items-center gap-2">
+                <Lightbulb className="text-amber-400" />
+                Topper's Revision Strategy
+              </h4>
+              <p className="text-slate-400 text-sm max-w-lg">
+                Use these cards once every morning. Don't read—try to <strong>predict</strong> the answer before your eyes land on it.
+              </p>
+           </div>
+           <div className="flex items-center gap-4 relative z-10">
+              <div className="flex flex-col items-center p-3 bg-white/10 rounded-2xl border border-white/10">
+                 <span className="text-2xl font-black text-amber-400">8</span>
+                 <span className="text-[10px] font-bold uppercase tracking-widest opacity-60">Categories</span>
+              </div>
+              <div className="flex flex-col items-center p-3 bg-white/10 rounded-2xl border border-white/10">
+                 <span className="text-2xl font-black text-indigo-400">32</span>
+                 <span className="text-[10px] font-bold uppercase tracking-widest opacity-60">Key Facts</span>
+              </div>
+           </div>
         </div>
       </div>
     </div>
