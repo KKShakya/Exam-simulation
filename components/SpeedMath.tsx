@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Zap, Book, Timer, Trophy, ChevronLeft, RefreshCcw, Brain, Eye, X, Flame, Star, Hash, Settings, Clock, Plus, Minus, Check, FileUp, Loader2, ArrowRight, ChevronDown, MoveLeft, Box, Cuboid, SortAsc, RefreshCw, Lightbulb, MousePointer2, ChevronRight, Gem, TrendingUp, Target, Divide, Layers, ArrowLeftRight } from 'lucide-react';
+import { Zap, Book, Timer, Trophy, ChevronLeft, RefreshCcw, Brain, Eye, X, Flame, Star, Hash, Settings, Clock, Plus, Minus, Check, FileUp, Loader2, ArrowRight, ChevronDown, MoveLeft, Box, Cuboid, SortAsc, RefreshCw, Lightbulb, MousePointer2, ChevronRight, Gem, TrendingUp, Target, Divide, Layers, ArrowLeftRight, Sparkles } from 'lucide-react';
 import { extractQuestionsFromPdf } from '../services/geminiService';
 
 type Category = 'tables' | 'squares' | 'cubes' | 'alpha' | 'alpha_rank' | 'alpha_pair' | 'percent' | 'multiplication' | 'specific_table' | 'speed_addition' | 'speed_subtraction' | 'mensuration' | 'golden_numbers' | 'ci_rates' | 'quadratic_blitz' | 'unit_digit' | 'consecutive_mult';
@@ -63,8 +63,6 @@ const PDF_BENCHMARKS: Record<string, { novice: number, pass: number, topper: num
   'Number Series (Wrong)': { novice: 90, pass: 60, topper: 45 },
 };
 
-// --- Restored Datasets ---
-
 const FRACTION_MAP = [
   { f: '1/2', p: '50%' }, { f: '1/3', p: '33.33%' }, { f: '2/3', p: '66.66%' },
   { f: '1/4', p: '25%' }, { f: '3/4', p: '75%' },
@@ -85,17 +83,7 @@ const FRACTION_MAP = [
   { f: '1/25', p: '4%' },
   { f: '1/30', p: '3.33%' },
   { f: '1/40', p: '2.5%' },
-  { f: '1/50', p: '2%' },
-  // High Value Percentages
-  { f: '3/2', p: '150%' },
-  { f: '5/2', p: '250%' },
-  { f: '7/2', p: '350%' },
-  { f: '9/2', p: '450%' },
-  { f: '11/2', p: '550%' },
-  { f: '13/2', p: '650%' },
-  { f: '15/2', p: '750%' },
-  { f: '17/2', p: '850%' },
-  { f: '19/2', p: '950%' }
+  { f: '1/50', p: '2%' }
 ];
 
 const CI_RATES_DATA = [
@@ -106,7 +94,6 @@ const CI_RATES_DATA = [
 ];
 
 const MENSURATION_DATA = [
-  // 2D Shapes
   { type: '2D', shape: 'Rectangle', param: 'Area', formula: 'l × b' },
   { type: '2D', shape: 'Rectangle', param: 'Perimeter', formula: '2(l + b)' },
   { type: '2D', shape: 'Square', param: 'Area', formula: 'a²' },
@@ -116,8 +103,6 @@ const MENSURATION_DATA = [
   { type: '2D', shape: 'Triangle', param: 'Area', formula: '½ × b × h' },
   { type: '2D', shape: 'Parallelogram', param: 'Area', formula: 'b × h' },
   { type: '2D', shape: 'Rhombus', param: 'Area', formula: '½ × d1 × d2' },
-  
-  // 3D Shapes
   { type: '3D', shape: 'Cuboid', param: 'Volume', formula: 'l × b × h' },
   { type: '3D', shape: 'Cuboid', param: 'TSA', formula: '2(lb + bh + hl)' },
   { type: '3D', shape: 'Cuboid', param: 'LSA/CSA', formula: '2h(l + b)' },
@@ -138,12 +123,10 @@ const MENSURATION_DATA = [
 ];
 
 const EXAM_MULTIPLICATIONS = [
-  // Consecutive numbers (n * n+1) - Very common in Series
   { q: '11 × 12', a: '132' }, { q: '12 × 13', a: '156' }, { q: '13 × 14', a: '182' },
   { q: '14 × 15', a: '210' }, { q: '15 × 16', a: '240' }, { q: '16 × 17', a: '272' },
   { q: '17 × 18', a: '306' }, { q: '18 × 19', a: '342' }, { q: '19 × 20', a: '380' },
   { q: '20 × 21', a: '420' }, { q: '24 × 25', a: '600' },
-  // Common Exam Pairs (Simplification frequent fliers)
   { q: '56 × 18', a: '1008' }, { q: '18 × 56', a: '1008' },
   { q: '15 × 18', a: '270' }, { q: '18 × 15', a: '270' },
   { q: '12 × 15', a: '180' }, { q: '15 × 12', a: '180' },
@@ -158,12 +141,10 @@ const EXAM_MULTIPLICATIONS = [
   { q: '75 × 12', a: '900' }, { q: '12 × 75', a: '900' },
   { q: '36 × 15', a: '540' }, { q: '15 × 36', a: '540' },
   { q: '24 × 15', a: '360' }, { q: '15 × 24', a: '360' },
-  // Special patterns
   { q: '37 × 3', a: '111' }, { q: '37 × 6', a: '222' }, { q: '37 × 9', a: '333' },
   { q: '37 × 27', a: '999' },
   { q: '11 × 11', a: '121' }, { q: '111 × 11', a: '1221' },
   { q: '101 × 25', a: '2525' }, { q: '101 × 44', a: '4444' },
-  // Squaring numbers ending in 5
   { q: '35 × 35', a: '1225' }, { q: '45 × 45', a: '2025' }, 
   { q: '55 × 55', a: '3025' }, { q: '65 × 65', a: '4225' },
   { q: '75 × 75', a: '5625' }
@@ -217,15 +198,13 @@ const VIRAL_CONCEPTS = {
     generator: () => {
       const type = Math.random();
       if (type < 0.4) {
-        // Judwa (Reverse)
         const a = Math.floor(Math.random() * 8) + 1;
         const b = Math.floor(Math.random() * 8) + 1;
-        if(a===b) return { q: '45 + 54', a: '99' }; // fallback
+        if(a===b) return { q: '45 + 54', a: '99' };
         const num1 = parseInt(`${a}${b}`);
         const num2 = parseInt(`${b}${a}`);
         return { q: `${num1} + ${num2}`, a: (num1+num2).toString() };
       } else {
-        // General / Todu Modu
         const n1 = Math.floor(Math.random() * 80) + 15;
         const n2 = Math.floor(Math.random() * 9) + 4;
         return { q: `${n1} + ${n2}`, a: (n1+n2).toString() };
@@ -243,16 +222,14 @@ const VIRAL_CONCEPTS = {
     generator: () => {
       const type = Math.random();
       if (type < 0.5) {
-        // Judwa
         let a = Math.floor(Math.random() * 9) + 1;
-        let b = Math.floor(Math.random() * (a - 1)); // b < a
-        if(isNaN(b)) { a=6; b=3; b=3; }
+        let b = Math.floor(Math.random() * (a - 1)); 
+        if(isNaN(b)) { a=6; b=3; }
         const n1 = parseInt(`${a}${b}`);
         const n2 = parseInt(`${b}${a}`);
         return { q: `${n1} - ${n2}`, a: (n1-n2).toString() };
       } else {
-        // Nadiya Paar (Base 100/200 etc)
-        const base = Math.floor(Math.random() * 3 + 1) * 100; // 100, 200, 300
+        const base = Math.floor(Math.random() * 3 + 1) * 100;
         const n1 = base + Math.floor(Math.random() * 20);
         const n2 = base - Math.floor(Math.random() * 20);
         return { q: `${n1} - ${n2}`, a: (n1-n2).toString() };
@@ -272,20 +249,16 @@ const VIRAL_CONCEPTS = {
     generator: () => {
       const type = Math.random();
       if(type < 0.2) {
-        // x11
         const n = Math.floor(Math.random() * 50) + 12;
         return { q: `${n} × 11`, a: (n*11).toString() };
       } else if (type < 0.4) {
-        // x5
         const n = Math.floor(Math.random() * 80) + 12;
         return { q: `${n} × 5`, a: (n*5).toString() };
       } else if (type < 0.6) {
-        // x99 (smaller version for speed)
         const n = Math.floor(Math.random() * 90) + 10;
         return { q: `${n} × 99`, a: (n*99).toString() };
       } else {
-        // Trishul (12x14)
-        const n = Math.floor(Math.random() * 12) + 10; // 10 to 22
+        const n = Math.floor(Math.random() * 12) + 10;
         const n1 = n * 2;
         const n2 = n1 + 2;
         return { q: `${n1} × ${n2}`, a: (n1*n2).toString() };
@@ -303,15 +276,12 @@ const VIRAL_CONCEPTS = {
     generator: () => {
       const type = Math.random();
       if(type < 0.33) {
-        // Ending 5
         const n = (Math.floor(Math.random() * 9) + 1) * 10 + 5;
         return { q: `${n}²`, a: (n*n).toString() };
       } else if (type < 0.66) {
-        // Base 50 (41-59)
         const n = Math.floor(Math.random() * 18) + 41;
         return { q: `${n}²`, a: (n*n).toString() };
       } else {
-        // Base 100 (91-109)
         const n = Math.floor(Math.random() * 18) + 91;
         return { q: `${n}²`, a: (n*n).toString() };
       }
@@ -363,18 +333,10 @@ const STANDARD_CONCEPTS = {
         { code: "CFILORUX", val: "3, 6, 9, 12, 15, 18, 21, 24" }
       ],
       opposites_list: [
-        { pair: "A-Z", mnemonic: "Azad (Free)" },
-        { pair: "B-Y", mnemonic: "Boy" },
-        { pair: "C-X", mnemonic: "Crux / Crack" },
-        { pair: "D-W", mnemonic: "Dew / Draw" },
-        { pair: "E-V", mnemonic: "EVerest / LoVe" },
-        { pair: "F-U", mnemonic: "FUn / FUr" },
-        { pair: "G-T", mnemonic: "G.T. Road" },
-        { pair: "H-S", mnemonic: "High School" },
-        { pair: "I-R", mystery: "Indian Railway" },
-        { pair: "J-Q", mnemonic: "Jungle Queen" },
-        { pair: "K-P", mnemonic: "Kanpur / PK" },
-        { pair: "L-O", mnemonic: "LOve / Light On" },
+        { pair: "A-Z", mnemonic: "Azad (Free)" }, { pair: "B-Y", mnemonic: "Boy" }, { pair: "C-X", mnemonic: "Crux / Crack" },
+        { pair: "D-W", mnemonic: "Dew / Draw" }, { pair: "E-V", mnemonic: "EVerest / LoVe" }, { pair: "F-U", mnemonic: "FUn / FUr" },
+        { pair: "G-T", mnemonic: "G.T. Road" }, { pair: "H-S", mnemonic: "High School" }, { pair: "I-R", mystery: "Indian Railway" },
+        { pair: "J-Q", mnemonic: "Jungle Queen" }, { pair: "K-P", mnemonic: "Kanpur / PK" }, { pair: "L-O", mnemonic: "LOve / Light On" },
         { pair: "M-N", mnemonic: "MaN / MooN" }
       ],
       opposites: "AZ, BY, CX, DW, EV, FU, GT, HS, IR, JQ, KP, LO, MN".split(', ')
@@ -418,6 +380,36 @@ const STANDARD_CONCEPTS = {
 
 const CHEAT_SHEET_DATA = [
   {
+    title: "Permutation & Combination (P&C)",
+    icon: Layers,
+    color: "indigo",
+    sections: [
+      {
+        subtitle: "1. The Golden Rule (P vs C)",
+        points: [
+          { label: "Permutation (Arrangement)", desc: "**YES, Order Matters**. Think: **Passwords, PINs, Seating**. (1-2-3 ≠ 3-2-1). Keywords: Arrange, Rank, Numbers." },
+          { label: "Combination (Selection)", desc: "**NO, Order Doesn't Matter**. Think: **Fruit Salad, Teams, Handshakes**. (Apple+Banana = Banana+Apple). Keywords: Select, Choose, Committee." }
+        ]
+      },
+      {
+        subtitle: "2. The Countdown Shortcut",
+        points: [
+          { label: "Mental Permutation (P)", desc: "**5P2** → Start at 5, countdown 2 slots. **5 × 4 = 20**. No factorials needed." },
+          { label: "Mental Combination (C)", desc: "**5C2** → (Countdown 2) / (Divide 2!). **(5×4) / (2×1) = 10**. **10C2 = 45**, **8C2 = 28**." }
+        ]
+      },
+      {
+        subtitle: "3. Common Exam Scenarios",
+        points: [
+          { label: "The Word Game", desc: "Arrange **APPLE**? Total (5!) divided by Repeats (P=2!). **120/2 = 60**. If no repeats, just n!." },
+          { label: "Vowels Together (Box)", desc: "Arrange **LEADER** (E,A,E together). Pack vowels in **1 Box**. Total units = L,D,R,Box = 4!. Box internal = 3!/2!. Multiply both." },
+          { label: "Handshake Master", desc: "10 people meet? Order doesn't matter → **10C2**. Formula: **n(n-1)/2**. Ans: **10×9/2 = 45**." },
+          { label: "And / Or Rule", desc: "3 Men **AND** 2 Women → **Multiply (×)**. Man **OR** Woman → **Add (+)**." }
+        ]
+      }
+    ]
+  },
+  {
     title: "Arithmetic (Hierarchy Models)",
     icon: RefreshCcw,
     color: "indigo",
@@ -425,36 +417,35 @@ const CHEAT_SHEET_DATA = [
       {
         subtitle: "Speed, Time, Distance (STD)",
         points: [
-          { label: "The King Rule", desc: "Distance is King (Top). Speed & Time are Servants." },
-          { label: "The Trigger", desc: "See Distance? → DIVIDE (D/S or D/T). Missing Distance? → MULTIPLY (S×T)." }
+          { label: "The King Rule", desc: "**Distance is King** (Top). Speed & Time are Servants." },
+          { label: "The Trigger", desc: "See Distance? → **DIVIDE** (D/S or D/T). Missing Distance? → **MULTIPLY** (S×T)." }
         ]
       },
       {
          subtitle: "Boats & Streams",
          points: [
             { 
-              label: "Golden Shortcut (Round Trip)", 
-              desc: "Distance (One Side) = Total Time × (B² - S²) / 2B. This gives the one-way distance. Use when Total Time is given for a round trip and Actual (or Ratio) speeds of Boat & Stream are known." 
+              label: "Round Trip Shortcut", 
+              desc: "**Distance = Total Time × (B² - S²) / 2B**. Use when total time for a round trip is known." 
             },
-            { label: "Option Attack", desc: "Don't solve quadratics. Plug options into B+S and B-S. Correct one divides Distance cleanly." },
-            { label: "Speed Definitions", desc: "Down(D) = B+S. Up(U) = B-S. Boat = (D+U)/2. Stream = (D-U)/2." }
+            { label: "Option Attack", desc: "Don't solve quadratics. Plug options into **B+S** and **B-S**. Correct one divides Distance cleanly." },
+            { label: "Speed Definitions", desc: "**Down(D) = B+S**. **Up(U) = B-S**. **Boat = (D+U)/2**. **Stream = (D-U)/2**." }
          ]
       },
       {
         subtitle: "Mixtures & Dishonest Shopkeeper",
         points: [
-          { label: "Adulteration Logic", desc: "In mixture if water is added it is free so profit% = 20% = 1/5 → Water: 1, Milk: 5, Mixture: 6. Cost Price of Water is ₹0." },
-          { label: "False Weight Rule", desc: "Assume ₹1 = 1gm. False weight is the CP and actual weight is the SP." },
-          { label: "The Double Cheat (Markup + Weight)", desc: "Shopkeeper marks up 20% & uses 900gm for 1kg. Linear Line Trick: Left(CP) 900gm. Right(SP) 1200 (1000+20%). Gap=300. Profit = 33.33%." }
+          { label: "Adulteration Logic", desc: "Free Water = **Profit%**. Profit 20% = 1/5 → Water: 1, Milk: 5, Mixture: 6." },
+          { label: "False Weight Rule", desc: "Assume **₹1 = 1gm**. False weight is CP, Actual weight is SP." },
+          { label: "Linear Line Trick", desc: "CP: 900gm | SP: 1200gm (Markup). Gap: 300. **Profit: 33.33%**." }
         ]
       },
       {
         subtitle: "Profit & Loss",
         points: [
-          { label: "Base Value Rules", desc: "Profit/Loss is always on CP: Profit% = P/CP → SP = CP + P. Loss% = L/CP → SP = CP - L.\nDiscount is always on MP: Discount% = D/MP → SP = MP - D.\nMarkup is on CP: Markup% = (MP-CP)/CP → MP = CP + Markup." },
-          { label: "The Golden Bridge", desc: "SP connects CP and MP. CP × (100+P)% = MP × (100-D)%." },
-          { label: "The King Rule (Partnership)", desc: "Profit is King. Investment & Time are Servants. Profit Ratio = Investment × Time." },
-          { label: "Time Trap (Partnership)", desc: "Use 'Time money was in machine', not calendar time." }
+          { label: "Base Value Rules", desc: "Profit on **CP**. Discount on **MP**. Markup on **CP**." },
+          { label: "The Golden Bridge", desc: "**SP connects CP and MP**. CP × (100+P)% = MP × (100-D)%." },
+          { label: "Partnership Rule", desc: "**Profit Ratio = Investment × Time**." }
         ]
       }
     ]
@@ -465,58 +456,42 @@ const CHEAT_SHEET_DATA = [
     color: "purple",
     sections: [
       {
-         subtitle: "Shadows & Directions Mastery",
+         subtitle: "Shadows & Directions",
          points: [
             { 
-              label: "1. The Anchor Concept", 
-              desc: "Shadows only fall in two directions based on the time:\n• Morning (Sun in East): Shadow is always in the WEST.\n• Evening (Sun in West): Shadow is always in the EAST." 
+              label: "Anchor Concept", 
+              desc: "Morning: **Shadow WEST**. Evening: **Shadow EAST**." 
             },
             { 
-              label: "2. The Left/Right Rule", 
-              desc: "If the shadow is to your Left or Right, you are facing either North or South.\n• Morning (Shadow West): Left=North, Right=South.\n• Evening (Shadow East): Left=South, Right=North." 
+              label: "Left/Right Rule", 
+              desc: "Shadow L/R? Facing **North or South**." 
             },
             { 
-              label: "3. The Front/Back Rule", 
-              desc: "If the shadow is to your Front or Back, you are facing either East or West.\n• Morning (Shadow West):\n  - Shadow in Front? Facing WEST.\n  - Shadow in Back? Facing EAST.\n• Evening (Shadow East):\n  - Shadow in Front? Facing EAST.\n  - Shadow in Back? Facing WEST." 
+              label: "Front/Back Rule", 
+              desc: "Shadow F/B? Facing **East or West**." 
             }
          ]
       },
       {
          subtitle: "Alphabet Series",
          points: [
-            { label: "Speak and Seek", desc: "Don't convert to numbers. Recite alphabet while moving eye. Match = Pair." },
-            { label: "The Gap Trick", desc: "Ignore letters that are neighbors in word (A,Z) but far in alphabet. Don't count dead ends." }
+            { label: "Speak and Seek", desc: "Recite alphabet while moving eye. **Match = Pair**." },
+            { label: "The Gap Trick", desc: "Ignore neighbors (A,Z) but count gaps in sequence." }
          ]
       },
       {
-        subtitle: "Syllogism",
+        subtitle: "Syllogism & Inequality",
         points: [
-          { label: "Stranger Territory", desc: "No touch + No Cross = Definite False, but Possibility True." },
-          { label: "Only A Few", desc: "A→B: Restricted (Some A not B). B→A: Free (All B can be A)." },
-          { label: "School Trap", desc: "If 'Only few A are B' & 'All B are C' → Can All A be C? YES." }
+          { label: "Only A Few", desc: "**A→B: Restricted**. B→A: Free." },
+          { label: "Either/Or (Block)", desc: "Need all 3 signs combined: **(>, <, =)**." },
+          { label: "School Trap", desc: "If 'Only few A are B' & 'All B are C' → **Can All A be C? YES**." }
         ]
       },
       {
-         subtitle: "Inequalities (Either/Or Rules)",
-         points: [
-           { label: "The Trigger (Step 1)", desc: "Check ONLY if: 1) Both elements same (A & B). 2) Both conclusions individually False/CND." },
-           { label: "Case A: Established Relation", desc: "Statement A ≥ B → Need (>) and (=). Statement A ≤ B → Need (<) and (=)." },
-           { label: "Case B: No Relation (Block)", desc: "Opposite signs (A > M < B) → Relation Unknown. Need ALL 3 symbols combined: (> & ≤) OR (< & ≥)." },
-           { label: "The Missing Symbol Trap", desc: "If No Relation, having just (>) and (=) is NEITHER/NOR. You are missing (<)." }
-         ]
-      },
-      {
-        subtitle: "Blood Relations",
+        subtitle: "Seating & Directions",
         points: [
-          { label: "In-Laws", desc: "Son/Daughter-in-Law: 1st Person is married." },
-          { label: "Gender Cheat", desc: "If B has Wife/Husband → B is married. If B has Sister → A is married." }
-        ]
-      },
-      {
-        subtitle: "Seating & Direction",
-        points: [
-          { label: "Direction (NEWS)", desc: "All faces outside: Clockwise is Right, Anti-clockwise is Left." },
-          { label: "Circular Seating", desc: "Facing Inside: Anti-clockwise is Right. Facing Outside: Clockwise is Right." }
+          { label: "Inside/Outside", desc: "Facing In: **ACW is Right**. Facing Out: **CW is Right**." },
+          { label: "Chinese Coding", desc: "Use **Shapes (Circles, Triangles)** for speed." }
         ]
       }
     ]
@@ -529,40 +504,29 @@ const CHEAT_SHEET_DATA = [
       {
         subtitle: "Double (x2) & Half (1/2)",
         points: [
-           { label: "Double (x2) Rule", desc: "If the last digit is ≥ 5, the doubled first digit gets a +1. Example: 26 × 2. Double 2 is 4. Since 6 > 5, 4 becomes 5. Last digit of 6×2 is 2. Answer: 52." },
-           { label: "Half (1/2) Rule", desc: "Even-Even (288/2 = 144) is direct. If tens/hundreds is Odd (116): Half it without decimal (11->5). The last digit comes from the carry (16/2=8, which is >5). If both digits are Odd, answer is decimal." }
+           { label: "Double Rule", desc: "Last digit ≥ 5? Doubled first digit gets **+1**." },
+           { label: "Half Rule", desc: "Odd tens? Carry **5** to the next digit." }
         ]
       },
       {
-        subtitle: "Mensuration",
+        subtitle: "Mensuration Hacks",
         points: [
-           { label: "Divisibility by 11", desc: "Volume/Area with π? Answer must be divisible by 11. (Sum Odd - Sum Even = 0 or 11)." },
-           { label: "Mother Formula", desc: "Vol = Base Area × H. CSA = Base Perimeter × H. (Cylinder, Cube, Cuboid)." },
-           { label: "Relation Tricks", desc: "Cone Vol = 1/3 Cylinder. Sphere Area = 4 Circles. Hemisphere TSA = 3 Circles." }
+           { label: "Divisibility by 11", desc: "Volumes with **π** must be divisible by 11." },
+           { label: "Relation Tricks", desc: "**Cone Vol = 1/3 Cylinder**. Sphere Area = 4 Circles." }
         ]
       },
       {
-        subtitle: "Simplification Hacks",
+        subtitle: "Simplification",
         points: [
-          { label: "Percent Swap", desc: "A% of B = B% of A. Move % to the friendly number." },
-          { label: "Split & Kill", desc: "512 × 12 → (512 × 10) + (512 × 2)." },
-          { label: "Approximation", desc: "Options far apart? Round to nearest 10/50/100." }
+          { label: "Percent Swap", desc: "**A% of B = B% of A**. Move % to friendly numbers." },
+          { label: "Split & Kill", desc: "512 × 12 → **(512 × 10) + (512 × 2)**." }
         ]
-      }
-    ]
-  },
-  {
-    title: "Exam Strategy",
-    icon: Trophy,
-    color: "emerald",
-    sections: [
+      },
       {
         subtitle: "Topper's Process",
         points: [
-          { label: "Rough Sheet", desc: "Fold it. Write Answers Only, never copy question." },
-          { label: "Mouse Hand", desc: "Left Hand on Mouse (Click), Right Hand with Pen (Write)." },
-          { label: "Alien Search", desc: "In Alpha-Numeric, scan for Numbers/Symbols, not Letters." },
-          { label: "Chinese Coding", desc: "Use Shapes (Circles, Triangles), do not write words." }
+          { label: "Rough Sheet", desc: "**Fold it**. Write Answers Only, never copy question." },
+          { label: "Mouse Hand", desc: "**Left Hand on Mouse**, Right Hand with Pen." }
         ]
       }
     ]
@@ -595,7 +559,6 @@ const SpeedMath: React.FC = () => {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Define randomInt helper function
   const randomInt = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min;
 
   const generateNonRepeatingNumber = (min: number, max: number, exclude: number[] = []): number => {
@@ -650,7 +613,6 @@ const SpeedMath: React.FC = () => {
            const n1 = generateNonRepeatingNumber(500, 9999);
            const n2 = generateNonRepeatingNumber(50, 999, [n1]);
            const n3 = generateNonRepeatingNumber(10, 400, [n1, n2]);
-           
            if (isType1) {
              q = `${n1} + ${n2} - ${n3}`;
              a = (n1 + n2 - n3).toString();
@@ -665,25 +627,13 @@ const SpeedMath: React.FC = () => {
       case 'squares': {
         const num = Math.floor(Math.random() * 49) + 2;
         const sq = num * num;
-        if (subMode === 'reverse') {
-          q = `√${sq}`;
-          a = num.toString();
-        } else {
-          q = `${num}²`;
-          a = sq.toString();
-        }
+        if (subMode === 'reverse') { q = `√${sq}`; a = num.toString(); } else { q = `${num}²`; a = sq.toString(); }
         break;
       }
       case 'cubes': {
         const num = Math.floor(Math.random() * 24) + 2;
         const cb = num * num * num;
-        if (subMode === 'reverse') {
-          q = `∛${cb}`;
-          a = num.toString();
-        } else {
-          q = `${num}³`;
-          a = cb.toString();
-        }
+        if (subMode === 'reverse') { q = `∛${cb}`; a = num.toString(); } else { q = `${num}³`; a = cb.toString(); }
         break;
       }
       case 'alpha': {
@@ -1063,40 +1013,94 @@ const SpeedMath: React.FC = () => {
   );
 
   const renderTricksSheet = () => (
-    <div className="max-w-5xl mx-auto animate-in fade-in slide-in-from-bottom-8">
-      <div className="flex items-center justify-between mb-8 sticky top-0 bg-slate-50/95 backdrop-blur-sm py-4 z-20 border-b border-slate-200">
-        <div className="flex items-center gap-4">
-          <button onClick={() => setMode('menu')} className="bg-white p-2 rounded-full shadow-sm border border-slate-200 hover:bg-slate-100">
-            <ChevronLeft size={24} className="text-slate-600" />
-          </button>
-          <h2 className="text-2xl font-bold text-slate-800">Topper's Cheat Sheet</h2>
-        </div>
+    <div className="max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-8 pb-12 px-4">
+      {/* Header */}
+      <div className="flex items-center justify-between border-b border-slate-200 pb-6 mb-8">
+           <button 
+             onClick={() => setMode('menu')}
+             className="flex items-center gap-2 text-slate-500 hover:text-indigo-600 font-bold transition-colors"
+           >
+             <ChevronLeft size={20} /> Back to Menu
+           </button>
+           <h2 className="text-2xl font-black text-slate-900 flex items-center gap-2">
+             <Sparkles className="text-amber-600" size={24} /> Topper's Cheat Sheet
+           </h2>
       </div>
 
-      <div className="space-y-8 pb-12">
-        {CHEAT_SHEET_DATA.map((section, idx) => {
-           const Icon = section.icon;
-           return (
-             <div key={idx} className="bg-white rounded-3xl p-8 shadow-sm border border-slate-200">
-               <div className={`flex items-center gap-4 mb-8 pb-4 border-b border-slate-100`}><div className={`p-3 rounded-2xl bg-${section.color}-100 text-${section.color}-600`}><Icon size={32} /></div><h3 className="text-2xl font-bold text-slate-800">{section.title}</h3></div>
-               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                 {section.sections.map((sub, sIdx) => (
-                   <div key={sIdx} className="bg-slate-50/50 rounded-2xl p-6 border border-slate-100/80 hover:border-indigo-100 transition-colors">
-                     <h4 className="font-bold text-lg text-slate-700 mb-6 flex items-center gap-2"><span className={`w-2 h-2 rounded-full bg-${section.color}-500`}></span>{sub.subtitle}</h4>
-                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                       {sub.points.map((pt: any, pIdx: number) => (
-                         <div key={pIdx} className={`p-5 rounded-xl border shadow-sm transition-all duration-200 hover:shadow-md flex flex-col h-full bg-white hover:bg-${section.color}-50 border-slate-200`}>
-                           <span className={`block font-bold text-md mb-2 text-slate-800`}>{pt.label}</span>
-                           <span className="block text-slate-600 text-sm leading-relaxed flex-1 whitespace-pre-line">{pt.desc}</span>
-                         </div>
-                       ))}
+      {/* Revision Content */}
+      <div className="bg-gradient-to-br from-indigo-50 to-white rounded-[2.5rem] p-8 md:p-12 shadow-sm border border-slate-200">
+        <div className="text-center mb-12">
+            <h3 className="text-3xl font-extrabold text-slate-900 mb-2">5-Minute Rapid Revision</h3>
+            <p className="text-slate-500 font-medium">Condensing logic hierarchies and visual models for active recall.</p>
+        </div>
+
+        {/* The Card Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+           {CHEAT_SHEET_DATA.flatMap((catData) => 
+             catData.sections.map((section, sIdx) => {
+                const Icon = catData.icon;
+                const colorClasses: Record<string, string> = {
+                   indigo: "bg-indigo-100 text-indigo-600 border-indigo-200",
+                   purple: "bg-purple-100 text-purple-600 border-purple-200",
+                   amber: "bg-amber-100 text-amber-600 border-amber-200",
+                   emerald: "bg-emerald-100 text-emerald-600 border-emerald-200",
+                };
+                
+                return (
+                  <div key={`${catData.title}-${sIdx}`} className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-all group overflow-hidden relative flex flex-col">
+                     {/* Decorative icon background */}
+                     <div className="absolute -bottom-6 -right-6 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <Icon size={120} />
                      </div>
-                   </div>
-                 ))}
-               </div>
-             </div>
-           );
-        })}
+
+                     {/* Card Header */}
+                     <div className="flex items-center gap-3 mb-6 relative z-10">
+                        <div className={`p-2 rounded-xl ${colorClasses[catData.color]}`}>
+                          <Icon size={20} />
+                        </div>
+                        <h4 className="font-bold text-slate-800 text-sm tracking-tight leading-tight">{section.subtitle}</h4>
+                     </div>
+
+                     {/* Card Content with Highlights */}
+                     <div className="space-y-4 relative z-10 flex-1">
+                        {section.points.map((item, i) => (
+                          <div key={i} className="group/item">
+                             <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">{item.label}</div>
+                             <div className="text-sm font-medium text-slate-700 leading-relaxed">
+                                <span dangerouslySetInnerHTML={{ __html: item.desc.replace(/\*\*(.*?)\*\*/g, '<strong class="text-indigo-600">$1</strong>') }} />
+                             </div>
+                          </div>
+                        ))}
+                     </div>
+                  </div>
+                );
+             })
+           )}
+        </div>
+
+        {/* Revision Strategy Footer */}
+        <div className="mt-16 bg-slate-900 text-white rounded-3xl p-8 flex flex-col md:flex-row items-center justify-between gap-6 overflow-hidden relative shadow-2xl">
+           <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
+           <div className="space-y-2 relative z-10">
+              <h4 className="text-xl font-bold flex items-center gap-2">
+                <Lightbulb className="text-amber-400" />
+                Topper's Revision Strategy
+              </h4>
+              <p className="text-slate-400 text-sm max-w-lg leading-relaxed">
+                Scan these cards <strong>once every morning</strong>. Do not read them like a book—look at the category label and try to <strong>predict the logic</strong> before reading it.
+              </p>
+           </div>
+           <div className="flex items-center gap-4 relative z-10">
+              <div className="flex flex-col items-center p-3 bg-white/10 rounded-2xl border border-white/10 min-w-[100px]">
+                 <span className="text-2xl font-black text-amber-400">5</span>
+                 <span className="text-[10px] font-bold uppercase tracking-widest opacity-60">Modules</span>
+              </div>
+              <div className="flex flex-col items-center p-3 bg-white/10 rounded-2xl border border-white/10 min-w-[100px]">
+                 <span className="text-2xl font-black text-indigo-400">14</span>
+                 <span className="text-[10px] font-bold uppercase tracking-widest opacity-60">Master Cards</span>
+              </div>
+           </div>
+        </div>
       </div>
     </div>
   );
@@ -1122,7 +1126,7 @@ const SpeedMath: React.FC = () => {
     const data = STANDARD_CONCEPTS[category as keyof typeof STANDARD_CONCEPTS];
     if (!data) return <div className="p-8 text-center text-slate-500">No reference data available.</div>;
     return (
-      <div className="max-w-5xl mx-auto animate-in fade-in slide-in-from-right-4"><div className="flex items-center justify-between mb-8"><button onClick={() => setMode('menu')} className="flex items-center text-slate-500 hover:text-indigo-600"><ChevronLeft size={20} /> Back to Menu</button><button onClick={() => initGameSetup(category)} className="bg-indigo-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-indigo-700 shadow-md flex items-center gap-2"><Zap size={18} /> Practice This</button></div><div className="text-center mb-10"><h2 className="text-3xl font-bold text-slate-900 mb-2">{data.title}</h2><p className="text-slate-500">Review before you practice.</p></div><div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">{JSON.stringify(data.data).slice(0,100)}... (Reference View active)</div></div>
+      <div className="max-w-5xl mx-auto animate-in fade-in slide-in-from-right-4"><div className="flex items-center justify-between mb-8"><button onClick={() => setMode('menu')} className="flex items-center text-slate-500 hover:text-indigo-600"><ChevronLeft size={20} /> Back to Menu</button><button onClick={() => initGameSetup(category)} className="bg-indigo-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-indigo-700 shadow-md flex items-center gap-2"><Zap size={18} /> Practice This</button></div><div className="text-center mb-10"><h2 className="text-3xl font-bold text-slate-900 mb-2">{data.title}</h2><p className="text-slate-500">Review before you practice.</p></div><div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden p-8 font-mono text-sm leading-relaxed whitespace-pre-wrap">{JSON.stringify(data.data, null, 2)}</div></div>
     );
   };
 
@@ -1140,14 +1144,14 @@ const SpeedMath: React.FC = () => {
         <div className="grid grid-cols-1 gap-4">
           <button 
             onClick={() => { setSubMode('normal'); setMode('timer-selection'); }}
-            className="py-4 px-6 border-2 border-slate-100 hover:border-indigo-500 hover:bg-indigo-50 rounded-xl font-bold text-lg text-slate-700 hover:text-indigo-700 transition-all flex items-center justify-between"
+            className="py-4 px-6 border-2 border-slate-100 hover:border-indigo-500 hover:bg-indigo-50 rounded-xl font-bold text-lg text-slate-700 hover:text-emerald-700 transition-all flex items-center justify-between"
           >
             <span>Normal (n → n²)</span>
             <ChevronRight size={20} />
           </button>
           <button 
             onClick={() => { setSubMode('reverse'); setMode('timer-selection'); }}
-            className="py-4 px-6 border-2 border-slate-100 hover:border-indigo-500 hover:bg-indigo-50 rounded-xl font-bold text-lg text-slate-700 hover:text-indigo-700 transition-all flex items-center justify-between"
+            className="py-4 px-6 border-2 border-slate-100 hover:border-indigo-500 hover:bg-indigo-50 rounded-xl font-bold text-lg text-slate-700 hover:text-emerald-700 transition-all flex items-center justify-between"
           >
             <span>Reverse (√n → n)</span>
             <ChevronRight size={20} />
@@ -1168,9 +1172,6 @@ const SpeedMath: React.FC = () => {
       {mode === 'reference' && renderReference()}
       {mode === 'pdf-upload' && renderPdfUpload()}
       {mode === 'mode-selection' && renderModeSelection()}
-      {mode === 'pdf-config' && (<div>PDF Config UI Placeholder</div>)}
-      {mode === 'pdf-drill' && (<div>PDF Drill UI Placeholder</div>)}
-      {mode === 'pdf-result' && (<div>PDF Result UI Placeholder</div>)}
     </div>
   );
 };
