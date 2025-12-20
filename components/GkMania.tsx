@@ -27,6 +27,58 @@ const BANKING_AWARENESS = [
       "**NPCI:** Retail Payments Umbrella (UPI/RuPay). Est 2008.",
       "**PFRDA:** Pension Regulator. HQ: New Delhi."
     ]
+  },
+  {
+    title: "Govt Schemes & Investments",
+    content: [
+      "**PM Kisan (21st):** Released from Coimbatore. ₹18k Cr.",
+      "**PM Fasal Bima:** 'Wild Animal Attacks' added (Kharif 2026).",
+      "**Adani in Assam:** ₹63k Cr Inv confirmed."
+    ]
+  },
+  {
+    title: "Legal Framework (Statutory Acts)",
+    content: [
+      "**Scheduled Banks:** Defined under **Section 2(e)** of RBI Act, 1934 (Second Schedule).",
+      "**CRR:** Mandated under **Section 42(1)** of RBI Act, 1934.",
+      "**SLR:** Mandated under **Section 24** of Banking Regulation Act, 1949.",
+      "**NPCI Status:** Section 8 of Companies Act, 2013 (Not-for-Profit). (Old: Sec 25)."
+    ]
+  },
+  {
+    title: "Evolution of Payment Systems",
+    content: [
+      "**2004:** **RTGS** (Real Time Gross Settlement) launched.",
+      "**2005:** **NEFT** launched by **IDRBT** (Later handed to RBI).",
+      "**2008:** **NPCI** established.",
+      "**2010:** **IMPS** (Immediate Payment) & **CTS** (Cheque Truncation).",
+      "**2016:** **UPI** & **BBPS** launched."
+    ]
+  },
+  {
+    title: "Operational Norms (KYC & Codes)",
+    content: [
+      "**KYC Cycles:** High Risk (2Y), Medium Risk (8Y), Low Risk (10Y).",
+      "**MICR Code:** 9 Digits (3 City, 3 Bank, 3 Branch). Used for Cheques.",
+      "**IFSC Code:** 11 Characters. Used for NEFT/RTGS.",
+      "**Plastic Money:** Refers specifically to Credit & Debit Cards."
+    ]
+  },
+  {
+    title: "Financial Inclusion & History",
+    content: [
+      "**Launch:** Officially in **2005** (C. Rangarajan Committee).",
+      "**First Merger:** PNB + New Bank of India (**1993**).",
+      "**Key Schemes:** BSBDA (2012, ex-No Frills), PMJDY (2014), Mudra (2015)."
+    ]
+  },
+  {
+    title: "Market Mechanics (Deep Dive)",
+    content: [
+      "**LAF (Liquidity Adjustment):** Primary tool. Repo (Injects) & Reverse Repo (Absorbs).",
+      "**Repo Rate:** Rate at which RBI lends to Commercial Banks.",
+      "**SLR Composition:** Cash, Gold, or G-Secs. <span class='text-red-600 font-bold bg-red-50 px-1 rounded text-xs'>Equity NOT allowed</span>."
+    ]
   }
 ];
 
@@ -54,7 +106,7 @@ const STATIC_GK = [
       { k: "Odisha Harvest", v: "Nuakhai, Dhanuyatra, Bali Jatra, Raj Parv" },
       { k: "Meghalaya", v: "Cherry Blossom Festival (Oct-Nov)" },
       { k: "Mizoram", v: "Chapchar Kut" },
-      { k: "Tripura", v: "Tripura (Kharchi Puja)" },
+      { k: "Tripura", v: "Kharchi Puja" },
       { k: "Surajkund Mela", v: "Faridabad, Haryana (Sun God linked)" }
     ]
   },
@@ -120,103 +172,209 @@ const CURRENT_AFFAIRS = [
           "**Rana Pratap Sagar Dam:** **Chambal River**, Rajasthan.",
           "**Airports in News:** Daporijo & Tezu (Arunachal), Devi Ahilyabai (Indore)."
         ]
+      },
+      {
+        type: "Stream A: Pure Static",
+        icon: Building2,
+        color: "emerald",
+        points: [
+          "**UNFPA HQ:** **New York** (UNEP is Nairobi).",
+          "**MICR:** Magnetic Ink Character Recognition.",
+          "**Murugappa Gold Cup:** Hockey.",
+          "**Pulitzer:** Journalism/Lit/Music (US)."
+        ]
+      },
+      {
+        type: "Currency Power Players",
+        icon: Globe,
+        color: "amber",
+        points: [
+          "**Won:** South & North Korea.",
+          "**Yen:** Japan. **Yuan:** China.",
+          "**Rand:** South Africa. **Real:** Brazil.",
+          "**Krona:** Iceland (Reykjavik). **Dirham:** Morocco."
+        ]
+      }
+    ]
+  },
+  {
+    month: "Nov-Dec 2025 (Blockbuster Verified)",
+    sections: [
+      {
+        type: "😲 The 'Unlikely' Real Events",
+        icon: Zap,
+        color: "red",
+        points: [
+          "**Nepal Interim PM:** **Sushila Karki** (Former Chief Justice).",
+          "**FIFA Peace Prize:** **Donald Trump** (Dec 2025) presented by Infantino.",
+          "**Tata in Morocco:** First overseas defense plant (Casablanca) for **WhAP 8x8**."
+        ]
+      },
+      {
+        type: "State & Summits",
+        icon: Globe,
+        color: "blue",
+        points: [
+          "**Tamil Nadu:** First ID Cards for **Women SHGs** (25kg free luggage).",
+          "**ASEAN:** 11 Members (Newest: **Timor-Leste**).",
+          "**FIFA WC 2026:** Hosts **Canada, Mexico, USA**."
+        ]
+      }
+    ]
+  },
+  {
+    month: "Dec 2025 (Stream B - Verified)",
+    sections: [
+      {
+        type: "🚨 Critical Traps (Sound-Alike)",
+        icon: AlertTriangle,
+        color: "red",
+        points: [
+          "**Helicopter Deal:** **MH-60 Romeo** (USA) ≠ MA-60 (China).",
+          "**Scheme Name:** **Tech-Textiles/Tex-Fund** (Textile Min) ≠ Tax-RAM.",
+          "**UNESCO Role:** India in **Exec Board** (25-29) ≠ Director (Audrey Azoulay)."
+        ]
+      },
+      {
+        type: "Banking & Economy",
+        icon: Landmark,
+        color: "blue",
+        points: [
+          "**Rare Earth Scheme:** Cabinet approved **₹7,280 Cr** for magnets (EVs).",
+          "**RBI Penalty:** **₹3.10 Lakh** on Manna Krishna Investments (NBFC).",
+          "**ADB Loan:** **$400 Million** for Maharashtra (Rural Conn).",
+          "**Tea Exports:** India is **2nd** (China is 1st)."
+        ]
+      },
+      {
+        type: "Defense & Exercises",
+        icon: Swords,
+        color: "emerald",
+        points: [
+          "**Ekuverin:** India-Maldives at **Thiruvananthapuram, Kerala**.",
+          "**Harimau Shakti:** India-Malaysia at **Rajasthan**."
+        ]
+      },
+      {
+        type: "Appointments",
+        icon: Briefcase,
+        color: "purple",
+        points: [
+          "**RBI ED:** Usha Janakiraman (Dec 1).",
+          "**PNB ED:** Amit Kumar Srivastava.",
+          "**DP World Amb:** Abhishek Sharma (Cricketer).",
+          "**Intl IDEA Chair:** Gyanesh Kumar (CEC)."
+        ]
+      },
+      {
+        type: "Awards & Records",
+        icon: Trophy,
+        color: "amber",
+        points: [
+          "**Riyadh Metro:** Guinness Record **Longest Driverless** (176km). <span class='text-xs bg-amber-100 text-amber-800 px-1 rounded'>Exam Trap: Longest = Shanghai</span>",
+          "**Water Positive:** IGIA (Delhi) - First major airport.",
+          "**Obituary:** Kumari Kamala (Bharatanatyam, 91)."
+        ]
+      }
+    ]
+  },
+  {
+    month: "Nov-Dec 2025 Capsule",
+    sections: [
+      {
+        type: "National & Tech (New)",
+        icon: Globe,
+        color: "blue",
+        points: [
+          "**Maldives:** Tobacco ban for those born after **Jan 1, 2007**.",
+          "**Social Media Ban:** Denmark (<15), Australia (<16).",
+          "**Google Project:** **'Suncatcher'** (Space AI). <span class='text-green-600 font-bold text-xs'>[CORRECTED]</span>",
+          "**Climate Risk Index:** India Ranked **6th** (Worsened). <span class='text-green-600 font-bold text-xs'>[CORRECTED]</span>",
+          "**JSW Energy:** Green Hydrogen at **Vijayanagar, KA**."
+        ]
+      },
+      {
+        type: "Appointments & Awards",
+        icon: Award,
+        color: "amber",
+        points: [
+          "**PFRDA Chair:** Sivasubramanian Ramann.",
+          "**Brand Amb:** Rahul Dravid (Paradeep Phosphates).",
+          "**Nobel:** James Watson (DNA) passed away (1962 Winner).",
+          "**NHPC Jubilee:** ₹50 Commemorative Coin released.",
+          "**CJI (53rd):** Justice Surya Kant."
+        ]
+      },
+      {
+        type: "Defense & Military",
+        icon: Swords,
+        color: "red",
+        points: [
+          "**Garud 2025:** India & France (Mont-de-Marsan).",
+          "**Ajay Warrior:** India & UK (Rajasthan).",
+          "**Goa Police:** 100% Cyber Fraud Response Rate.",
+          "**Production:** Record ₹1.54 Lakh Cr."
+        ]
+      },
+      {
+        type: "Key Updates (Prev)",
+        icon: Users,
+        color: "purple",
+        points: [
+          "**Indira Gandhi Prize:** Michelle Bachelet (Chile).",
+          "**Bihar CM (10th):** Nitish Kumar.",
+          "**UNESCO DG:** Khaled El-Enany (Egypt).",
+          "**Miss Universe:** Fatima Bosh (Mexico)."
+        ]
+      },
+      {
+        type: "Important Days",
+        icon: Zap,
+        color: "emerald",
+        points: [
+          "**26 Nov:** Constitution Day (76th)",
+          "**1 Dec:** World AIDS Day",
+          "**2 Dec:** Comp Literacy Day",
+          "**3 Dec:** Disabilities Day"
+        ]
       }
     ]
   }
 ];
 
 const RBI_DATA = [
-  {
-    title: "Module 1: RBI History & Structure",
-    content: [
-      "**Foundation:** Hilton Young Commission (**1926**). RBI Act, **1934**.",
-      "**Establishment:** **April 1, 1935** (Private entity, ₹5 Cr capital). Nationalized: **Jan 1, 1949**.",
-      "**Governors:** 1st: **Sir Osborne Smith**. 1st Indian: **C.D. Deshmukh**.",
-      "**Central Board:** **21 Members**. (1 Gov + 4 Deputy Govs + 4 Local Boards + 10 Govt Nominees + 2 Fin Min Officials).",
-      "**Currency Rights:** **Section 22** (Sole right to issue). **Minimum Reserve System** ( MRS, 1957) requires ₹200 Cr Assets (₹115 Cr Gold + ₹85 Cr Forex).",
-      "**Denominations:** Max **₹10,000** (Section 24). Languages on note: **17**."
-    ]
-  },
-  {
-    title: "RBI Subsidiaries & Framework",
-    content: [
-      "**Fully Owned:** DICGC, BRBNMPL, ReBIT, IFTAS, RBIH (CEO: Rajesh Bansal).",
-      "**Note:** **NHB is NO LONGER** a subsidiary (100% Govt owned now).",
-      "**Associate:** **NCFE** (30% stake)."
-    ]
-  },
-  {
-    title: "Module 2: Monetary Policy Framework",
-    content: [
-      "**MPC (Committee):** **Section 45ZB**. 6 Members (3 RBI + 3 Govt). Quorum: 4.",
-      "**CRR:** **Section 42(1)** of RBI Act. Held with RBI in **CASH**. No interest paid.",
-      "**SLR:** **Section 24** of BR Act 1949. Held by Bank in **Liquid Assets**. **Equity NOT allowed**.",
-      "**Rates:** Repo (Lends), Rev Repo (Absorbs), MSF (Emergency SLR), SDF (Absorb without collateral), OMO (G-Sec Trading)."
-    ]
-  },
-  {
-    title: "Module 3: Banking Structure & RRBs",
-    content: [
-      "**Imperial Bank (1921):** Renamed **SBI** on **July 1, 1955** (Gorwala Committee).",
-      "**Nationalization:** **1969** (14 Banks > ₹50 Cr), **1980** (6 Banks > ₹200 Cr).",
-      "**RRBs:** Est **Oct 2, 1975** (**Narasimham Committee**). Ownership: Central (**50%**) : Sponsor (**35%**) : State (**15%**). Reg: RBI. Super: **NABARD**.",
-      "**Payments Banks:** **Nachiket Mor**. Max Dep: **₹2 Lakh**. Cannot Lend.",
-      "**Small Finance Banks:** **Usha Thorat**. PSL Target: **75%**. Min Capital: **₹200 Cr**."
-    ]
-  },
-  {
-    title: "Module 4: Financial Markets",
-    content: [
-      "**Money Market:** Short Term (< 1Y). Reg: **RBI**. (Call: 1D, Notice: 2-14D, Term: >14D).",
-      "**Capital Market:** Long Term (> 1Y). Reg: **SEBI**. (Primary: IPO, Secondary: Exchange).",
-      "**T-Bills:** Issued by Govt. **91, 182, 364 days**. Min: **₹25,000**.",
-      "**CMB:** Temporary cash flow (< 91 days).",
-      "**CP & CD:** Min Amount: **₹5 Lakh**.",
-      "**Exchanges:** BSE (**1875**, Oldest), NSE (**1992**)."
-    ]
-  },
-  {
-    title: "Module 5: Operations, Cheques & NPCI",
-    content: [
-      "**Accounts:** CASA (Interest on Daily Product). RAFA (Term). RD tenure: 6M to 10Y.",
-      "**BSBDA:** No min balance. Max Credit ₹1L/yr. Max 4 withdrawals/month.",
-      "**Cheques:** CTS (2010). Validity: **3 Months**.",
-      "**ATM Types:** White (Non-Bank), Brown (Shared), Green (Agri), Pink (Women).",
-      "**NPCI (2008):** Section 8 (Not-for-Profit). Products: UPI, IMPS, RuPay, NACH."
-    ]
-  },
-  {
-    title: "Module 6: Inclusion & Social Security",
-    content: [
-      "**PMJDY (2014):** OD: **₹10,000**. Accident Cover: **₹2 Lakh** (RuPay).",
-      "**PMSBY:** ₹20/yr. Cover: ₹2 Lakh. Age: 18-70.",
-      "**PMJJBY:** ₹436/yr. Cover: ₹2 Lakh. Age: 18-50.",
-      "**APY:** Age: 18-40. Pension: ₹1k-5k after 60.",
-      "**MUDRA:** Shishu (50k), Kishore (50k-5L), Tarun (5L-10L).",
-      "**Small Savings:** PPF (15Y, EEE), KVP (Double in 115M), Sukanya (Girl < 10yr)."
-    ]
-  },
-  {
-    title: "Module 7: Intl Groups & Budget",
-    content: [
-      "**World Bank (DC):** IBRD, IFC, IDA, MIGA (India is member). **ICSID (India NOT a member)**.",
-      "**Budget:**James Wilson (1860). Railway merge: **2017**.",
-      "**Constitutional Funds:** Consolidated (**Art 266-1**), Contingency (**Art 267-1**)."
-    ]
-  },
-  {
-    title: "Module 8: Master Committee Cheat Sheet",
-    content: [
-      "**NABARD Formation:** CRAFICARD (B. Sivaraman)",
-      "**RRB Formation:** Narasimham Committee",
-      "**Financial Inclusion:** C. Rangarajan Committee",
-      "**Small Finance Banks:** Usha Thorat Committee",
-      "**Payments Banks:** Nachiket Mor Committee",
-      "**Universal Banking:** R.H. Khan Committee",
-      "**CIBIL / Credit Info:** Siddiqui Committee",
-      "**Banking Reforms:** Narasimham Committee (I & II)"
-    ]
-  }
+    {
+        title: "Monetary Policy Rates (Check Pre-Exam)",
+        content: [
+            "**Repo Rate:** 6.50% (Benchmarks liquidity)",
+            "**Reverse Repo Rate:** 3.35%",
+            "**SDF (Standing Deposit Facility):** 6.25% (No collateral needed)",
+            "**MSF (Marginal Standing Facility):** 6.75%",
+            "**Bank Rate:** 6.75% (Long term loans)",
+            "**CRR:** 4.50% (Cash Reserve Ratio - held with RBI)",
+            "**SLR:** 18.00% (Statutory Liquidity Ratio - held by Bank)"
+        ]
+    },
+    {
+        title: "Instruments & Tools",
+        content: [
+            "**LAF (Liquidity Adjustment Facility):** Manages daily liquidity using Repo & Reverse Repo.",
+            "**OMO (Open Market Operations):** Buying/Selling G-Secs to control money supply.",
+            "**PCA (Prompt Corrective Action):** Triggered when banks breach thresholds of Capital, Asset Quality, or Leverage.",
+            "**e₹ (Digital Rupee):** CBDC using blockchain technology."
+        ]
+    },
+    {
+        title: "History & Structure",
+        content: [
+            "**Establishment:** April 1, 1935 (RBI Act 1934).",
+            "**Nationalisation:** Jan 1, 1949.",
+            "**Headquarters:** Mumbai (Moved from Kolkata in 1937).",
+            "**First Governor:** Sir Osborne Smith.",
+            "**First Indian Governor:** C.D. Deshmukh.",
+            "**Board:** 21 Members (1 Gov + 4 Deputy Govs + 14 Others)."
+        ]
+    }
 ];
 
 const MINISTRY_DATA = {
@@ -240,7 +398,7 @@ const MINISTRY_DATA = {
     ]
 };
 
-// RECOVERY DATA SET
+// NEW RECOVERY DATA SET
 const RECOVERY_DATA = [
   {
     title: "📂 Recovery Set 1: Marathon Details",
@@ -254,6 +412,88 @@ const RECOVERY_DATA = [
           "**Justice Vikram Nath:** Exec Chairman of **NALSA**.",
           "**Rahul Dravid:** Brand Amb for **Paradip Phosphates**.",
           "**Rohit Sharma:** Amb for **ICC T20 WC 2026**."
+        ]
+      },
+      {
+        topic: "Defense & Locations",
+        points: [
+          "**Garud 2025:** Held at **Mont-de-Marsan Air Base**, France.",
+          "**Surya Kiran:** Held at **Pithoragarh, Uttarakhand**.",
+          "**Deep Ocean Mission:** Phase 1 lab at **500m depth** (Target 6000m).",
+          "**Ikubarin:** Joint Ex with **Maldives** (Standard) / Malawi (Note)."
+        ]
+      },
+      {
+        topic: "Stats & One-Liners",
+        points: [
+          "**Defense Production:** Record **₹1.54 Lakh Cr**.",
+          "**Tea Exports:** India Rank **2nd** (China 1st).",
+          "**Driverless Metro:** Guinness Record **146 Stations**.",
+          "**Nov 26:** Constitution Day (76th).",
+          "**Nov 21:** World TV Day | **Dec 1:** Nagaland Day."
+        ]
+      }
+    ]
+  },
+  {
+    title: "📂 Recovery Set 2: Nov-Dec Deep Dive",
+    icon: AlertTriangle,
+    color: "red",
+    items: [
+      {
+        topic: "Phonetic Corrections (Crucial)",
+        points: [
+          "**'Gen Z' Post Office:** At **IIT Delhi** (Not 'Janjiri').",
+          "**Michelle Bachelet:** Indira Gandhi Prize (Not 'Misal').",
+          "**Hayli Gubbi:** Ethiopian Volcano Eruption (Not 'Hailu')."
+        ]
+      },
+      {
+        topic: "Schemes & Cities",
+        points: [
+          "**PM Kisan (21st):** Released from **Coimbatore, TN**.",
+          "**PM Fasal Bima:** Added cover for **'Wild Animal Attacks'**.",
+          "**SBI:** Discontinued **'M-Cash'** service (Nov 30)."
+        ]
+      },
+      {
+        topic: "Banking & Economy",
+        points: [
+          "**HDFC Bank:** Top Brand Value **$44.9 Billion**.",
+          "**Adani in Assam:** Total Investment **₹63,000 Cr**."
+        ]
+      },
+      {
+        topic: "State GI & Sports",
+        points: [
+          "**Nagaland:** Naga Mircha, Tomato Tree.",
+          "**Sikkim:** Lepcha Instruments. **Gujarat:** Ambaji Marble.",
+          "**Hockey WC 2026:** Hosts **Netherlands & Belgium**.",
+          "**Kabaddi (Women):** India lost to **Chinese Taipei**."
+        ]
+      }
+    ]
+  },
+  {
+    title: "📂 Recovery Set 3: Alliances & Sports",
+    icon: Globe,
+    color: "blue",
+    items: [
+      {
+        topic: "BIMSTEC (Mini SAARC)",
+        points: [
+          "**Members (7):** Bangladesh, Bhutan, India, Myanmar, SL, Thai, Nepal.",
+          "**Est:** June 6, 1997 (Bangkok Declaration).",
+          "**Sec Gen:** Indra Mani Pandey (India).",
+          "**Chair:** Bangladesh."
+        ]
+      },
+      {
+        topic: "Sports Hosts & Awards",
+        points: [
+          "**Squash World Cup:** Chennai (3rd time host). India Rank: 3.",
+          "**FIFA WC 2026:** Canada, Mexico, USA.",
+          "**Dronacharya Award:** For Coaches."
         ]
       }
     ]
@@ -277,7 +517,7 @@ const GkMania: React.FC = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {/* Recovery Card */}
+                    {/* Recovery Card (NEW) */}
                     <div 
                         onClick={() => setView('recovery')}
                         className="bg-red-50 rounded-2xl p-6 shadow-lg border border-red-100 hover:shadow-xl hover:border-red-300 transition-all cursor-pointer group relative overflow-hidden h-full flex flex-col justify-between"
@@ -289,7 +529,7 @@ const GkMania: React.FC = () => {
                             </div>
                             <h3 className="text-xl font-bold text-red-800 mb-2 group-hover:text-red-900 transition-colors">Master Recovery Sheet</h3>
                             <p className="text-red-600 text-sm leading-relaxed mb-6 font-medium">
-                                The missing details. Specific dates, tenures, and "gap-fillers" from Marathon sessions.
+                                The missing details. Specific dates, tenures, correct spellings, and "gap-fillers" from Marathon sessions.
                             </p>
                         </div>
                         <button className="relative z-10 w-full bg-white text-red-600 py-3 rounded-xl font-bold text-sm hover:bg-red-600 hover:text-white transition-all flex items-center justify-center gap-2 shadow-sm border border-red-200">
@@ -317,7 +557,7 @@ const GkMania: React.FC = () => {
                         </button>
                     </div>
 
-                    {/* RBI Vault */}
+                    {/* RBI Vault (NEW) */}
                     <div 
                         onClick={() => setView('rbi')}
                         className="bg-white rounded-2xl p-6 shadow-lg border border-slate-100 hover:shadow-xl hover:border-amber-300 transition-all cursor-pointer group relative overflow-hidden h-full flex flex-col justify-between"
@@ -329,15 +569,15 @@ const GkMania: React.FC = () => {
                             </div>
                             <h3 className="text-xl font-bold text-slate-800 mb-2 group-hover:text-amber-600 transition-colors">RBI Vault</h3>
                             <p className="text-slate-500 text-sm leading-relaxed mb-6">
-                                The complete Banking Awareness & RBI syllabus. 8 Master Modules.
+                                Monetary Policy Rates, Tools (LAF/MSF), History & Frameworks.
                             </p>
                         </div>
                         <button className="relative z-10 w-full bg-amber-50 text-amber-600 py-3 rounded-xl font-bold text-sm hover:bg-amber-600 hover:text-white transition-all flex items-center justify-center gap-2">
-                            View Master Data <ChevronLeft className="rotate-180" size={16} />
+                            View Policy <ChevronLeft className="rotate-180" size={16} />
                         </button>
                     </div>
 
-                    {/* Ministries */}
+                    {/* Ministries (NEW) */}
                     <div 
                         onClick={() => setView('ministries')}
                         className="bg-white rounded-2xl p-6 shadow-lg border border-slate-100 hover:shadow-xl hover:border-purple-300 transition-all cursor-pointer group relative overflow-hidden h-full flex flex-col justify-between"
@@ -498,7 +738,7 @@ const GkMania: React.FC = () => {
                     </button>
                     <h1 className="text-2xl font-extrabold text-slate-800 flex items-center gap-2">
                         <Scale className="text-amber-600" size={24} />
-                        RBI & Banking Vault
+                        RBI Vault
                     </h1>
                 </div>
 
@@ -535,6 +775,7 @@ const GkMania: React.FC = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {/* Cabinet Ministers */}
                     <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                         <div className="bg-purple-50 p-4 border-b border-purple-100 flex items-center gap-3">
                            <Users className="text-purple-700" size={20} />
@@ -550,6 +791,7 @@ const GkMania: React.FC = () => {
                         </div>
                     </div>
 
+                    {/* Ministry News */}
                     <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden h-fit">
                         <div className="bg-rose-50 p-4 border-b border-rose-100 flex items-center gap-3">
                            <Newspaper className="text-rose-700" size={20} />
@@ -599,7 +841,7 @@ const GkMania: React.FC = () => {
                                     {section.items.map((item, iIdx) => (
                                         <div key={iIdx} className="flex justify-between items-center border-b border-slate-50 pb-2 last:border-0 last:pb-0">
                                             <span className="text-slate-600 font-medium text-sm">{item.k}</span>
-                                            <span className="text-slate-800 font-bold text-sm text-right" dangerouslySetInnerHTML={{ __html: item.v }}></span>
+                                            <span className="text-slate-800 font-bold text-sm text-right" dangerouslySetInnerHTML={{ __html: item.v.replace(/🔥 x2/g, '<span class="text-amber-600 bg-amber-50 px-1 rounded text-xs ml-1">🔥 x2</span>') }}></span>
                                         </div>
                                     ))}
                                 </div>
@@ -637,6 +879,7 @@ const GkMania: React.FC = () => {
                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {monthData.sections.map((sec, sIdx) => {
                                 const Icon = sec.icon;
+                                // Color Map
                                 const colors = {
                                     blue: "bg-blue-50 text-blue-700 border-blue-100",
                                     red: "bg-red-50 text-red-700 border-red-100",

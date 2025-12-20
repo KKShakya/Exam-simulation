@@ -1,61 +1,50 @@
 
 import React, { useState } from 'react';
-import { Monitor, Cpu, Wifi, Database, Shield, HardDrive, ChevronDown, Binary, History, FileText, Keyboard, Layers, MousePointer2, Info, Clock, Terminal, Hash, Activity, Zap, ShieldCheck, Star, Box, ZapOff, Globe, Lock, ListChecks, FileSearch, Sparkles, ArrowLeft, Lightbulb, ZapIcon } from 'lucide-react';
+import { Monitor, Cpu, Wifi, Database, Shield, HardDrive, ChevronDown, Binary, History, FileText, Keyboard, Layers, MousePointer2, Info, Clock, Terminal, Hash, Activity, Zap, ShieldCheck, Star, Box, ZapOff, Globe, Lock, ListChecks, FileSearch, Sparkles, ArrowLeft, Lightbulb, Link } from 'lucide-react';
 
 const FLASHCARD_DATA = [
   {
-    category: "History & Landmarks",
-    icon: History,
+    category: "Measurements & Speed",
+    icon: Activity,
     color: "amber",
     items: [
-      { q: "1st Indian PC", a: "Siddharth" },
-      { q: "1st Installation", a: "ISI Kolkata" },
-      { q: "Father of WWW", a: "Tim Berners-Lee" },
-      { q: "1st High-Level Lang", a: "FORTRAN (Formula Translation)" }
+      { q: "CPU Clock Speed", a: "Hertz (MHz/GHz)" },
+      { q: "Supercomputer Speed", a: "FLOPS / MFLOPS" },
+      { q: "Printer Speed (P/L)", a: "PPM (Pages) / LPM (Lines)" },
+      { q: "Baud Rate", a: "Analog Signal Transfer Rate" }
     ]
   },
   {
-    category: "Hardware Logic",
+    category: "Hardware & Booting",
     icon: Cpu,
     color: "cyan",
     items: [
-      { q: "CPU Traffic Cop", a: "Control Unit (CU)" },
-      { q: "Fastest Memory", a: "Registers > Cache > RAM" },
-      { q: "Impact Printer", a: "Dot Matrix, Daisy Wheel (Strikes)" },
-      { q: "Non-Impact", a: "Laser, Inkjet (No Strike)" }
+      { q: "Cold Boot", a: "Start from OFF state" },
+      { q: "Warm Boot", a: "Restart (Reboot)" },
+      { q: "BIOS Location", a: "ROM (Starts Hardware Check)" },
+      { q: "POST", a: "Power On Self Test (HW Check)" }
     ]
   },
   {
-    category: "Memory & Units",
-    icon: HardDrive,
+    category: "Networking & OSI",
+    icon: Wifi,
     color: "blue",
     items: [
-      { q: "1 Nibble", a: "4 Bits" },
-      { q: "1 Byte", a: "8 Bits" },
-      { q: "Volatile (Temporary)", a: "RAM, Cache" },
-      { q: "Non-Volatile", a: "ROM, HDD, SSD" }
+      { q: "Encryption Layer", a: "Presentation Layer" },
+      { q: "End-to-End Delivery", a: "Transport Layer" },
+      { q: "IPv4 vs IPv6", a: "32-bit vs 128-bit" },
+      { q: "Most Reliable Topology", a: "Mesh Topology" }
     ]
   },
   {
-    category: "Storage Capacities",
-    icon: Database,
+    category: "Cloud & Modern Tech",
+    icon: Globe,
     color: "indigo",
     items: [
-      { q: "CD-ROM", a: "700 - 850 MB" },
-      { q: "DVD", a: "4.7 GB - 17 GB" },
-      { q: "Blu-ray", a: "Up to 100 GB" },
-      { q: "Standard Sector", a: "512 Bytes" }
-    ]
-  },
-  {
-    category: "Networking Hub",
-    icon: Wifi,
-    color: "purple",
-    items: [
-      { q: "Hub", a: "Broadcasts (Dumb Device)" },
-      { q: "Switch", a: "Unicasts (Intelligent Device)" },
-      { q: "Bluetooth Std", a: "IEEE 802.15" },
-      { q: "WiFi Std", a: "IEEE 802.11" }
+      { q: "SaaS / PaaS / IaaS", a: "Cloud Service Models" },
+      { q: "Elasticity", a: "Scaling resources on demand" },
+      { q: "Zero Trust", a: "Continuous Verification" },
+      { q: "AIoT", a: "AI + Internet of Things" }
     ]
   },
   {
@@ -63,32 +52,44 @@ const FLASHCARD_DATA = [
     icon: Shield,
     color: "rose",
     items: [
-      { q: "Worm", a: "Self-Replicates (No Host Needed)" },
-      { q: "Virus", a: "Self-Replicates (Host Program Needed)" },
-      { q: "Trojan", a: "Hidden Malware (No Replication)" },
-      { q: "Firewall", a: "Filters Network Traffic" }
+      { q: "Data Diddling", a: "Forgery of electronic data" },
+      { q: "Pharming", a: "Redirecting to fake websites" },
+      { q: "Blockchain", a: "Immutable/Tamper-proof ledger" },
+      { q: "Worm", a: "Self-Replicates (No Host Needed)" }
     ]
   },
   {
-    category: "MS Office Blitz",
+    category: "MS Office Master",
     icon: FileText,
     color: "emerald",
     items: [
-      { q: "PPT New Slide", a: "Ctrl + M" },
-      { q: "Excel Save As", a: "F12" },
-      { q: "Clear Format", a: "Ctrl + Space" },
-      { q: "Min Excel Table", a: "1 Row × 1 Column" }
+      { q: "Excel Rows/Cols", a: "1,048,576 / 16,384 (XFD)" },
+      { q: "Absolute Ref", a: "$A$1 (Dollar Symbol)" },
+      { q: "Pivot Table", a: "Narrow data via drag & drop" },
+      { q: "PPT Extension", a: ".pptx (Slideshow: .pptm)" }
     ]
   },
   {
-    category: "Binary & Digital",
-    icon: Binary,
+    category: "Languages & OS",
+    icon: Terminal,
     color: "slate",
     items: [
-      { q: "1024 GB", a: "1 Terabyte (TB)" },
-      { q: "1024 TB", a: "1 Petabyte (PB)" },
-      { q: "MODEM", a: "Modulator-Demodulator" },
-      { q: "UPI Logic", a: "GPay, PhonePe (Real-time)" }
+      { q: "Java", a: "Write Once, Run Anywhere" },
+      { q: "Python", a: "AI-based Programming" },
+      { q: "Oracle", a: "Database Package (Not OS)" },
+      { q: "Information", a: "Processed Data" }
+    ]
+  },
+  {
+    category: "IoT & Protocols",
+    // Fix: Added missing 'Link' import to the destructuring list above.
+    icon: Link,
+    color: "purple",
+    items: [
+      { q: "MQTT", a: "Lightweight IoT Protocol" },
+      { q: "Secure Remote Login", a: "SSH (Secure Shell)" },
+      { q: "Telnet", a: "Non-secure remote login" },
+      { q: "IPSec", a: "Encryption at Network Layer" }
     ]
   }
 ];
@@ -99,124 +100,74 @@ const COMPUTER_MODULES = [
     title: 'Hardware & Architecture',
     icon: Cpu,
     color: 'cyan',
-    description: "CPU logic, Internal Ports (ATX/SATA), and Generations.",
+    description: "CPU logic, Units, and Booting Sequence.",
     points: [
       {
-        title: "CPU: The Trio (ALU, CU, MU)",
-        content: "• **ALU:** Arithmetic & Logical operations.\n• **CU:** The 'Traffic Cop' - manages execution order.\n• **Clock Speed:** Measured in **Hertz (Hz)**.\n• **Registers:** Fastest internal storage. The **Accumulator** stores intermediate results."
+        title: "Speed Measurements",
+        content: "• **CPU:** Measured in MHz/GHz.\n• **Supercomputers:** Measured in FLOPS (Floating Point Operations Per Second).\n• **Printers:** CPS (Characters), LPM (Lines), PPM (Pages).\n• **Hard Disk:** RPM (Revolutions Per Minute)."
       },
       {
-        title: "History & Landmarks",
-        content: "• **Tim Berners-Lee:** Father of World Wide Web (WWW).\n• **Siddharth:** First computer manufactured indigenously in India.\n• **ISI Kolkata:** Location where India's first computer was installed."
+        title: "Booting & BIOS",
+        content: "• **Boot Sequence:** BIOS (ROM) -> POST (Hardware Test) -> Loader (OS to RAM).\n• **Cold Boot:** Starting from power off.\n• **Warm Boot:** Restarting via software (Ctrl+Alt+Del)."
       },
       {
-        title: "Printers: Impact vs Non-Impact",
-        content: "• **Impact:** Physical strike on ribbon (Dot Matrix, Chain). Can use carbon paper for copies.\n• **Non-Impact:** Cartridge/Laser based (Laser, Inkjet, Thermal). Quieter and higher quality."
-      },
-      {
-        title: "FORTRAN",
-        content: "• **Formula Translation:** The first high-level language, primarily used for complex mathematical calculations."
-      }
-    ]
-  },
-  {
-    id: 'memory',
-    title: 'Memory & Storage Hierarchy',
-    icon: HardDrive,
-    color: 'blue',
-    description: "Volatile vs Non-volatile, ROM types, and Units.",
-    points: [
-      {
-        title: "Storage Geometry (Magnetic)",
-        content: "• **Platter:** Circular disk.\n• **Track:** Concentric circles on platter.\n• **Sector:** Subdivision of a track.\n• **Cluster:** Group of sectors.\n• **Cylinder:** Vertical alignment of tracks across multiple platters."
-      },
-      {
-        title: "Volatile vs Non-Volatile",
-        content: "• **Volatile:** Loses data on power-off (**RAM**, Cache, Registers).\n• **Non-Volatile:** Retains data (**ROM**, HDD, SSD, CD/DVD)."
-      },
-      {
-        title: "Storage Capacities",
-        content: "• **CD-ROM:** 750-850 MB.\n• **DVD:** 4.7-17 GB.\n• **Blu-ray:** ~100 GB.\n• **Speed Hierarchy:** Register > Cache > RAM > SSD > HDD."
+        title: "Hierarchy of Storage",
+        content: "• **Registers:** Fastest and internal to CPU.\n• **Cache:** Intermediate between RAM and CPU.\n• **RAM:** Main memory (Volatile).\n• **HDD/SSD:** Secondary memory (Non-Volatile)."
       }
     ]
   },
   {
     id: 'networking',
-    title: 'Networking & Protocols',
+    title: 'Networking & OSI Model',
     icon: Wifi,
     color: 'indigo',
-    description: "IP Classes, Email sync, and Internet History.",
+    description: "OSI Layers, IP Classes, and Devices.",
     points: [
       {
-        title: "Communication Standards",
-        content: "• **Bluetooth:** IEEE **802.15** standard for wireless file transfer.\n• **HDMI:** Interface for high-definition audio and video transmission.\n• **Modem:** Device that converts Digital signals to Analog (and vice versa)."
+        title: "OSI Layer Mastery",
+        content: "• **Presentation:** Encryption & Decryption.\n• **Transport:** End-to-end delivery & segments.\n• **Session:** Connection management.\n• **Data Link:** Framing & Error handling (Switch works here).\n• **Network:** Routing (Router works here)."
       },
       {
-        title: "Device Intelligence",
-        content: "• **Hub:** Broadcasts data to all ports (Indiscriminate).\n• **Switch:** Sends data only to destination (Intelligent).\n• **Repeater:** Boosts weak signals to extend range."
+        title: "Network Devices",
+        content: "• **Hub/Repeater:** Physical Layer.\n• **Switch/Bridge:** Data Link Layer.\n• **Router:** Network Layer.\n• **Gateway:** Transport Layer.\n• **Proxy Server:** Known as a 'Dummy Server' intermediary."
       },
       {
-        title: "Email Nuances",
-        content: "• **@ Symbol:** Separates username from domain.\n• **CC vs BCC:** CC is visible to all; BCC hides recipients from others."
+        title: "Protocols",
+        content: "• **SSH:** Secure remote login.\n• **MQTT:** Low-bandwidth IoT protocol.\n• **SNMP:** Network management.\n• **IPSec:** Network layer security."
       }
     ]
   },
   {
     id: 'software',
-    title: 'Software & Productivity',
+    title: 'Software & Cloud',
     icon: FileText,
     color: 'purple',
-    description: "OS Types, Middleware, and MS Office Mastery.",
+    description: "Cloud models, OS, and Excel Limits.",
     points: [
       {
-        title: "Software Categories",
-        content: "• **System:** OS, Compilers, Interpreters (Runs the hardware).\n• **Utility:** Antivirus, Disk Defragmenter (Enhances performance).\n• **Application:** MS Office, Browser, Spotify (User tasks).\n• **Open Source:** Linux (Free and modifiable)."
+        title: "Cloud Computing",
+        content: "• **SaaS:** Software as a Service (Apps).\n• **PaaS:** Platform for developers.\n• **IaaS:** Infrastructure (Virtual resources).\n• **Deployment:** Public, Private, and Hybrid (mix of both)."
       },
       {
-        title: "MS Excel Master",
-        content: "• **Freeze Pane:** Keeps specific rows/columns visible while scrolling.\n• **Active Cell:** The specific cell currently being edited (highlighted by a dark border)."
-      },
-      {
-        title: "System Crashes",
-        content: "• **System Hang:** CPU overload freezing everything.\n• **BSOD (Blue Screen of Death):** Occurs when the Operating System itself crashes."
+        title: "MS Excel Mastery",
+        content: "• **Limits:** 1,048,576 Rows and 16,384 Columns (A to XFD).\n• **Absolute Ref:** Use '$' sign to lock cells (e.g., $A$1).\n• **Pivot Table:** Drag & drop to summarize large data.\n• **Shortcuts:** Ctrl+1 (Format Cells), Ctrl+E (Center Align)."
       }
     ]
   },
   {
     id: 'security',
-    title: 'Security & Malware',
+    title: 'Cybersecurity & Modern Tech',
     icon: Shield,
     color: 'rose',
-    description: "Viruses, Trojans, and Phishing variants.",
+    description: "Attacks, Encryption, and Blockchain.",
     points: [
       {
-        title: "Malware Behavior",
-        content: "• **Worm:** Self-replicates WITHOUT a host program.\n• **Virus:** Self-replicates but REQUIRES a host program.\n• **Trojan:** Does NOT self-replicate; hides inside legitimate software."
+        title: "Security Attacks",
+        content: "• **Data Diddling:** Forgery/Modification of electronic data.\n• **Pharming:** Traffic redirection to fake sites.\n• **MITM:** Man-in-the-Middle intercepting communication.\n• **SQL Injection:** Modifying database queries via user input."
       },
       {
-        title: "Threat Landscape",
-        content: "• **Phishing:** Deception/Lure (fake lottery/bank calls) to steal info.\n• **Spoofing:** Pretending to be someone else by cloning IP or Phone Numbers.\n• **Firewall:** Hardware or Software used to block unauthorized network access."
-      },
-      {
-        title: "Data Protection",
-        content: "• **Digital Signature:** Verifies sender identity and data integrity.\n• **Identity Theft:** Stealing a person's online identity/credentials."
-      }
-    ]
-  },
-  {
-    id: 'future',
-    title: 'Future Tech & Logic',
-    icon: Zap,
-    color: 'amber',
-    description: "Quantum computing, VR/AR, and Base conversions.",
-    points: [
-      {
-        title: "Blockchain & UPI",
-        content: "• **Blockchain:** Distributed ledger for decentralized security.\n• **UPI Apps:** BHIM, GPay, PhonePe, Paytm (AOP Photo is NOT a UPI app)."
-      },
-      {
-        title: "Binary Logic",
-        content: "• **Bit:** 0 or 1.\n• **Nibble:** 4 Bits (Half a Byte).\n• **Byte:** 8 Bits."
+        title: "Modern Tech Trends",
+        content: "• **Zero Trust:** Continuous verification regardless of location.\n• **Blockchain:** Immutable records for banking/transactions.\n• **e-RUPI:** India's Central Bank Digital Currency (CBDC).\n• **AIoT:** Integration of AI with IoT sensors."
       }
     ]
   }
@@ -232,53 +183,50 @@ const IP_CLASSES = [
 ];
 
 const DATA_UNITS = [
-  { unit: "Bit", val: "0 or 1" },
+  { unit: "IPv4", val: "32-bit Address" },
+  { unit: "IPv6", val: "128-bit Address" },
   { unit: "Nibble", val: "4 Bits" },
   { unit: "Byte", val: "8 Bits" },
   { unit: "Kilobyte (KB)", val: "1024 Bytes" },
   { unit: "Megabyte (MB)", val: "1024 KB" },
   { unit: "Gigabyte (GB)", val: "1024 MB" },
-  { unit: "Terabyte (TB)", val: "1024 GB" },
-  { unit: "Petabyte (PB)", val: "1024 TB" }
+  { unit: "Terabyte (TB)", val: "1024 GB" }
 ];
 
 const MAINS_FLASH_POINTS = [
-  { title: "Optical Capacity", text: "CD: 750-850MB | DVD: 4.7-17GB | Blu-ray: 100GB" },
-  { title: "Worm vs Virus", text: "Worm: NO host program needed | Virus: NEEDS a host program." },
-  { title: "History Hub", text: "1st Indian PC: Siddharth | Internet Father: Vint Cerf | WWW: Tim Berners-Lee." },
-  { title: "Hardware Logic", text: "Flip-flop: 1-bit storage | Modem: Digital to Analog converter." },
-  { title: "Network Devices", text: "Hub: Broadcaster (Dumb) | Switch: Intelligent (Direct)." }
+  { title: "Zero Trust", text: "Continuous verification of every user, even internal ones." },
+  { title: "Data Diddling", text: "Unauthorized forgery or modification of data (emails/spreadsheets)." },
+  { title: "e-RUPI", text: "India's official Central Bank Digital Currency (CBDC)." },
+  { title: "Blockchain", text: "Immutable, tamper-proof record keeping for banking transparency." },
+  { title: "AIoT", text: "AI + IoT integration for smart devices with low bandwidth needs." }
 ];
 
 const RAPID_TIPS = [
-  { title: "Gutter Margin", text: "Extra binding side margin (Left or Top) added to avoid text loss." },
-  { title: "MS Word Min", text: "Every table must have at least 1 Row and 1 Column (1x1)." },
-  { title: "Booting Rule", text: "A computer CANNOT boot without an Operating System (OS)." },
-  { title: "Excel Freeze", text: "Freeze Panes keep headers visible while scrolling down sheets." },
-  { title: "BSOD Crash", text: "Blue Screen of Death = Critical Operating System / Kernel failure." },
-  { title: "UPI Legitimacy", text: "GPay, PhonePe, BHIM are valid; AOP Photo is a common Exam Trap." }
+  { title: "Excel Limits", text: "1,048,576 Rows & 16,384 Columns (A to XFD). Max Zoom: 400%." },
+  { title: "Absolute Ref", text: "Use $ sign ($A$1) to keep formula cells from changing when copied." },
+  { title: "Cloud Elasticity", text: "The ability to scale computing resources up or down on demand." },
+  { title: "Booting BIOS", text: "BIOS resides in ROM; initiates POST to check hardware integrity." },
+  { title: "Proxy Server", text: "Acts as an intermediary (Dummy Server) to enhance security and cache data." }
 ];
 
 const MOST_ASKED_QA = [
-  { q: "Ctrl + Space", a: "Remove character formatting" },
+  { q: "Ctrl + E", a: "Center Alignment in MS Word/PPT" },
+  { q: "Ctrl + 1", a: "Open Format Cells dialog in Excel" },
   { q: "F12 Key", a: "Save As dialog box" },
-  { q: "Shift + F5", a: "Start PPT from current slide" },
-  { q: "Ctrl + M", a: "Insert a New Slide in PPT" },
-  { q: "Port 443", a: "HTTPS (Secure Web Transfer)" },
-  { q: "IEEE 802.15", a: "Standard for Bluetooth Tech" }
+  { q: "Type 1 Hypervisor", a: "KVM - Used for Cloud Virtualization" },
+  { q: "MQTT", a: "Lightweight protocol for IoT communication" },
+  { q: "Mesh Topology", a: "Most reliable network topology" }
 ];
 
 const ComputerSePyaar: React.FC = () => {
   const [activeSubView, setActiveSubView] = useState<'menu' | 'detailed' | 'flashcards'>('menu');
   const [expandedModule, setExpandedModule] = useState<string | null>('hardware');
 
-  // Helper for back navigation
   const goBack = () => setActiveSubView('menu');
 
   if (activeSubView === 'menu') {
     return (
       <div className="max-w-7xl mx-auto space-y-12 animate-in fade-in slide-in-from-bottom-4 pb-12 px-4">
-        {/* Header */}
         <div className="text-center space-y-4 mb-10">
           <h1 className="text-5xl font-extrabold text-slate-900 flex items-center justify-center gap-3">
             <Monitor className="text-indigo-600" size={48} />
@@ -289,9 +237,7 @@ const ComputerSePyaar: React.FC = () => {
           </p>
         </div>
 
-        {/* Menu Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-          {/* Detailed Version Entry */}
           <div 
             onClick={() => setActiveSubView('detailed')}
             className="group relative bg-white rounded-[2.5rem] p-10 shadow-sm border border-slate-200 hover:border-indigo-400 hover:shadow-2xl transition-all cursor-pointer overflow-hidden flex flex-col items-center text-center"
@@ -314,7 +260,6 @@ const ComputerSePyaar: React.FC = () => {
             </div>
           </div>
 
-          {/* Flash Cards Entry */}
           <div 
             onClick={() => setActiveSubView('flashcards')}
             className="group relative bg-white rounded-[2.5rem] p-10 shadow-sm border border-slate-200 hover:border-amber-400 hover:shadow-2xl transition-all cursor-pointer overflow-hidden flex flex-col items-center text-center"
@@ -344,7 +289,6 @@ const ComputerSePyaar: React.FC = () => {
   if (activeSubView === 'detailed') {
     return (
       <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in slide-in-from-right-4 pb-12 px-4">
-        {/* Navigation Header */}
         <div className="flex items-center justify-between border-b border-slate-200 pb-6 mb-4">
            <button 
              onClick={goBack}
@@ -358,7 +302,6 @@ const ComputerSePyaar: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Left Column: Modules (8 cols) */}
           <div className="lg:col-span-8 space-y-4">
             {COMPUTER_MODULES.map((module) => {
               const Icon = module.icon;
@@ -411,7 +354,6 @@ const ComputerSePyaar: React.FC = () => {
             })}
           </div>
 
-          {/* Right Column: Reference Cards (4 cols) */}
           <div className="lg:col-span-4 space-y-6">
              <div className="bg-indigo-900 text-white rounded-3xl p-6 shadow-xl border border-indigo-700 relative overflow-hidden">
                 <div className="flex items-center gap-3 mb-6 border-b border-indigo-700 pb-4">
@@ -431,7 +373,7 @@ const ComputerSePyaar: React.FC = () => {
              <div className="bg-slate-900 text-white rounded-3xl p-6 shadow-xl border border-slate-700 relative overflow-hidden">
                 <div className="flex items-center gap-3 mb-6 border-b border-slate-700 pb-4">
                    <Binary className="text-emerald-400" size={24} />
-                   <h3 className="font-bold text-lg">Data Units Guide</h3>
+                   <h3 className="font-bold text-lg">Addressing & Storage</h3>
                 </div>
                 <div className="space-y-3">
                    {DATA_UNITS.map((item, i) => (
@@ -445,7 +387,6 @@ const ComputerSePyaar: React.FC = () => {
           </div>
         </div>
 
-        {/* Highlight Grid (Mains Points, Tips, QA) */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-10 border-t border-slate-100">
           <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm h-full flex flex-col">
             <div className="flex items-center gap-3 mb-6">
@@ -499,7 +440,6 @@ const ComputerSePyaar: React.FC = () => {
     );
   }
 
-  // FLASHCARDS VIEW
   return (
     <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in slide-in-from-left-4 pb-12 px-4">
       <div className="flex items-center justify-between border-b border-slate-200 pb-6 mb-4">
@@ -536,7 +476,6 @@ const ComputerSePyaar: React.FC = () => {
               
               return (
                 <div key={idx} className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-all group overflow-hidden relative">
-                   {/* Decorative icon background */}
                    <div className="absolute -bottom-6 -right-6 opacity-5 group-hover:opacity-10 transition-opacity">
                       <Icon size={120} />
                    </div>

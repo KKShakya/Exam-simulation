@@ -1,5 +1,5 @@
 
-import { GoogleGenAI, Type, Schema } from "@google/genai";
+import { GoogleGenAI, Type } from "@google/genai";
 import { Question, Subject, Difficulty, PatternAnalysis, MockQuestion } from "../types";
 import { getStaticMockExam } from "./mockDataService";
 
@@ -27,7 +27,8 @@ const cleanJson = (text: string): string => {
 export const sendChatMessage = async (history: { role: string; parts: { text: string }[] }[], message: string): Promise<string> => {
   try {
     const chat = ai.chats.create({
-      model: 'gemini-2.5-flash',
+      // Replaced legacy model name with the recommended gemini-3-flash-preview for text tasks.
+      model: 'gemini-3-flash-preview',
       config: {
         systemInstruction: TUTOR_SYSTEM_INSTRUCTION,
       },
@@ -43,7 +44,7 @@ export const sendChatMessage = async (history: { role: string; parts: { text: st
 };
 
 export const generatePracticeQuestions = async (subject: Subject, difficulty: Difficulty, topic: string, count: number = 5): Promise<Question[]> => {
-  const schema: Schema = {
+  const schema = {
     type: Type.ARRAY,
     items: {
       type: Type.OBJECT,
@@ -92,7 +93,8 @@ export const generatePracticeQuestions = async (subject: Subject, difficulty: Di
 
   try {
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      // Updated model to gemini-3-flash-preview.
+      model: 'gemini-3-flash-preview',
       contents: prompt,
       config: {
         responseMimeType: "application/json",
@@ -110,7 +112,7 @@ export const generatePracticeQuestions = async (subject: Subject, difficulty: Di
 };
 
 export const analyzeExamPattern = async (examType: 'PO' | 'Clerk', year: string): Promise<PatternAnalysis | null> => {
-  const schema: Schema = {
+  const schema = {
     type: Type.OBJECT,
     properties: {
       examYear: { type: Type.STRING },
@@ -138,6 +140,7 @@ export const analyzeExamPattern = async (examType: 'PO' | 'Clerk', year: string)
 
   try {
     const response = await ai.models.generateContent({
+      // Model gemini-3-pro-preview is correct for complex reasoning.
       model: 'gemini-3-pro-preview',
       contents: prompt,
       config: {
@@ -173,7 +176,8 @@ export const analyzeUserNote = async (noteContent: string, action: 'summarize' |
 
   try {
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      // Updated to gemini-3-flash-preview.
+      model: 'gemini-3-flash-preview',
       contents: prompt,
     });
     return response.text || "Analysis failed.";
@@ -196,7 +200,7 @@ export const generateMockExam = async (type: 'PO' | 'Clerk'): Promise<MockQuesti
 };
 
 export const parseMockFromText = async (questionText: string, answerText: string): Promise<MockQuestion[]> => {
-  const schema: Schema = {
+  const schema = {
     type: Type.ARRAY,
     items: {
       type: Type.OBJECT,
@@ -256,6 +260,7 @@ export const parseMockFromText = async (questionText: string, answerText: string
 
   try {
     const response = await ai.models.generateContent({
+      // Model gemini-3-pro-preview is correct for complex reasoning.
       model: 'gemini-3-pro-preview',
       contents: prompt,
       config: {
@@ -289,7 +294,7 @@ export const parseMockFromText = async (questionText: string, answerText: string
 // --- PDF Question Extraction ---
 
 export const extractQuestionsFromPdf = async (pdfBase64: string): Promise<{ q: string; a: string }[]> => {
-  const schema: Schema = {
+  const schema = {
     type: Type.ARRAY,
     items: {
       type: Type.OBJECT,
@@ -303,7 +308,8 @@ export const extractQuestionsFromPdf = async (pdfBase64: string): Promise<{ q: s
 
   try {
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      // Updated to gemini-3-flash-preview.
+      model: 'gemini-3-flash-preview',
       contents: [
         {
           inlineData: {

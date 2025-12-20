@@ -1136,8 +1136,184 @@ const SpeedMath: React.FC = () => {
   const renderReference = () => {
     const data = STANDARD_CONCEPTS[category as keyof typeof STANDARD_CONCEPTS];
     if (!data) return <div className="p-8 text-center text-slate-500">No reference data available.</div>;
+
+    const renderContent = () => {
+      switch (data.type) {
+        case 'grid-card':
+          return (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {(data.data as any[]).map((item, idx) => (
+                <div key={idx} className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-all">
+                  <div className="bg-indigo-600 text-white px-4 py-2 font-black text-center text-sm uppercase tracking-widest">
+                    Table of {item.label}
+                  </div>
+                  <div className="p-4 space-y-1.5">
+                    {item.values.map((v: string, i: number) => (
+                      <div key={i} className="text-xs font-mono text-slate-600 border-b border-slate-50 last:border-0 pb-1 last:pb-0 flex justify-center">
+                        {v}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          );
+        case 'grid-simple':
+          return (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+              {(data.data as any[]).map((item, idx) => (
+                <div key={idx} className="bg-white border border-slate-100 p-4 rounded-xl shadow-sm text-center flex flex-col items-center justify-center hover:border-indigo-200 transition-colors">
+                  <div className="text-xs font-bold text-slate-400 uppercase tracking-tighter mb-1">{item.q}</div>
+                  <div className="text-xl font-black text-indigo-700">{item.a}</div>
+                </div>
+              ))}
+            </div>
+          );
+        case 'custom-alpha':
+          const alphaData = data.data as any;
+          return (
+            <div className="space-y-10">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                <div>
+                   <h4 className="text-sm font-black text-slate-400 uppercase tracking-widest mb-4">Alphabet Ranks (Forward)</h4>
+                   <div className="grid grid-cols-6 sm:grid-cols-9 gap-2">
+                      {alphaData.forward.map((item: any) => (
+                        <div key={item.char} className="bg-white border border-slate-200 p-2 rounded-lg text-center shadow-sm">
+                           <div className="text-lg font-black text-slate-800">{item.char}</div>
+                           <div className="text-[10px] font-bold text-indigo-500">{item.val}</div>
+                        </div>
+                      ))}
+                   </div>
+                </div>
+                <div>
+                  <h4 className="text-sm font-black text-slate-400 uppercase tracking-widest mb-4">Opposite Pairs</h4>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    {alphaData.opposites_list.map((item: any, i: number) => (
+                      <div key={i} className="bg-indigo-50 border border-indigo-100 p-3 rounded-xl shadow-sm">
+                         <div className="text-lg font-black text-indigo-700">{item.pair}</div>
+                         <div className="text-[10px] font-bold text-slate-500 truncate">{item.mnemonic || item.mystery}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div className="bg-slate-900 text-white p-6 rounded-2xl shadow-xl">
+                 <h4 className="text-amber-400 font-bold mb-4 flex items-center gap-2"><Sparkles size={18}/> Mnemonics to Remember</h4>
+                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    {alphaData.mnemonics.map((m: any, i: number) => (
+                      <div key={i} className="flex flex-col gap-1">
+                         <span className="text-2xl font-black tracking-[0.2em]">{m.code}</span>
+                         <span className="text-slate-400 text-xs font-mono">{m.val}</span>
+                      </div>
+                    ))}
+                 </div>
+              </div>
+            </div>
+          );
+        case 'grid-table':
+          return (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+               {(data.data as any[]).map((item, idx) => (
+                 <div key={idx} className="bg-white border border-slate-200 p-4 rounded-xl shadow-sm text-center flex flex-col items-center group hover:bg-indigo-600 transition-all duration-300">
+                    <div className="text-sm font-black text-indigo-600 group-hover:text-white transition-colors">{item.p}</div>
+                    <div className="text-xs font-bold text-slate-400 group-hover:text-white transition-colors">= {item.f}</div>
+                 </div>
+               ))}
+            </div>
+          );
+        case 'ci-table':
+          return (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200">
+                <thead className="bg-indigo-600 text-white">
+                  <tr>
+                    <th className="px-6 py-4 text-xs font-black uppercase tracking-widest">Rate %</th>
+                    <th className="px-6 py-4 text-xs font-black uppercase tracking-widest">2 Years</th>
+                    <th className="px-6 py-4 text-xs font-black uppercase tracking-widest">3 Years</th>
+                    <th className="px-6 py-4 text-xs font-black uppercase tracking-widest">4 Years</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {(data.data as any[]).map((item, idx) => (
+                    <tr key={idx} className="hover:bg-indigo-50/30 transition-colors">
+                      <td className="px-6 py-4 font-black text-slate-800">{item.r}</td>
+                      <td className="px-6 py-4 font-mono text-sm text-indigo-600 font-bold">{item.y2}</td>
+                      <td className="px-6 py-4 font-mono text-sm text-indigo-600 font-bold">{item.y3}</td>
+                      <td className="px-6 py-4 font-mono text-sm text-indigo-600 font-bold">{item.y4}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          );
+        case 'mensuration-list':
+          return (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+               {['2D', '3D'].map(dim => (
+                 <div key={dim} className="space-y-4">
+                    <h4 className="text-sm font-black text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-2">{dim} Figures</h4>
+                    {(data.data as any[]).filter(item => item.type === dim).map((item, idx) => (
+                      <div key={idx} className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between group hover:border-indigo-300 transition-colors">
+                         <div className="flex flex-col">
+                            <span className="text-xs font-bold text-slate-400">{item.shape}</span>
+                            <span className="text-sm font-black text-slate-800">{item.param}</span>
+                         </div>
+                         <div className="bg-slate-50 px-4 py-2 rounded-lg font-mono text-indigo-600 font-bold group-hover:bg-indigo-600 group-hover:text-white transition-all">
+                            {item.formula}
+                         </div>
+                      </div>
+                    ))}
+                 </div>
+               ))}
+            </div>
+          );
+        case 'golden-list':
+          return (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+               {(data.data as any[]).map((item, idx) => (
+                 <div key={idx} className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-all relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-amber-50 rounded-full blur-2xl -mr-12 -mt-12 group-hover:bg-amber-100 transition-colors"></div>
+                    <div className="relative z-10">
+                       <div className="text-4xl font-black text-slate-900 mb-6 flex items-center gap-3">
+                          <Gem size={32} className="text-amber-500" /> {item.num}
+                       </div>
+                       <div className="flex flex-wrap gap-2">
+                          {item.pairs.map((pair: number[], pIdx: number) => (
+                             <div key={pIdx} className="bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-xl text-xs font-black shadow-sm border border-indigo-100">
+                                {pair.join(' × ')}
+                             </div>
+                          ))}
+                       </div>
+                    </div>
+                 </div>
+               ))}
+            </div>
+          );
+        default:
+          return <div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden p-8 font-mono text-sm leading-relaxed whitespace-pre-wrap">{JSON.stringify(data.data, null, 2)}</div>;
+      }
+    };
+
     return (
-      <div className="max-w-5xl mx-auto animate-in fade-in slide-in-from-right-4"><div className="flex items-center justify-between mb-8"><button onClick={() => setMode('menu')} className="flex items-center text-slate-500 hover:text-indigo-600"><ChevronLeft size={20} /> Back to Menu</button><button onClick={() => initGameSetup(category)} className="bg-indigo-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-indigo-700 shadow-md flex items-center gap-2"><Zap size={18} /> Practice This</button></div><div className="text-center mb-10"><h2 className="text-3xl font-bold text-slate-900 mb-2">{data.title}</h2><p className="text-slate-500">Review before you practice.</p></div><div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden p-8 font-mono text-sm leading-relaxed whitespace-pre-wrap">{JSON.stringify(data.data, null, 2)}</div></div>
+      <div className="max-w-6xl mx-auto animate-in fade-in slide-in-from-right-4 pb-12">
+        <div className="flex items-center justify-between mb-10">
+          <button onClick={() => setMode('menu')} className="flex items-center gap-2 text-slate-500 hover:text-indigo-600 font-bold transition-colors">
+            <ChevronLeft size={20} /> Back to Menu
+          </button>
+          <button onClick={() => initGameSetup(category)} className="bg-indigo-600 text-white px-8 py-3 rounded-xl font-black shadow-lg shadow-indigo-200 hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-2 uppercase text-xs tracking-widest">
+            <Zap size={18} fill="currentColor" /> Practice Mode
+          </button>
+        </div>
+
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-black text-slate-900 mb-3 tracking-tight">{data.title}</h2>
+          <p className="text-slate-500 font-medium">Internalize these patterns before starting the drill.</p>
+        </div>
+
+        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+          {renderContent()}
+        </div>
+      </div>
     );
   };
 
