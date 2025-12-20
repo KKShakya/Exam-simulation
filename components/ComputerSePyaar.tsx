@@ -4,6 +4,21 @@ import { Monitor, Cpu, Wifi, Database, Shield, HardDrive, ChevronDown, Binary, H
 
 const FLASHCARD_DATA = [
   {
+    category: "History & Landmarks",
+    icon: History,
+    color: "slate",
+    items: [
+      { q: "1st Indian PC", a: "Siddharth" },
+      { q: "1st Installation", a: "ISI Kolkata" },
+      { q: "Father of WWW", a: "Tim Berners-Lee" },
+      { q: "1st High-Level Lang", a: "FORTRAN (Formula Translation)" },
+       { q: "Java", a: "Write Once, Run Anywhere" },
+      { q: "Python", a: "AI-based Programming" },
+      { q: "Oracle", a: "Database Package (Not OS)" },
+      { q: "Information", a: "Processed Data" }
+    ]
+  },
+   {
     category: "Measurements & Speed",
     icon: Activity,
     color: "amber",
@@ -15,6 +30,17 @@ const FLASHCARD_DATA = [
     ]
   },
   {
+    category: "Hardware Logic",
+    icon: Cpu,
+    color: "cyan",
+    items: [
+      { q: "CPU Traffic Cop", a: "Control Unit (CU)" },
+      { q: "Fastest Memory", a: "Registers > Cache > RAM" },
+      { q: "Impact Printer", a: "Dot Matrix, Daisy Wheel (Strikes)" },
+      { q: "Non-Impact", a: "Laser, Inkjet (No Strike)" }
+    ]
+  },
+    {
     category: "Hardware & Booting",
     icon: Cpu,
     color: "cyan",
@@ -25,18 +51,7 @@ const FLASHCARD_DATA = [
       { q: "POST", a: "Power On Self Test (HW Check)" }
     ]
   },
-  {
-    category: "Networking & OSI",
-    icon: Wifi,
-    color: "blue",
-    items: [
-      { q: "Encryption Layer", a: "Presentation Layer" },
-      { q: "End-to-End Delivery", a: "Transport Layer" },
-      { q: "IPv4 vs IPv6", a: "32-bit vs 128-bit" },
-      { q: "Most Reliable Topology", a: "Mesh Topology" }
-    ]
-  },
-  {
+   {
     category: "Cloud & Modern Tech",
     icon: Globe,
     color: "indigo",
@@ -47,40 +62,108 @@ const FLASHCARD_DATA = [
       { q: "AIoT", a: "AI + Internet of Things" }
     ]
   },
+
+  {
+    category: "Memory & Units",
+    icon: HardDrive,
+    color: "amber",
+    items: [
+      { q: "1 Nibble", a: "4 Bits" },
+      { q: "1 Byte", a: "8 Bits" },
+      { q: "Volatile (Temporary)", a: "RAM, Cache" },
+      { q: "Non-Volatile", a: "ROM, HDD, SSD" }
+    ]
+  },
+  {
+    category: "Storage Capacities",
+    icon: Database,
+    color: "indigo",
+    items: [
+      { q: "CD-ROM", a: "700 - 850 MB" },
+      { q: "DVD", a: "4.7 GB - 17 GB" },
+      { q: "Blu-ray", a: "Up to 100 GB" },
+      { q: "Standard Sector", a: "512 Bytes" }
+    ]
+  },
+  {
+    category: "Networking Hub",
+    icon: Wifi,
+    color: "blue",
+    items: [
+      { q: "Hub", a: "Broadcasts (Dumb Device)" },
+      { q: "Switch", a: "Unicasts (Intelligent Device)" },
+      { q: "Bluetooth Std", a: "IEEE 802.15" },
+      { q: "WiFi Std", a: "IEEE 802.11" },
+      { q: "Encryption Layer", a: "Presentation Layer" },
+      { q: "End-to-End Delivery", a: "Transport Layer" },
+      { q: "IPv4 vs IPv6", a: "32-bit vs 128-bit" },
+      { q: "Most Reliable Topology", a: "Mesh Topology" }
+    ]
+  },
   {
     category: "Security & Malware",
     icon: Shield,
     color: "rose",
     items: [
-      { q: "Data Diddling", a: "Forgery of electronic data" },
+      { q: "Worm", a: "Self-Replicates (No Host Needed)" },
+      { q: "Virus", a: "Self-Replicates (Host Program Needed)" },
+      { q: "Trojan", a: "Hidden Malware (No Replication)" },
+      { q: "Firewall", a: "Filters Network Traffic" },
+       { q: "Data Diddling", a: "Forgery of electronic data" },
       { q: "Pharming", a: "Redirecting to fake websites" },
       { q: "Blockchain", a: "Immutable/Tamper-proof ledger" },
-      { q: "Worm", a: "Self-Replicates (No Host Needed)" }
     ]
   },
   {
-    category: "MS Office Master",
+    category: "MS Office Blitz",
     icon: FileText,
     color: "emerald",
     items: [
-      { q: "Excel Rows/Cols", a: "1,048,576 / 16,384 (XFD)" },
+      { q: "PPT New Slide", a: "Ctrl + M" },
+      { q: "Excel Save As", a: "F12" },
+      { q: "Clear Format", a: "Ctrl + Space" },
+      { q: "Min Excel Table", a: "1 Row × 1 Column" },
+        { q: "Excel Rows/Cols", a: "1,048,576 / 16,384 (XFD)" },
       { q: "Absolute Ref", a: "$A$1 (Dollar Symbol)" },
       { q: "Pivot Table", a: "Narrow data via drag & drop" },
       { q: "PPT Extension", a: ".pptx (Slideshow: .pptm)" }
     ]
   },
   {
-    category: "Languages & OS",
-    icon: Terminal,
-    color: "slate",
+    category: "Binary & Digital",
+    icon: Binary,
+    color: "purple",
     items: [
-      { q: "Java", a: "Write Once, Run Anywhere" },
-      { q: "Python", a: "AI-based Programming" },
-      { q: "Oracle", a: "Database Package (Not OS)" },
-      { q: "Information", a: "Processed Data" }
+      { q: "1024 GB", a: "1 Terabyte (TB)" },
+      { q: "1024 TB", a: "1 Petabyte (PB)" },
+      { q: "MODEM", a: "Modulator-Demodulator" },
+      { q: "UPI Logic", a: "GPay, PhonePe (Real-time)" }
     ]
   },
+    {
+    category: "IoT & Protocols",
+    // Fix: Added missing 'Link' import to the destructuring list above.
+    icon: Link,
+    color: "purple",
+    items: [
+      { q: "MQTT", a: "Lightweight IoT Protocol" },
+      { q: "Secure Remote Login", a: "SSH (Secure Shell)" },
+      { q: "Telnet", a: "Non-secure remote login" },
+      { q: "IPSec", a: "Encryption at Network Layer" }
+    ]
+  }
   {
+    category: "OSI Layer Mastery",
+    icon: Layers,
+    color: "blue",
+    items: [
+      { q: "Encryption Layer", a: "Presentation Layer" },
+      { q: "End-to-End Delivery", a: "Transport Layer" },
+      { q: "IPv4 vs IPv6", a: "32-bit vs 128-bit" },
+      { q: "Most Reliable Topology", a: "Mesh Topology" }
+    ]
+  },
+   {
     category: "IoT & Protocols",
     // Fix: Added missing 'Link' import to the destructuring list above.
     icon: Link,
@@ -456,8 +539,8 @@ const ComputerSePyaar: React.FC = () => {
 
       <div className="bg-gradient-to-br from-amber-50 to-white rounded-[2.5rem] p-8 md:p-12 shadow-sm border border-slate-200">
         <div className="text-center mb-12">
-            <h3 className="text-2xl font-bold text-slate-800 mb-2">5-Minute Super Revision</h3>
-            <p className="text-slate-500">Condensed data clusters for quick recall and high-speed retention.</p>
+            <h3 className="text-3xl font-extrabold text-slate-900 mb-2 tracking-tight">5-Minute Super Revision</h3>
+            <p className="text-slate-500 font-medium">Condensed data clusters for quick recall and high-speed retention.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -475,23 +558,23 @@ const ComputerSePyaar: React.FC = () => {
               };
               
               return (
-                <div key={idx} className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-all group overflow-hidden relative">
+                <div key={idx} className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-all group overflow-hidden relative flex flex-col min-h-[280px]">
                    <div className="absolute -bottom-6 -right-6 opacity-5 group-hover:opacity-10 transition-opacity">
                       <Icon size={120} />
                    </div>
 
                    <div className="flex items-center gap-3 mb-6 relative z-10">
-                      <div className={`p-2 rounded-xl ${colorClasses[card.color]}`}>
+                      <div className={`p-2 rounded-xl ${colorClasses[card.color] || colorClasses.slate}`}>
                         <Icon size={20} />
                       </div>
-                      <h4 className="font-bold text-slate-800 text-sm tracking-tight">{card.category}</h4>
+                      <h4 className="font-bold text-slate-800 text-sm tracking-tight leading-tight">{card.category}</h4>
                    </div>
 
-                   <div className="space-y-4 relative z-10">
+                   <div className="space-y-4 relative z-10 flex-1">
                       {card.items.map((item, i) => (
                         <div key={i} className="group/item">
                            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">{item.q}</div>
-                           <div className="text-sm font-bold text-slate-700 group-hover/item:text-indigo-600 transition-colors">{item.a}</div>
+                           <div className="text-sm font-bold text-slate-700 group-hover/item:text-indigo-600 transition-colors leading-snug">{item.a}</div>
                         </div>
                       ))}
                    </div>
@@ -500,24 +583,25 @@ const ComputerSePyaar: React.FC = () => {
            })}
         </div>
 
-        <div className="mt-16 bg-slate-900 text-white rounded-3xl p-8 flex flex-col md:flex-row items-center justify-between gap-6 overflow-hidden relative">
+        <div className="mt-16 bg-slate-900 text-white rounded-3xl p-8 flex flex-col md:flex-row items-center justify-between gap-6 overflow-hidden relative shadow-2xl">
            <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
            <div className="space-y-2 relative z-10">
               <h4 className="text-xl font-bold flex items-center gap-2">
                 <Lightbulb className="text-amber-400" />
                 Topper's Revision Strategy
               </h4>
-              <p className="text-slate-400 text-sm max-w-lg">
-                Use these cards once every morning. Don't read—try to <strong>predict</strong> the answer before your eyes land on it.
+              <p className="text-slate-400 text-sm max-w-lg leading-relaxed">
+                Use these cards once every morning. Don't read—try to <strong>predict the answer</strong> before your eyes land on it. 
+                Active recall is the fastest way to build computer knowledge for RRB PO & Clerk.
               </p>
            </div>
            <div className="flex items-center gap-4 relative z-10">
-              <div className="flex flex-col items-center p-3 bg-white/10 rounded-2xl border border-white/10">
-                 <span className="text-2xl font-black text-amber-400">8</span>
-                 <span className="text-[10px] font-bold uppercase tracking-widest opacity-60">Categories</span>
+              <div className="flex flex-col items-center p-3 bg-white/10 rounded-2xl border border-white/10 min-w-[100px]">
+                 <span className="text-2xl font-black text-amber-400">{FLASHCARD_DATA.length}</span>
+                 <span className="text-[10px] font-bold uppercase tracking-widest opacity-60">Modules</span>
               </div>
-              <div className="flex flex-col items-center p-3 bg-white/10 rounded-2xl border border-white/10">
-                 <span className="text-2xl font-black text-indigo-400">32</span>
+              <div className="flex flex-col items-center p-3 bg-white/10 rounded-2xl border border-white/10 min-w-[100px]">
+                 <span className="text-2xl font-black text-indigo-400">40+</span>
                  <span className="text-[10px] font-bold uppercase tracking-widest opacity-60">Key Facts</span>
               </div>
            </div>
