@@ -15,7 +15,15 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { Question, Subject, Difficulty, PatternAnalysis, MockQuestion } from "../types";
 import { getStaticMockExam } from "./mockDataService";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Use Vite's standard method for accessing environment variables
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY as string;
+
+// Provide a clear error if the API key is missing
+if (!GEMINI_API_KEY) {
+  throw new Error("CRITICAL: VITE_GEMINI_API_KEY is not defined. Please add it to your .env.local file.");
+}
+
+const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
 // Updated System Instruction for a more natural "Gemini-like" experience
 const TUTOR_SYSTEM_INSTRUCTION = `
