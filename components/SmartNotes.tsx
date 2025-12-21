@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Plus, Save, FileText, Sparkles, Trash2, Calendar, Search, Copy, Maximize2, Minimize2 } from 'lucide-react';
+import { Plus, Save, FileText, Sparkles, Trash2, Calendar, Search, Copy, Maximize2, Minimize2, ChevronLeft } from 'lucide-react';
 import { Note } from '../types';
 import { analyzeUserNote } from '../services/geminiService';
 
@@ -426,7 +426,7 @@ Step 2: Identify the Case Type
     setNotes([newNote, ...notes]);
     setActiveNoteId(newNote.id);
     setAnalysisResult('');
-    if (window.innerWidth < 768) setIsExpanded(true);
+    setIsExpanded(true); // Automatically expand editor on creation for better UX
   };
 
   const updateNote = (field: keyof Note, value: string) => {
@@ -460,7 +460,10 @@ Step 2: Identify the Case Type
   return (
     <div className="h-[calc(100vh-8rem)] flex gap-6 animate-in fade-in">
       {/* Sidebar List */}
-      <div className={`${isExpanded ? 'hidden' : 'w-1/3'} bg-white rounded-xl shadow-sm border border-slate-200 flex flex-col overflow-hidden transition-all`}>
+      {/* Added shrink-0 to prevent sidebar from shrinking when editor content expands. 
+          Changed logic to hide sidebar on mobile when expanded, but show as w-full when not expanded. 
+          On MD+ screens, it stays w-1/3. */}
+      <div className={`${isExpanded ? 'hidden' : 'w-full md:w-80 lg:w-1/3 shrink-0'} bg-white rounded-xl shadow-sm border border-slate-200 flex flex-col overflow-hidden transition-all`}>
         <div className="p-6 border-b border-white/40 bg-gradient-to-br from-white/80 via-indigo-50/50 to-purple-50/50 backdrop-blur-xl space-y-4">
            <div className="flex justify-between items-center">
              <h2 className="font-bold text-xl text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 flex items-center gap-3">
@@ -485,7 +488,13 @@ Step 2: Identify the Case Type
         
         <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50">
           {filteredNotes.map(note => (
-            <div key={note.id} onClick={() => { setActiveNoteId(note.id); setAnalysisResult(''); }}
+            <div key={note.id} 
+              onClick={() => { 
+                setActiveNoteId(note.id); 
+                setAnalysisResult(''); 
+                // Auto-expand editor on mobile/tablet when a note is clicked
+                if (window.innerWidth < 1024) setIsExpanded(true); 
+              }}
               className={`p-4 rounded-xl cursor-pointer transition-all group relative border ${activeNoteId === note.id ? 'bg-amber-50 border-amber-200 shadow-md ring-1 ring-amber-100' : 'bg-white border-slate-200 hover:border-amber-100 hover:bg-amber-50/30 hover:shadow-sm'}`}
             >
               <div className={`font-bold text-md mb-2 pr-6 truncate ${activeNoteId === note.id ? 'text-amber-800' : 'text-slate-800'}`}>{note.title}</div>
@@ -504,44 +513,56 @@ Step 2: Identify the Case Type
       </div>
 
       {/* Editor Area */}
-      <div className="flex-1 flex flex-col gap-4">
+      {/* On mobile: Hidden if !isExpanded (List view). Visible if isExpanded.
+          On Desktop: Always visible (flex) unless logic changes, but we want list+editor side-by-side usually.
+          The logic `!isExpanded ? 'hidden md:flex' : 'flex'` ensures editor is hidden on mobile when list is shown, but always shown on desktop if we treat 'isExpanded' as 'Fullscreen Editor' or just 'Editor Active'.
+      */}
+      <div className={`flex-1 flex flex-col gap-4 ${!isExpanded ? 'hidden md:flex' : 'flex'}`}>
         {activeNote ? (
           <>
             <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex-1 flex flex-col">
               <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-100 gap-4">
+                {/* Back button for mobile when expanded */}
+                <button 
+                  onClick={() => setIsExpanded(false)} 
+                  className="md:hidden p-2 -ml-2 text-slate-500 hover:text-indigo-600 transition-colors"
+                >
+                  <ChevronLeft size={24} />
+                </button>
+
                 <input type="text" value={activeNote.title} onChange={(e) => updateNote('title', e.target.value)}
-                  className="text-3xl font-bold text-slate-800 outline-none placeholder-slate-300 flex-1 bg-transparent" placeholder="Note Title"
+                  className="text-2xl md:text-3xl font-bold text-slate-800 outline-none placeholder-slate-300 flex-1 bg-transparent min-w-0" placeholder="Note Title"
                 />
-                <div className="flex items-center gap-3">
-                   <span className="text-xs text-slate-400 flex items-center gap-1 bg-slate-50 px-2 py-1 rounded-full border border-slate-100">
+                <div className="flex items-center gap-3 shrink-0">
+                   <span className="hidden md:flex text-xs text-slate-400 items-center gap-1 bg-slate-50 px-2 py-1 rounded-full border border-slate-100">
                       <Calendar size={12} /> {new Date(activeNote.date).toLocaleDateString()}
                    </span>
-                   <button onClick={() => setIsExpanded(!isExpanded)} className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all">
+                   <button onClick={() => setIsExpanded(!isExpanded)} className="hidden md:block p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all" title={isExpanded ? "Show List" : "Maximize Editor"}>
                     {isExpanded ? <Minimize2 size={20} /> : <Maximize2 size={20} />}
                   </button>
                 </div>
               </div>
               
               <textarea value={activeNote.content} onChange={(e) => updateNote('content', e.target.value)}
-                className="flex-1 w-full resize-none outline-none text-slate-600 leading-relaxed text-lg font-mono bg-transparent placeholder-slate-300"
+                className="flex-1 w-full resize-none outline-none text-slate-600 leading-relaxed text-base md:text-lg font-mono bg-transparent placeholder-slate-300"
                 placeholder="Start typing your notes here..."
               />
               <div className="flex justify-between items-center pt-4 border-t border-slate-100 text-sm text-slate-400">
                  <span>{activeNote.content.length} characters</span>
-                 <div className="flex items-center gap-1 hover:text-indigo-600 cursor-default"><Save size={14} /> Auto-saved to Local</div>
+                 <div className="flex items-center gap-1 hover:text-indigo-600 cursor-default"><Save size={14} /> Auto-saved</div>
               </div>
             </div>
 
             {/* AI Analysis Tool */}
-            <div className={`bg-white p-4 rounded-xl shadow-sm border border-slate-200 min-h-[150px] ${isExpanded ? 'hidden' : ''}`}>
+            <div className={`bg-white p-4 rounded-xl shadow-sm border border-slate-200 min-h-[150px] ${isExpanded && window.innerWidth < 768 ? '' : ''}`}>
               <div className="flex items-center justify-between mb-3">
                  <h3 className="font-bold text-slate-700 flex items-center gap-2">
                    <Sparkles className="text-amber-500" size={18} /> AI Insights
                  </h3>
                  <div className="flex gap-2">
                    <button onClick={() => handleAnalyze('summarize')} disabled={isAnalyzing} className="px-3 py-1.5 text-xs font-medium bg-indigo-50 text-indigo-600 rounded hover:bg-indigo-100">Summarize</button>
-                   <button onClick={() => handleAnalyze('formulas')} disabled={isAnalyzing} className="px-3 py-1.5 text-xs font-medium bg-emerald-50 text-emerald-600 rounded hover:bg-emerald-100">Find Formulas</button>
-                   <button onClick={() => handleAnalyze('quiz')} disabled={isAnalyzing} className="px-3 py-1.5 text-xs font-medium bg-purple-50 text-purple-600 rounded hover:bg-purple-100">Create Quiz</button>
+                   <button onClick={() => handleAnalyze('formulas')} disabled={isAnalyzing} className="px-3 py-1.5 text-xs font-medium bg-emerald-50 text-emerald-600 rounded hover:bg-emerald-100">Formulas</button>
+                   <button onClick={() => handleAnalyze('quiz')} disabled={isAnalyzing} className="px-3 py-1.5 text-xs font-medium bg-purple-50 text-purple-600 rounded hover:bg-purple-100">Quiz</button>
                  </div>
               </div>
               

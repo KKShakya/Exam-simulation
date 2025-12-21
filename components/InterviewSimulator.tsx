@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { GoogleGenAI, LiveServerMessage, Modality } from '@google/genai';
-import { Mic, MicOff, PhoneOff, Briefcase, Play, Loader2, Volume2, UserCheck, AlertCircle } from 'lucide-react';
+import { Mic, MicOff, PhoneOff, Briefcase, Play, Loader2, Volume2, UserCheck, AlertCircle, ShieldCheck, X } from 'lucide-react';
 
 // --- Audio Utilities ---
 
@@ -43,6 +43,10 @@ const InterviewSimulator: React.FC = () => {
   const [isMicOn, setIsMicOn] = useState(true);
   const [volumeLevel, setVolumeLevel] = useState(0);
   const [status, setStatus] = useState<string>('');
+  
+  // Permission Modal State
+  const [showPermissionModal, setShowPermissionModal] = useState(false);
+  const [pendingPanelId, setPendingPanelId] = useState<string | null>(null);
 
   // Refs for Audio Contexts and Processor
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -93,10 +97,28 @@ const InterviewSimulator: React.FC = () => {
     }
   ];
 
+  const handlePanelEntry = (panelId: string) => {
+    setPendingPanelId(panelId);
+    setShowPermissionModal(true);
+  };
+
+  const handlePermissionDenied = () => {
+    setShowPermissionModal(false);
+    setPendingPanelId(null);
+  };
+
+  const confirmStartSession = () => {
+    if (pendingPanelId) {
+      setShowPermissionModal(false);
+      startSession(pendingPanelId);
+    }
+  };
+
   const startSession = async (panelId: string) => {
     try {
       setStatus('Requesting Microphone Access...');
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: { sampleRate: 16000, channelCount: 1 } });
+      // Use basic audio constraint to avoid OverconstrainedError on some devices
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
 
       setStatus('Connecting to BankEdge Interview AI...');
@@ -128,8 +150,8 @@ const InterviewSimulator: React.FC = () => {
             setActivePanel(panelId);
             
             // --- Setup Input Audio Stream ---
-            // We use a separate context for input to ensure 16kHz capture if possible, 
-            // or just resample manually.
+            // Create a new context for input with the specific sample rate required for processing
+            // The browser will handle resampling from the source stream to this context
             const inputCtx = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 16000 });
             const source = inputCtx.createMediaStreamSource(stream);
             
@@ -193,8 +215,18 @@ const InterviewSimulator: React.FC = () => {
 
     } catch (err: any) {
       console.error("Failed to start session:", err);
-      alert("Microphone access denied or API error. Please check permissions.");
+      let errorMessage = "Microphone access failed.";
+      if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+        errorMessage = "Microphone permission denied. Please allow microphone access in your browser settings.";
+      } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+        errorMessage = "No microphone found.";
+      } else if (err.name === 'NotReadableError' || err.name === 'TrackStartError') {
+        errorMessage = "Microphone is busy or not readable.";
+      } else if (err.name === 'OverconstrainedError') {
+        errorMessage = "Microphone constraints not satisfied (Overconstrained).";
+      }
       setStatus('');
+      alert(errorMessage);
     }
   };
 
@@ -280,7 +312,51 @@ const InterviewSimulator: React.FC = () => {
 
   if (!activePanel) {
     return (
-      <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 pb-12">
+      <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 pb-12 relative">
+        
+        {/* Permission Modal */}
+        {showPermissionModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={handlePermissionDenied}></div>
+            <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl relative z-10 animate-in zoom-in-95 duration-200">
+              <button 
+                onClick={handlePermissionDenied}
+                className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1"
+              >
+                <X size={20} />
+              </button>
+              
+              <div className="flex flex-col items-center text-center space-y-4">
+                <div className="w-16 h-16 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mb-2">
+                  <ShieldCheck size={32} />
+                </div>
+                <h3 className="text-2xl font-bold text-slate-800">Microphone Access Required</h3>
+                <p className="text-slate-500 text-sm leading-relaxed">
+                  To simulate a real interview, BankEdge needs access to your microphone. Your audio is processed in real-time by AI to provide instant feedback and is not stored.
+                </p>
+                
+                <div className="flex flex-col w-full gap-3 mt-4">
+                  <button 
+                    onClick={confirmStartSession}
+                    className="w-full py-3.5 bg-indigo-600 text-white rounded-xl font-bold shadow-lg hover:bg-indigo-700 transition-all active:scale-95 flex items-center justify-center gap-2"
+                  >
+                    <Mic size={18} /> Allow Access & Start
+                  </button>
+                  <button 
+                    onClick={handlePermissionDenied}
+                    className="w-full py-3.5 bg-white text-slate-600 border border-slate-200 rounded-xl font-bold hover:bg-slate-50 transition-all"
+                  >
+                    Cancel
+                  </button>
+                </div>
+                <p className="text-xs text-slate-400 mt-2">
+                  Please ensure you are in a quiet environment.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="text-center space-y-4 mb-8">
           <div className="inline-flex items-center justify-center p-4 bg-indigo-100 rounded-full mb-2">
              <Mic size={32} className="text-indigo-600" />
@@ -301,7 +377,7 @@ const InterviewSimulator: React.FC = () => {
                </div>
                <div className="mt-auto">
                  <button 
-                   onClick={() => startSession(panel.id)}
+                   onClick={() => handlePanelEntry(panel.id)}
                    className="w-full py-4 rounded-xl font-bold bg-slate-900 text-white hover:bg-slate-800 transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl group-hover:-translate-y-1"
                  >
                    <Play size={18} fill="currentColor" /> Enter Panel
