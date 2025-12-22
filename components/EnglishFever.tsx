@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Clock, GitMerge, Box, Scissors, Hash, AlertTriangle, Feather, ChevronLeft, BookOpen, GraduationCap, Crosshair, Layout, Link, Sparkles, ScanEye, CheckCircle2, Award, ChevronDown, ChevronUp, Link2 } from 'lucide-react';
+import { Clock, GitMerge, Box, Scissors, Hash, AlertTriangle, Feather, ChevronLeft, BookOpen, GraduationCap, Crosshair, Layout, Link, Sparkles, ScanEye, CheckCircle2, Award, ChevronDown, ChevronUp, Link2, ExternalLink } from 'lucide-react';
 
 // Data Structure for Rules
 const ENGLISH_MODULES = [
@@ -242,14 +242,26 @@ const EnglishFever: React.FC = () => {
 
     return (
         <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 pb-12">
-            <div className="text-center space-y-4 mb-10">
-                <h1 className="text-4xl font-bold text-slate-900 flex items-center justify-center gap-3">
-                    <Feather className="text-pink-600" size={40} />
-                    English Fever
-                </h1>
-                <p className="text-slate-500 max-w-2xl mx-auto">
-                    The 120 Rules of Grammar & The Root Method condensed into 9 High-Impact Modules.
-                </p>
+            <div className="relative mb-10">
+                {/* External Vocab Link Button */}
+                <a 
+                  href="https://vocab-ka-power.vercel.app/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="absolute top-0 right-0 hidden md:flex items-center gap-2 bg-pink-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-pink-700 transition-all shadow-lg hover:shadow-pink-200 hover:-translate-y-0.5 z-10"
+                >
+                  <BookOpen size={18} /> Vocab Learning <ExternalLink size={14} className="opacity-80" />
+                </a>
+
+                <div className="text-center space-y-4 pt-8 md:pt-2">
+                    <h1 className="text-4xl font-bold text-slate-900 flex items-center justify-center gap-3">
+                        <Feather className="text-pink-600" size={40} />
+                        English Fever
+                    </h1>
+                    <p className="text-slate-500 max-w-2xl mx-auto">
+                        The 120 Rules of Grammar & The Root Method condensed into 9 High-Impact Modules.
+                    </p>
+                </div>
             </div>
 
             <div className="grid grid-cols-1 gap-4">

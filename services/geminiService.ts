@@ -21,9 +21,7 @@ import { Question, Subject, Difficulty, PatternAnalysis, MockQuestion, EssayAnal
 import { getStaticMockExam } from "./mockDataService";
 
 // In this environment, the API key is injected automatically via process.env.API_KEY
-const GEMINI_API_KEY = process.env.API_KEY as string;
-
-const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 // Updated System Instruction for a more natural "Gemini-like" experience
 const TUTOR_SYSTEM_INSTRUCTION = `
