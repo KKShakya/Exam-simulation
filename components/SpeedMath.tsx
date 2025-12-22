@@ -513,6 +513,17 @@ const CHEAT_SHEET_DATA = [
     color: "amber",
     sections: [
       {
+        subtitle: "Check: Condition for 'NOT A SQUARE'",
+        points: [
+           { label: "Last Digit", desc: "Ends in **2, 3, 7, 8**" },
+           { label: "Digital Sum", desc: "Sum is **2, 3, 5, 6, 8**" },
+           { label: "Ends in 5", desc: "Tens digit is **NOT 2**" },
+           { label: "Ends in 6", desc: "Tens digit is **Even**" },
+           { label: "Ends in 1, 4, 9", desc: "Tens digit is **Odd**" },
+           { label: "Zeros", desc: "**Odd number** of zeros (e.g., 0, 000)" }
+        ]
+      },
+      {
         subtitle: "Double (x2) & Half (1/2)",
         points: [
            { label: "Double Rule", desc: "Last digit ≥ 5? Doubled first digit gets **+1**." },
